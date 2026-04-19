@@ -16,6 +16,12 @@ The site walks you through a series of chapters, one concept per chapter, each w
 
 **Secondary audience:** experienced analysts and growth PMs. A "skip to calculator" link gets them there fast.
 
+## Stack
+
+- Next.js + React, hosted on Vercel
+- Statically generated pages for SEO, client-side hydration for interactive charts
+- No server or database needed
+
 ## Docs
 
 - [Architecture](docs/architecture.md) — routing model, rendering pattern, open technical decisions
