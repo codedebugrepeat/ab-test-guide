@@ -238,10 +238,13 @@ it; it just doesn't animate yet.
 `Container`, `lib/site-config.ts`, `components/tutorial/case-study-callout.tsx`.
 
 **Verification:**
-- Button draws a new row instantly; 12-row cap works; mean line aligns.
-- Light + dark mode, mobile width readable.
-- Screen reader announces each draw.
-- `npm run lint` and `npm run build` pass.
+- Button draws a new row instantly; 12-row cap (with fade) works; mean line aligns.
+- Pill label "Jar: 20% conversion rate" visible above the button.
+- Mean line labelled "average: 2".
+- Light + dark mode, `npm run lint` and `npm run build` pass.
+- **User feedback requested:** check the widget at mobile width (375 px) and
+  confirm whether marble sizing is comfortable. If not, raise before Phase 4 so
+  the fix can be bundled in.
 
 ---
 
@@ -304,21 +307,16 @@ No structural changes to the widget; animation is purely additive.
 - Histogram or distribution curve overlay — text + dotted mean line is enough
   for this section's goal.
 
-## Open questions
+## Resolved decisions
 
-1. **True mean line label.** "expected: 2" is clear but slightly technical for
-   a first-time reader. Alternatives: "average" / "typical" / "what we'd expect
-   from a perfect sample". Decide at implementation time — lean toward
-   "average: 2" for accessibility.
-2. **Marble size on mobile.** 10 × 20 px circles + gaps + count label may be
-   tight at 375 px width. Options: reduce to 16 px circles, or wrap to 5+5 on
-   very small screens. Confirm at implementation time.
-3. **Row cap behavior.** When the 13th row would be added, should old rows fade
-   out or hard-cut? Fade (opacity 0 over 200 ms then remove) feels cleaner.
-4. **Initial conversion rate disclosure.** The lead-in text says "20%". Should
-   the widget also display this as a label ("Jar: 20% conversion rate") for
-   readers who don't read the prose first? Probably yes — a small pill label
-   above the button.
+1. **True mean line label** → **"average: 2"**. Implemented in Phase 3.
+2. **Marble size on mobile** → deferred. Ship Phase 3 as-is; after the static
+   widget is live, gather feedback on whether the layout is comfortable at mobile
+   widths before deciding between 16 px circles or 5+5 wrapping.
+3. **Row cap behavior** → **fade**. When the 13th row would be added, the oldest
+   row fades out (opacity 0 over 200 ms) then is removed. Implemented in Phase 3.
+4. **Conversion rate pill label** → **yes**. Show a small pill above the button:
+   "Jar: 20% conversion rate". Implemented in Phase 3.
 
 ## Verification (Phase 4 — full checklist)
 
