@@ -141,22 +141,142 @@ that follow name and use what the user just felt.
 > Sample size is the lever that tightens this spread. We'll come back to exactly
 > how much — but first, let's name the mistake.
 
-## Files to create / change
+## Phases
 
-**Create:**
+Each phase ends with a reviewable commit. Do not start the next phase until the
+previous one is approved.
+
+---
+
+### Phase 1 — Prose + placeholder
+
+**Goal:** get the surrounding text right before any code touches the widget slot.
+The page should read well even with a static placeholder where the widget will
+eventually live.
+
+**Files to change:**
+- `app/why-you-cant-trust-your-experiment/page.tsx` — insert the lead-in prose,
+  a `<VisualizationPlaceholder />` stub, and the follow-on prose between the
+  case-study callout and the existing "The instinct" section.
+
+**The placeholder** is a simple bordered box with a short label inside:
+```
+┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐
+  [Marble sampling widget — coming soon]
+└ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘
+```
+Dashed border, muted text, fixed `min-height` (~180 px) so the page layout
+already reflects the space the real widget will occupy. Inline in the page file;
+no separate component needed.
+
+**Do not touch:** `globals.css`, `maths/`, any component files not listed above.
+
+**Verification:**
+- Page renders with lead-in prose, placeholder box, follow-on prose in the
+  correct position between the case-study callout and "The instinct" section.
+- `npm run lint` and `npm run build` pass.
+
+---
+
+### Phase 2 — Maths module + unit tests
+
+**Goal:** implement and verify the sampling logic in isolation, before any UI
+touches it.
+
+**Files to create:**
 - `maths/sampling.ts` — `drawSample`, `drawSampleCount`, `binomialMean`,
   `binomialSD`. Pure TS, no dependencies.
+- `maths/sampling.test.ts` — unit tests (use whichever test runner is already
+  configured in the project; check `package.json` at implementation time).
+
+**What to test:**
+- `drawSample(10, 0.2)` always returns an array of exactly 10 booleans.
+- `drawSample(10, 0.0)` returns all `false`; `drawSample(10, 1.0)` returns all
+  `true`.
+- `drawSampleCount` return value always satisfies `0 <= count <= n`.
+- `binomialMean(10, 0.2)` returns `2`; `binomialSD(10, 0.2)` is close to
+  `1.265` (within floating-point tolerance).
+- Statistical smoke test: draw 1 000 samples with `drawSampleCount(10, 0.2)`,
+  confirm the empirical mean is within ±0.2 of 2.0. (Seeding isn't needed —
+  the tolerance is wide enough that this passes reliably.)
+
+**Do not touch:** any component or page files.
+
+**Verification:**
+- `npm test` (or equivalent) passes with all cases green.
+- `npm run lint` passes.
+
+---
+
+### Phase 3 — Static widget (no animation)
+
+**Goal:** real component with real data, no movement. The reader can already use
+it; it just doesn't animate yet.
+
+**Files to create:**
 - `components/tutorial/marble-sampling-widget.tsx` — `'use client'` component.
-  Owns the sample history state, button interaction, and renders rows +
-  true-mean line. Composes `MarbleRow`.
-- `components/tutorial/marble-row.tsx` — single animated row. Props:
-  `marbles: boolean[], index: number, isNew: boolean`. Handles CSS animation
-  on mount via `isNew`.
+  Owns sample-history state and the button. Composes `MarbleRow`. No animation
+  logic yet — marbles appear instantly on draw.
+- `components/tutorial/marble-row.tsx` — renders one row of 10 marble circles +
+  count label. Props: `marbles: boolean[], sampleNumber: number`. No `isNew` or
+  animation props yet.
+
+**Files to change:**
+- `app/why-you-cant-trust-your-experiment/page.tsx` — replace
+  `<VisualizationPlaceholder />` with `<MarbleSamplingWidget />`.
+
+**Behaviour in this phase:**
+- Button click immediately adds a new row at the top of the stack (no drop
+  animation).
+- True-mean line present and correctly positioned.
+- Empty state, row cap (12), count label, pill label all implemented.
+- Button disabled state (re-enables instantly since there is no animation timer
+  yet — the 700 ms lock is added in Phase 4).
+- `aria-live` region present and announcing results.
+
+**Do not touch:** `globals.css`, `layout.tsx`, `SiteHeader`, `SiteFooter`,
+`Container`, `lib/site-config.ts`, `components/tutorial/case-study-callout.tsx`.
+
+**Verification:**
+- Button draws a new row instantly; 12-row cap works; mean line aligns.
+- Light + dark mode, mobile width readable.
+- Screen reader announces each draw.
+- `npm run lint` and `npm run build` pass.
+
+---
+
+### Phase 4 — Animation
+
+**Goal:** add the drop + bounce animation on top of the working static widget.
+No structural changes to the widget; animation is purely additive.
+
+**Files to change:**
+- `components/tutorial/marble-row.tsx` — add `isNew: boolean` prop. When `true`,
+  animate each marble from `translateY(-24px), opacity 0` to settled position
+  (staggered by `index * 60 ms`, ease-out ~200 ms each). Converted marbles get
+  a settle-bounce (scale 1.0 → 1.15 → 1.0). Uses CSS keyframes via Tailwind
+  arbitrary values or a `<style>` block; no animation library.
+- `components/tutorial/marble-sampling-widget.tsx` — track which row is `isNew`
+  (only the most recently added); disable button for ~700 ms during animation.
+  Respect `prefers-reduced-motion`: if set, `isNew` has no effect (marbles
+  appear instantly).
+
+**Do not touch:** everything not listed above.
+
+**Verification:** full checklist from the Phase 4 Verification section below.
+
+---
+
+## Files to create / change (summary across all phases)
+
+**Create:**
+- `maths/sampling.ts`
+- `maths/sampling.test.ts`
+- `components/tutorial/marble-sampling-widget.tsx`
+- `components/tutorial/marble-row.tsx`
 
 **Modify:**
-- `app/why-you-cant-trust-your-experiment/page.tsx` — insert the lead-in prose,
-  `<MarbleSamplingWidget />`, and follow-on prose between the case-study callout
-  and the existing "The instinct" section.
+- `app/why-you-cant-trust-your-experiment/page.tsx`
 
 **Do not touch:**
 - `globals.css`, `layout.tsx`, `SiteHeader`, `SiteFooter`, `Container`,
@@ -200,10 +320,10 @@ that follow name and use what the user just felt.
    readers who don't read the prose first? Probably yes — a small pill label
    above the button.
 
-## Verification
+## Verification (Phase 4 — full checklist)
 
 1. `npm run dev` — no console errors.
-2. Button click → 10 marbles animate into the top row, staggered drop effect.
+2. Button click → 10 marbles drop into the top row with staggered animation.
 3. Green marbles (converted=true) have bounce on settle; grey do not.
 4. Drawing 8+ samples stacks correctly; row 13+ causes row 1 to disappear.
 5. True-mean line is vertically aligned with position 2/10 across all rows.
@@ -212,5 +332,5 @@ that follow name and use what the user just felt.
 8. Mobile (375 px): marbles readable, button reachable.
 9. Light mode + dark mode: colors readable, contrast sufficient.
 10. `npm run lint` passes.
-11. `npm run build` succeeds; route stays static (widget is client component
+11. `npm run build` succeeds; route stays static (widget is a client component
     inside a server page — this is fine).
