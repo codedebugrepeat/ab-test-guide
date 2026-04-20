@@ -14,17 +14,16 @@ Tutorial sections and the calculator are statically generated at build time. Int
 
 The first widget on a page hydrates eagerly. Any below-the-fold widgets hydrate on scroll into view.
 
-## Routing (draft)
+## Routing
 
-Two options under consideration — decision deferred:
+**Decision: one route per section.** Each tutorial concept is its own URL (e.g., `/sample-size`, `/peeking`). Reasons:
 
-**Option A — single-page tutorial:** all sections live on one long scrollable page at `/`. Simple, no navigation needed, easier to build first. Downside: harder to deep-link to a section, worse for SEO per concept.
+- Better SEO per concept — each page can target its own query intent and metadata.
+- Deep-linkable — share or bookmark a specific idea.
+- Smaller initial payload per section; widgets stay scoped to the page that needs them.
+- Progress and next/prev navigation map cleanly onto routes.
 
-**Option B — one route per section:** each concept is its own URL (e.g., `/sample-size`, `/peeking`). Better SEO per concept, deep-linkable. Slightly more infrastructure.
-
-The calculator is always its own page at `/calculator` regardless of which option we pick for the tutorial.
-
-**Current default:** start with Option A (single page) for the MVP and split into routes if needed.
+The calculator is its own page at `/calculator`. Exact section slugs are decided per section when it's built (see `docs/plans/`).
 
 ## State
 
@@ -64,7 +63,6 @@ Specific libraries for charts, animations, and simulations are not decided yet.
 
 ## Open questions
 
-- Single-page vs. per-section routing (see above)?
 - Content format for tutorial prose — MDX, plain TSX, or something else?
 - Charting/animation library?
 - Do heavy simulations need Web Workers, or is the complexity low enough to run on the main thread?
