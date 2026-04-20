@@ -51,6 +51,43 @@ export default function Section1Page() {
 
       <CaseStudyCallout />
 
+      <p className="mt-8 text-foreground/70">
+        Imagine every potential visitor is a marble in a jar. Green means they
+        signed up; grey means they didn&apos;t. The jar below has a true
+        conversion rate baked in — 20%, so 2 in every 10 on average. Draw a
+        sample of 10 and count the green ones.
+      </p>
+
+      <div
+        className="mt-6 flex min-h-[180px] items-center justify-center rounded-lg border border-dashed border-foreground/30"
+        aria-label="Marble sampling widget — coming soon"
+      >
+        <span className="text-sm text-foreground/40">
+          Marble sampling widget — coming soon
+        </span>
+      </div>
+
+      <div className="mt-6 space-y-4 text-foreground/70">
+        <p>
+          What you just saw is <strong>sampling error</strong> — the natural
+          spread in outcomes you get when drawing a small random sample, even
+          when nothing about the jar changed. The jar&apos;s truth didn&apos;t
+          move; your draws did.
+        </p>
+        <p>
+          At 10 marbles per draw, the count bounces around considerably.
+          Getting 1 when the expected value is 2 is common. Getting 3 is common
+          too. Now scale that up: our A/B test had 100 visitors per group, not
+          10 — but the same principle applies. A raw gap of 10 vs. 15 signups
+          is the kind of gap that sampling error produces routinely, even when
+          both variants are identical.
+        </p>
+        <p>
+          Sample size is the lever that tightens this spread. We&apos;ll come
+          back to exactly how much — but first, let&apos;s name the mistake.
+        </p>
+      </div>
+
       <h2 className="mt-8 text-xl font-semibold tracking-tight">
         The instinct: B beat A, so ship B
       </h2>
