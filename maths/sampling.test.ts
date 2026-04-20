@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   drawSample,
-  drawCount,
+  countSample,
   binomialMean,
   binomialSD,
 } from "./sampling";
@@ -22,10 +22,18 @@ describe("drawSample", () => {
   });
 });
 
-describe("drawSampleCount", () => {
-  it("count is always between 0 and n", () => {
+describe("countSample", () => {
+  it("counts the true values in an array", () => {
+    expect(countSample([true, false, true, false, false])).toBe(2);
+  });
+
+  it("returns 0 for all-false array", () => {
+    expect(countSample([false, false, false])).toBe(0);
+  });
+
+  it("result is always between 0 and n when used with drawSample", () => {
     for (let i = 0; i < 100; i++) {
-      const count = drawCount(10, 0.2);
+      const count = countSample(drawSample(10, 0.2));
       expect(count).toBeGreaterThanOrEqual(0);
       expect(count).toBeLessThanOrEqual(10);
     }
@@ -46,7 +54,7 @@ describe("binomialSD", () => {
 
 describe("statistical smoke test", () => {
   it("empirical mean of 1000 samples is within ±0.2 of 2.0", () => {
-    const counts = Array.from({ length: 1000 }, () => drawCount(10, 0.2));
+    const counts = Array.from({ length: 1000 }, () => countSample(drawSample(10, 0.2)));
     const mean = counts.reduce((a, b) => a + b, 0) / counts.length;
     expect(mean).toBeGreaterThan(1.8);
     expect(mean).toBeLessThan(2.2);

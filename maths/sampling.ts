@@ -2,9 +2,10 @@ export function drawSample(n: number, p: number): boolean[] {
   return Array.from({ length: n }, () => Math.random() < p);
 }
 
-export function drawCount(n: number, p: number): number {
-  return drawSample(n, p).filter(x => x === true).length;
+export function countSample(marbles: boolean[]): number {
+  return marbles.filter(x => x === true).length;
 }
+
 
 export function binomialMean(n: number, p: number): number {
   return n * p;
