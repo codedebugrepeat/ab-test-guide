@@ -3,19 +3,46 @@ import { Container } from "@/components/container";
 import { CaseStudyCallout } from "@/components/tutorial/case-study-callout";
 
 export const metadata: Metadata = {
-  title: "Why You Can't Trust Your Experiment",
+  title: "A/B Testing — From Zero to Confident",
   description:
-    "Your A/B test showed a clear winner — but can you trust it? Learn why small samples produce misleading results and how to tell a real signal from lucky noise.",
+    "A hands-on guide to A/B testing with interactive visualizations. No assumed theory — just clear explanations, a running example, and a calculator you'll actually know how to use.",
 };
 
 export default function Section1Page() {
   return (
     <Container>
-      <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-        100 visitors. 15 signups vs. 10. Ship the winner, right?
+      <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
+        A/B Testing from first principles
       </h1>
+      <p className="mt-4 text-lg text-foreground/60">
+        The interactive guide that explains the math behind the numbers — so you
+        can run experiments with confidence, not guesswork.
+      </p>
 
-      <p className="mt-6 text-foreground/70">
+      <div className="mt-8 space-y-3 text-foreground/70">
+        <p>
+          Maybe you&apos;ve run an A/B test and aren&apos;t sure whether to
+          trust the result. Maybe you&apos;ve tried a sample-size calculator and
+          hit a wall of jargon — statistical power, significance thresholds,
+          baseline conversion rates — with no explanation of what any of it
+          means or where those numbers come from.
+        </p>
+        <p>
+          This guide starts from scratch. Each section builds on the last, with
+          interactive visuals that let you see the concepts in motion rather than
+          just read about them. By the end you&apos;ll understand exactly what
+          the calculator is doing and why — and you&apos;ll have the calculator
+          too.
+        </p>
+      </div>
+
+      <hr className="my-10 border-foreground/10" />
+
+      <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+        100 visitors. 15 signups vs. 10. Ship the winner, right?
+      </h2>
+
+      <p className="mt-4 text-foreground/70">
         Almost everyone makes this call. The numbers point one way, the
         conclusion feels obvious, and waiting longer just means leaving money on
         the table. But the obvious conclusion here is wrong — and the next few
