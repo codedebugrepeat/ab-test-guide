@@ -4,9 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { drawSample, countSample, binomialMean } from "@/maths/sampling";
 import { MarbleRow } from "./marble-row";
 import { JarIllustration, WJAR_W } from "./jar-illustration";
-
-const N = 10;
-const P = 0.2;
+import { N, P } from "./sampling-constants";
 const MAX_ROWS = 5;
 const FADE_DURATION = 250;
 

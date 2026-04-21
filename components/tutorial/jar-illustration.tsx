@@ -3,7 +3,7 @@
 
 // Wide horizontal jar with 4 rows of marbles and 3 sample ovals circled inside.
 
-const P = 0.2;
+import { P } from "./sampling-constants";
 
 export const WJAR_W = 420;
 const WJAR_H = 168;
