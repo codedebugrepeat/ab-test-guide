@@ -27,23 +27,23 @@ export function MarbleRow({
 
       {/* Marble dots */}
       <div className="flex shrink-0 gap-[3px]">
-        {marbles.map((converted, i) => (
+        {marbles.map((isHit, i) => (
           <div
             key={i}
             aria-hidden="true"
             className={`relative flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full text-[9px] font-bold ${isNew ? "animate-pop-in" : ""
-              } ${converted
+              } ${isHit
                 ? "bg-green-600 text-white"
                 : "border border-foreground/[0.18] text-foreground/25"
               }`}
           >
-            {converted && (
+            {isHit && (
               <span
                 aria-hidden="true"
                 className="pointer-events-none absolute left-[4px] top-[3px] h-[4px] w-[6px] -rotate-[30deg] rounded-full bg-white/40"
               />
             )}
-            {converted ? "✓" : "✗"}
+            {isHit ? "✓" : "✗"}
           </div>
         ))}
       </div>
