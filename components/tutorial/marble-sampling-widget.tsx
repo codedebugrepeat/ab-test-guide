@@ -10,7 +10,7 @@ const P = 0.2;
 const MAX_ROWS = 5;
 const FADE_DURATION = 250;
 
-type Sample = { id: number; marbles: boolean[] };
+type Sample = { id: number; marbles: boolean[]; fading?: boolean };
 
 // ── Stat card ─────────────────────────────────────────────────────────────────
 function StatCard({
@@ -56,7 +56,6 @@ export function MarbleSamplingWidget() {
   const [runningSum, setRunningSum] = useState(0);
   const [latestCount, setLatestCount] = useState<number | null>(null);
   const [liveText, setLiveText] = useState("");
-  const [fadingId, setFadingId] = useState<number | null>(null);
   const [newestId, setNewestId] = useState<number | null>(null);
   const fadeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -70,17 +69,19 @@ export function MarbleSamplingWidget() {
     const count = countSample(marbles);
     const nextId = ++drawCount.current;
 
-    if (samples.length >= MAX_ROWS) {
-      const oldestId = samples[samples.length - 1].id;
-      setFadingId(oldestId);
-      if (fadeTimeout.current) clearTimeout(fadeTimeout.current);
-      fadeTimeout.current = setTimeout(() => {
-        setSamples((s) => s.filter((r) => r.id !== oldestId));
-        setFadingId(null);
-      }, FADE_DURATION);
-    }
+    setSamples((prev) => {
+      const next = [{ id: nextId, marbles }, ...prev].slice(0, MAX_ROWS + 1);
+      if (prev.length >= MAX_ROWS) {
+        const lastIdx = next.length - 1;
+        return next.map((s, i) => i === lastIdx ? { ...s, fading: true } : s);
+      }
+      return next;
+    });
 
-    setSamples((prev) => [{ id: nextId, marbles }, ...prev].slice(0, MAX_ROWS + 1));
+    if (fadeTimeout.current) clearTimeout(fadeTimeout.current);
+    fadeTimeout.current = setTimeout(() => {
+      setSamples((s) => s.filter((r) => !r.fading));
+    }, FADE_DURATION);
     setRunningSum((prev) => prev + count);
     setLatestCount(count);
     setNewestId(nextId);
@@ -180,7 +181,7 @@ export function MarbleSamplingWidget() {
                   marbles={s.marbles}
                   sampleNumber={s.id}
                   isNew={s.id === newestId}
-                  isFading={s.id === fadingId}
+                  isFading={!!s.fading}
                 />
               ))}
 
