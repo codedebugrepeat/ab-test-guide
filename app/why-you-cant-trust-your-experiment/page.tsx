@@ -3,6 +3,7 @@ import { Container } from "@/components/container";
 import { CaseStudyCallout } from "@/components/tutorial/case-study-callout";
 import { MarbleSamplingWidget } from "@/components/tutorial/marble-sampling-widget";
 import { Quote } from "@/components/tutorial/quote";
+import { SectionFooter } from "@/components/tutorial/section-footer";
 
 export const metadata: Metadata = {
   title: "A/B Testing — From Zero to Confident",
@@ -128,10 +129,15 @@ export default function Section1Page() {
         </p>
       </div>
 
-      <p className="mt-8 text-foreground/50">
-        How many visitors <em>would</em> it take? That depends on a few
-        things — unpacked in the next sections.
-      </p>
+      <SectionFooter
+        summary={[
+          "Small samples produce noisy results — a 10 vs. 15 gap is common by chance alone.",
+          "You can't tell signal from noise without knowing how much data you actually need.",
+          "That's what the rest of this guide teaches.",
+        ]}
+        teaserText="Next: where does the number of visitors you need actually come from?"
+        nextLabel="Next: Sample size →"
+      />
     </Container>
   );
 }
