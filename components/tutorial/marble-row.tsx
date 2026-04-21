@@ -18,7 +18,7 @@ export function MarbleRow({
       className={`flex items-center gap-2 py-1 transition-opacity duration-200 ${isFading ? "opacity-0" : "opacity-100"
         }`}
     >
-      <span className="w-16 shrink-0 text-right text-xs text-foreground/50">
+      <span className="w-20 shrink-0 whitespace-nowrap text-right text-xs text-foreground/50">
         Sample {sampleNumber}
       </span>
 
@@ -52,7 +52,7 @@ export function MarbleRow({
         </div>
       </div>
 
-      <span className="w-10 shrink-0 text-xs tabular-nums text-foreground/60">
+      <span className="w-12 shrink-0 text-sm font-semibold tabular-nums text-foreground/80">
         {count} / 10
       </span>
     </div>
