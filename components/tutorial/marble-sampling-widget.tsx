@@ -53,6 +53,7 @@ function StatCard({
 export function MarbleSamplingWidget() {
   const [samples, setSamples] = useState<Sample[]>([]);
   const drawCount = useRef(0);
+  const [totalDraws, setTotalDraws] = useState(0);
   const [runningSum, setRunningSum] = useState(0);
   const [latestCount, setLatestCount] = useState<number | null>(null);
   const [liveText, setLiveText] = useState("");
@@ -62,7 +63,7 @@ export function MarbleSamplingWidget() {
   useEffect(() => () => { if (fadeTimeout.current) clearTimeout(fadeTimeout.current); }, []);
 
   const trueMean = binomialMean(N, P);
-  const currentMean = drawCount.current > 0 ? runningSum / drawCount.current : null;
+  const currentMean = totalDraws > 0 ? runningSum / totalDraws : null;
 
   function handleDraw() {
     const marbles = drawSample(N, P);
@@ -82,6 +83,7 @@ export function MarbleSamplingWidget() {
     fadeTimeout.current = setTimeout(() => {
       setSamples((s) => s.filter((r) => !r.fading));
     }, FADE_DURATION);
+    setTotalDraws(nextId);
     setRunningSum((prev) => prev + count);
     setLatestCount(count);
     setNewestId(nextId);
@@ -89,7 +91,7 @@ export function MarbleSamplingWidget() {
   }
 
   const buttonLabel =
-    drawCount.current === 0 ? "Draw a sample" : "Draw another sample";
+    totalDraws === 0 ? "Draw a sample" : "Draw another sample";
 
   return (
     <div className="flex flex-col items-center gap-5">
@@ -124,7 +126,7 @@ export function MarbleSamplingWidget() {
           <div className="mx-1 w-px self-stretch bg-foreground/[0.08]" />
           <StatCard
             label="your average"
-            sub={`${drawCount.current} samples`}
+            sub={`${totalDraws} samples`}
             value={currentMean !== null ? currentMean.toFixed(2) : "–"}
           />
           <div className="mx-1 w-px self-stretch bg-foreground/[0.08]" />
@@ -138,7 +140,7 @@ export function MarbleSamplingWidget() {
         {/* Full-width draw button */}
         <button
           onClick={handleDraw}
-          aria-label={`${buttonLabel}. ${drawCount.current} sample${drawCount.current !== 1 ? "s" : ""} drawn so far.`}
+          aria-label={`${buttonLabel}. ${totalDraws} sample${totalDraws !== 1 ? "s" : ""} drawn so far.`}
           className="mb-4 w-full rounded-[10px] bg-foreground py-3 text-sm font-semibold text-background transition-opacity hover:opacity-80 active:opacity-65"
         >
           {buttonLabel}
@@ -185,9 +187,9 @@ export function MarbleSamplingWidget() {
                 />
               ))}
 
-              {drawCount.current > MAX_ROWS && (
+              {totalDraws > MAX_ROWS && (
                 <p className="mt-2 text-center text-[10px] text-foreground/30">
-                  showing last {MAX_ROWS} of {drawCount.current} samples
+                  showing last {MAX_ROWS} of {totalDraws} samples
                 </p>
               )}
             </div>
