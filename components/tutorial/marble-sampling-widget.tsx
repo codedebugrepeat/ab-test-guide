@@ -63,6 +63,17 @@ export function MarbleSamplingWidget() {
   const trueMean = binomialMean(N, P);
   const currentMean = totalDraws > 0 ? runningSum / totalDraws : null;
 
+  function handleReset() {
+    if (fadeTimeout.current) clearTimeout(fadeTimeout.current);
+    drawCount.current = 0;
+    setSamples([]);
+    setTotalDraws(0);
+    setRunningSum(0);
+    setLatestCount(null);
+    setNewestId(null);
+    setLiveText("Samples cleared.");
+  }
+
   function handleDraw() {
     const marbles = drawSample(N, P);
     const count = countSample(marbles);
@@ -135,14 +146,25 @@ export function MarbleSamplingWidget() {
           />
         </div>
 
-        {/* Full-width draw button */}
-        <button
-          onClick={handleDraw}
-          aria-label={`${buttonLabel}. ${totalDraws} sample${totalDraws !== 1 ? "s" : ""} drawn so far.`}
-          className="mb-4 w-full rounded-[10px] bg-foreground py-3 text-sm font-semibold text-background transition-opacity hover:opacity-80 active:opacity-65"
-        >
-          {buttonLabel}
-        </button>
+        {/* Button row */}
+        <div className="mb-4 flex items-center gap-2">
+          <button
+            onClick={handleDraw}
+            aria-label={`${buttonLabel}. ${totalDraws} sample${totalDraws !== 1 ? "s" : ""} drawn so far.`}
+            className="flex-1 rounded-[10px] bg-foreground py-3 text-sm font-semibold text-background transition-opacity hover:opacity-80 active:opacity-65"
+          >
+            {buttonLabel}
+          </button>
+          {totalDraws > 0 && (
+            <button
+              onClick={handleReset}
+              aria-label="Clear all samples and start over"
+              className="rounded-[10px] border border-foreground/25 px-4 py-3 text-sm font-medium text-foreground/60 transition-opacity hover:opacity-80 active:opacity-65"
+            >
+              ↺ Start over
+            </button>
+          )}
+        </div>
 
         {/* Screen-reader live region */}
         <div aria-live="polite" className="sr-only">{liveText}</div>
