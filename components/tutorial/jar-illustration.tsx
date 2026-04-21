@@ -22,56 +22,78 @@ const WOVAL_W = WOVAL_COLS * WMSTEP - WMGAP + 10;
 const WOVAL_RY = 18;
 
 function seededRandom(seed: number) {
-    let s = seed;
-    return () => {
-        s = (s * 1664525 + 1013904223) & 0xffffffff;
-        return (s >>> 0) / 4294967296;
-    };
+  let s = seed;
+  return () => {
+    s = (s * 1664525 + 1013904223) & 0xffffffff;
+    return (s >>> 0) / 4294967296;
+  };
 }
 
 type WideMarble = { row: number; col: number; green: boolean };
 
 function generateWideMarbles(): WideMarble[] {
-    const rng = seededRandom(77);
-    const marbles: WideMarble[] = [];
-    for (let r = 0; r < WROWS; r++)
-        for (let c = 0; c < WCOLS; c++)
-            marbles.push({ row: r, col: c, green: rng() < P });
-    return marbles;
+  const rng = seededRandom(77);
+  const marbles: WideMarble[] = [];
+  for (let r = 0; r < WROWS; r++)
+    for (let c = 0; c < WCOLS; c++)
+      marbles.push({ row: r, col: c, green: rng() < P });
+  return marbles;
 }
 
 const WIDE_MARBLES = generateWideMarbles();
 
 export function JarIllustration() {
-    return (
-        <svg
+  return (
+    <svg
+      width={WJAR_W}
+      height={WJAR_H + 8}
+      viewBox={`0 0 ${WJAR_W} ${WJAR_H + 8}`}
+      style={{ display: "block" }}
+      aria-hidden="true"
+    >
+      <defs>
+        <clipPath id="wjar-clip">
+          <rect
+            x={0}
+            y={WJAR_RIM}
             width={WJAR_W}
-            height={WJAR_H + 8}
-            viewBox={`0 0 ${WJAR_W} ${WJAR_H + 8}`}
-            style={{ display: "block" }}
-            aria-hidden="true"
-        >
-            <defs>
-                <clipPath id="wjar-clip">
-                    <rect x={0} y={WJAR_RIM} width={WJAR_W} height={WJAR_H - WJAR_RIM} rx={10} />
-                </clipPath>
-            </defs>
+            height={WJAR_H - WJAR_RIM}
+            rx={10}
+          />
+        </clipPath>
+      </defs>
 
-            {/* Jar body */}
-            <rect
-                x={0} y={WJAR_RIM} width={WJAR_W} height={WJAR_H - WJAR_RIM}
-                rx={10} fill="#f0f0ee" stroke="rgba(23,23,23,0.14)" strokeWidth="1.5"
-            />
-            {/* Rim */}
-            <rect
-                x={0} y={0} width={WJAR_W} height={WJAR_RIM}
-                rx={4} fill="#e8e8e6" stroke="rgba(23,23,23,0.14)" strokeWidth="1.2"
-            />
-            <text
-                x={WJAR_W / 2} y={WJAR_RIM - 4} textAnchor="middle"
-                fontSize="8" fill="rgba(23,23,23,0.35)"
-                fontWeight="600" letterSpacing="0.12em"
-            >
+      {/* Jar body */}
+      <rect
+        x={0}
+        y={WJAR_RIM}
+        width={WJAR_W}
+        height={WJAR_H - WJAR_RIM}
+        rx={10}
+        fill="#f0f0ee"
+        stroke="rgba(23,23,23,0.14)"
+        strokeWidth="1.5"
+      />
+      {/* Rim */}
+      <rect
+        x={0}
+        y={0}
+        width={WJAR_W}
+        height={WJAR_RIM}
+        rx={4}
+        fill="#e8e8e6"
+        stroke="rgba(23,23,23,0.14)"
+        strokeWidth="1.2"
+      />
+      <text
+        x={WJAR_W / 2}
+        y={WJAR_RIM - 4}
+        textAnchor="middle"
+        fontSize="8"
+        fill="rgba(23,23,23,0.35)"
+        fontWeight="600"
+        letterSpacing="0.12em"
+      >
                 JAR
             </text>
 
