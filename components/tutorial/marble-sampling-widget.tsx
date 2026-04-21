@@ -52,7 +52,7 @@ function StatCard({
 // ── Main widget ───────────────────────────────────────────────────────────────
 export function MarbleSamplingWidget() {
   const [samples, setSamples] = useState<Sample[]>([]);
-  const [totalDraws, setTotalDraws] = useState(0);
+  const drawCount = useRef(0);
   const [allCounts, setAllCounts] = useState<number[]>([]);
   const [liveText, setLiveText] = useState("");
   const [fadingId, setFadingId] = useState<number | null>(null);
@@ -68,7 +68,7 @@ export function MarbleSamplingWidget() {
   function handleDraw() {
     const marbles = drawSample(N, P);
     const count = countSample(marbles);
-    const nextId = totalDraws + 1;
+    const nextId = ++drawCount.current;
 
     if (samples.length >= MAX_ROWS) {
       const oldestId = samples[samples.length - 1].id;
@@ -82,13 +82,12 @@ export function MarbleSamplingWidget() {
 
     setSamples((prev) => [{ id: nextId, marbles }, ...prev].slice(0, MAX_ROWS + 1));
     setAllCounts((prev) => [...prev, count]);
-    setTotalDraws(nextId);
     setNewestId(nextId);
     setLiveText(`Sample ${nextId}: ${count} out of ${N} green.`);
   }
 
   const buttonLabel =
-    totalDraws === 0 ? "Draw a sample" : "Draw another sample";
+    drawCount.current === 0 ? "Draw a sample" : "Draw another sample";
 
   return (
     <div className="flex flex-col items-center gap-5">
