@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { drawSample, countSample, binomialMean, sampleMean } from "@/maths/sampling";
 import { MarbleRow } from "./marble-row";
 import { JarIllustration, WJAR_W } from "./jar-illustration";
@@ -57,6 +57,9 @@ export function MarbleSamplingWidget() {
   const [liveText, setLiveText] = useState("");
   const [fadingId, setFadingId] = useState<number | null>(null);
   const [newestId, setNewestId] = useState<number | null>(null);
+  const fadeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => { if (fadeTimeout.current) clearTimeout(fadeTimeout.current); }, []);
 
   const trueMean = binomialMean(N, P);
   const currentMean = allCounts.length > 0 ? sampleMean(allCounts) : null;
@@ -70,7 +73,8 @@ export function MarbleSamplingWidget() {
     if (samples.length >= MAX_ROWS) {
       const oldestId = samples[samples.length - 1].id;
       setFadingId(oldestId);
-      setTimeout(() => {
+      if (fadeTimeout.current) clearTimeout(fadeTimeout.current);
+      fadeTimeout.current = setTimeout(() => {
         setSamples((s) => s.filter((r) => r.id !== oldestId));
         setFadingId(null);
       }, FADE_DURATION);
