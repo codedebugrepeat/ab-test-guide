@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { drawSample, countSample, binomialMean, sampleMean } from "@/maths/sampling";
+import { drawSample, countSample, binomialMean } from "@/maths/sampling";
 import { MarbleRow } from "./marble-row";
 import { JarIllustration, WJAR_W } from "./jar-illustration";
 
@@ -53,7 +53,8 @@ function StatCard({
 export function MarbleSamplingWidget() {
   const [samples, setSamples] = useState<Sample[]>([]);
   const drawCount = useRef(0);
-  const [allCounts, setAllCounts] = useState<number[]>([]);
+  const [runningSum, setRunningSum] = useState(0);
+  const [latestCount, setLatestCount] = useState<number | null>(null);
   const [liveText, setLiveText] = useState("");
   const [fadingId, setFadingId] = useState<number | null>(null);
   const [newestId, setNewestId] = useState<number | null>(null);
@@ -62,8 +63,7 @@ export function MarbleSamplingWidget() {
   useEffect(() => () => { if (fadeTimeout.current) clearTimeout(fadeTimeout.current); }, []);
 
   const trueMean = binomialMean(N, P);
-  const currentMean = allCounts.length > 0 ? sampleMean(allCounts) : null;
-  const latestCount = allCounts.length > 0 ? allCounts[allCounts.length - 1] : null;
+  const currentMean = drawCount.current > 0 ? runningSum / drawCount.current : null;
 
   function handleDraw() {
     const marbles = drawSample(N, P);
@@ -81,7 +81,8 @@ export function MarbleSamplingWidget() {
     }
 
     setSamples((prev) => [{ id: nextId, marbles }, ...prev].slice(0, MAX_ROWS + 1));
-    setAllCounts((prev) => [...prev, count]);
+    setRunningSum((prev) => prev + count);
+    setLatestCount(count);
     setNewestId(nextId);
     setLiveText(`Sample ${nextId}: ${count} out of ${N} green.`);
   }
@@ -122,7 +123,7 @@ export function MarbleSamplingWidget() {
           <div className="mx-1 w-px self-stretch bg-foreground/[0.08]" />
           <StatCard
             label="your average"
-            sub={`${totalDraws} samples`}
+            sub={`${drawCount.current} samples`}
             value={currentMean !== null ? currentMean.toFixed(2) : "–"}
           />
           <div className="mx-1 w-px self-stretch bg-foreground/[0.08]" />
@@ -136,7 +137,7 @@ export function MarbleSamplingWidget() {
         {/* Full-width draw button */}
         <button
           onClick={handleDraw}
-          aria-label={`${buttonLabel}. ${totalDraws} sample${totalDraws !== 1 ? "s" : ""} drawn so far.`}
+          aria-label={`${buttonLabel}. ${drawCount.current} sample${drawCount.current !== 1 ? "s" : ""} drawn so far.`}
           className="mb-4 w-full rounded-[10px] bg-foreground py-3 text-sm font-semibold text-background transition-opacity hover:opacity-80 active:opacity-65"
         >
           {buttonLabel}
@@ -183,9 +184,9 @@ export function MarbleSamplingWidget() {
                 />
               ))}
 
-              {totalDraws > MAX_ROWS && (
+              {drawCount.current > MAX_ROWS && (
                 <p className="mt-2 text-center text-[10px] text-foreground/30">
-                  showing last {MAX_ROWS} of {totalDraws} samples
+                  showing last {MAX_ROWS} of {drawCount.current} samples
                 </p>
               )}
             </div>
