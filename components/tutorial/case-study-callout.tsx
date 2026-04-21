@@ -2,7 +2,7 @@ export function CaseStudyCallout() {
   return (
     <div className="my-8 rounded-lg border border-foreground/15 bg-foreground/[0.03] px-6 py-5">
       <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-foreground/40">
-        Running example
+        Case study
       </p>
       <p className="mb-4 text-sm text-foreground/80">
         You run a SaaS. You want more signups. You A/B tested your signup button

@@ -39,18 +39,17 @@ export default function Section1Page() {
 
       <hr className="my-10 border-foreground/10" />
 
-      <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-        100 visitors. 15 signups vs. 10. Ship the winner, right?
+      <CaseStudyCallout />
+
+      <h2 className="mt-8 text-2xl font-semibold tracking-tight sm:text-3xl">
+        I ran the experiment and sign-ups went from 10 to 15. Ship version B,
+        right?
       </h2>
 
       <p className="mt-4 text-foreground/70">
-        Almost everyone makes this call. The numbers point one way, the
-        conclusion feels obvious, and waiting longer just means leaving money on
-        the table. But the obvious conclusion here is wrong — and the next few
-        minutes will show you exactly why.
+        This is a common call to make, and an intuitive one. But it&apos;s a
+        pitfall — and the next few minutes will show you exactly why.
       </p>
-
-      <CaseStudyCallout />
 
       <p className="mt-8 text-foreground/70">
         Imagine every potential visitor is a marble in a jar. Green means they
