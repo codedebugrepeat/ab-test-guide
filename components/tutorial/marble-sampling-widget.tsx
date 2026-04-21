@@ -126,7 +126,7 @@ export function MarbleSamplingWidget() {
           <div className="mx-1 w-px self-stretch bg-foreground/[0.08]" />
           <StatCard
             label="your average"
-            sub={`${totalDraws} samples`}
+            sub={`${totalDraws} sample${totalDraws !== 1 ? "s" : ""}`}
             value={currentMean !== null ? currentMean.toFixed(2) : "–"}
           />
           <div className="mx-1 w-px self-stretch bg-foreground/[0.08]" />
