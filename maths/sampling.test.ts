@@ -4,6 +4,7 @@ import {
   countSample,
   binomialMean,
   binomialSD,
+  sampleMean,
 } from "./sampling";
 
 describe("drawSample", () => {
@@ -49,6 +50,25 @@ describe("binomialMean", () => {
 describe("binomialSD", () => {
   it("returns sqrt(n*p*(1-p))", () => {
     expect(binomialSD(10, 0.2)).toBeCloseTo(1.2649, 3);
+  });
+});
+
+describe("sampleMean", () => {
+  it("returns the mean of an array of counts", () => {
+    expect(sampleMean([1, 3])).toBe(2);
+  });
+
+  it("handles a single value", () => {
+    expect(sampleMean([4])).toBe(4);
+  });
+
+  it("returns 0 for an empty array", () => {
+    expect(sampleMean([])).toBe(0);
+  });
+
+  it("rounds correctly for display at 1 decimal", () => {
+    expect(sampleMean([1, 2, 3]).toFixed(1)).toBe("2.0");
+    expect(sampleMean([0, 3]).toFixed(1)).toBe("1.5");
   });
 });
 

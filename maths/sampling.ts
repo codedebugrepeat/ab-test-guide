@@ -14,3 +14,8 @@ export function binomialMean(n: number, p: number): number {
 export function binomialSD(n: number, p: number): number {
   return Math.sqrt(n * p * (1 - p));
 }
+
+export function sampleMean(counts: number[]): number {
+  if (counts.length === 0) return 0;
+  return counts.reduce((a, b) => a + b, 0) / counts.length;
+}
