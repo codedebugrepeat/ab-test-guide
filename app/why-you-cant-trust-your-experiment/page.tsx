@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Container } from "@/components/container";
 import { CaseStudyCallout } from "@/components/tutorial/case-study-callout";
 import { MarbleSamplingWidget } from "@/components/tutorial/marble-sampling-widget";
+import { Quote } from "@/components/tutorial/quote";
 
 export const metadata: Metadata = {
   title: "A/B Testing — From Zero to Confident",
@@ -66,9 +67,13 @@ export default function Section1Page() {
         <p>
           What you just saw is <strong>sampling error</strong> — the natural
           spread in outcomes you get when drawing a small random sample, even
-          when nothing about the jar changed. The jar&apos;s truth didn&apos;t
-          move; your draws did.
+          when nothing about the jar changed.
         </p>
+      </div>
+
+      <Quote>The jar&apos;s truth didn&apos;t move. Your draws did.</Quote>
+
+      <div className="space-y-4 text-foreground/70">
         <p>
           At 10 marbles per draw, the count bounces around considerably.
           Getting 1 when the expected value is 2 is common. Getting 3 is common
@@ -108,6 +113,14 @@ export default function Section1Page() {
           like 10 vs. 15 by pure chance at this sample size. Random variation at
           small scales is that large.
         </p>
+      </div>
+
+      <Quote>
+        At 100 visitors per group, even two <em>identical</em> versions would
+        routinely show a gap like this by pure chance.
+      </Quote>
+
+      <div className="space-y-4 text-foreground/70">
         <p>
           That means you cannot tell, from 100 visitors per group, whether B is
           genuinely better or you got lucky. Shipping on this evidence is a coin
