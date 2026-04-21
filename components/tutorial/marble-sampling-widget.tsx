@@ -246,17 +246,20 @@ export function MarbleSamplingWidget() {
             >
               Draw 100 samples
             </button>
-            {totalDraws > 0 && (
+          </div>
+          {/* Reset row */}
+          {totalDraws > 0 && (
+            <div className="flex justify-end">
               <button
                 onClick={handleReset}
                 disabled={isAnimating}
                 aria-label="Clear all samples and start over"
-                className="rounded-[10px] border border-foreground/25 px-4 py-2.5 text-sm font-medium text-foreground/60 transition-opacity hover:opacity-80 active:opacity-65 disabled:opacity-40"
+                className="rounded-lg border border-foreground/20 px-3 py-1.5 text-xs font-medium text-foreground/50 transition-opacity hover:opacity-80 active:opacity-65 disabled:opacity-40"
               >
                 ↺ Start over
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         {/* Screen-reader live region */}
