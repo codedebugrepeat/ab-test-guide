@@ -4,7 +4,6 @@ import { useState, useRef, useEffect } from "react";
 import { drawSample, countSample, binomialMean } from "@/maths/sampling";
 import { MarbleRow } from "./marble-row";
 import { JarIllustration, WJAR_W } from "./jar-illustration";
-import { newestFirst } from "./widget-utils";
 import { N, P } from "./sampling-constants";
 const MAX_ROWS = 5;
 const FADE_DURATION = 250;
@@ -58,7 +57,6 @@ export function MarbleSamplingWidget() {
   const [liveText, setLiveText] = useState("");
   const [newestId, setNewestId] = useState<number | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [isSnapping, setIsSnapping] = useState(false);
   const fadeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const bulkTimeouts = useRef<ReturnType<typeof setTimeout>[]>([]);
 
@@ -75,7 +73,6 @@ export function MarbleSamplingWidget() {
     bulkTimeouts.current = [];
     if (fadeTimeout.current) clearTimeout(fadeTimeout.current);
     setIsAnimating(false);
-    setIsSnapping(false);
     drawCount.current = 0;
     setSamples([]);
     setTotalDraws(0);
@@ -92,30 +89,12 @@ export function MarbleSamplingWidget() {
       return { id, marbles, count: countSample(marbles) };
     });
 
-    const stagger = Math.round(1000 / n);
-    const snap = stagger < 50;
+    // Total animation ~1 s for n=10, ~3.2 s for n=100 (square-root scale).
+    const stagger = Math.round(1000 * Math.sqrt(n / 10) / n);
 
     setIsAnimating(true);
     bulkTimeouts.current.forEach(clearTimeout);
     bulkTimeouts.current = [];
-
-    if (snap) {
-      const last = newSamples[newSamples.length - 1];
-      const totalNew = newSamples.reduce((sum, s) => sum + s.count, 0);
-      setIsSnapping(true);
-      const t = setTimeout(() => {
-        setSamples(newestFirst(newSamples, MAX_ROWS).map((s) => ({ id: s.id, marbles: s.marbles })));
-        setTotalDraws(last.id);
-        setRunningSum((prev) => prev + totalNew);
-        setLatestCount(last.count);
-        setNewestId(null);
-        setLiveText(`${n} samples drawn. Showing most recent ${MAX_ROWS}.`);
-        setIsSnapping(false);
-        setIsAnimating(false);
-      }, 400);
-      bulkTimeouts.current.push(t);
-      return;
-    }
 
     newSamples.forEach((sample, index) => {
       const t = setTimeout(() => {
@@ -265,10 +244,9 @@ export function MarbleSamplingWidget() {
         {/* Screen-reader live region */}
         <div aria-live="polite" className="sr-only">{liveText}</div>
 
-        {/* Sample rows */}
-        <div className={`flex flex-col items-center transition-opacity duration-200 ${isSnapping ? "opacity-20" : "opacity-100"}`}>
+        <div className={`flex flex-col items-center`}>
           {samples.length === 0 ? (
-            <div className="flex justify-center gap-[3px] py-3">
+            <div className="flex w-full items-center justify-center gap-[3px]">
               {Array.from({ length: N }, (_, i) => (
                 <div
                   key={i}
@@ -293,25 +271,29 @@ export function MarbleSamplingWidget() {
                 <span className="w-9 pl-0.5 text-[10px] font-semibold text-foreground/25">hits</span>
               </div>
 
-              {samples.map((s) => (
-                <MarbleRow
-                  key={s.id}
-                  marbles={s.marbles}
-                  sampleNumber={s.id}
-                  isNew={s.id === newestId}
-                  isFading={!!s.fading}
-                />
-              ))}
+              {/* overflow-hidden clips the fading-out row so it never adds height */}
+              <div className="max-h-[150px] overflow-hidden">
+                {samples.map((s) => (
+                  <MarbleRow
+                    key={s.id}
+                    marbles={s.marbles}
+                    sampleNumber={s.id}
+                    isNew={s.id === newestId}
+                    isFading={!!s.fading}
+                  />
+                ))}
+              </div>
 
               {totalDraws > MAX_ROWS && (
-                <p className="mt-2 text-center text-[10px] text-foreground/30">
-                  showing last {MAX_ROWS} of {totalDraws} samples
+                <p className="mt-3 rounded-md px-3 py-2 text-center text-[12px] font-medium bg-foreground/[0.06] text-foreground/60">
+                  Showing the {MAX_ROWS} most recent — {totalDraws} drawn in total
                 </p>
               )}
             </div>
-          )}
-        </div>
-      </div>
-    </div>
+          )
+          }
+        </div >
+      </div >
+    </div >
   );
 }
