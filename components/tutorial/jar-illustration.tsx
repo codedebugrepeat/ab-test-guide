@@ -1,3 +1,6 @@
+
+"use client";
+
 // Wide horizontal jar with 4 rows of marbles and 3 sample ovals circled inside.
 
 const P = 0.2;

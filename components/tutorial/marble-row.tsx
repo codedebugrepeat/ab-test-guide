@@ -1,3 +1,4 @@
+"use client";
 import { countSample } from "@/maths/sampling";
 
 type Props = {
