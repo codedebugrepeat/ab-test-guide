@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { drawSample, countSample, binomialMean } from "@/maths/sampling";
 import { MarbleRow } from "./marble-row";
 import { JarIllustration, WJAR_W } from "./jar-illustration";
+import { newestFirst } from "./widget-utils";
 import { N, P } from "./sampling-constants";
 const MAX_ROWS = 5;
 const FADE_DURATION = 250;
@@ -57,6 +58,7 @@ export function MarbleSamplingWidget() {
   const [liveText, setLiveText] = useState("");
   const [newestId, setNewestId] = useState<number | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isSnapping, setIsSnapping] = useState(false);
   const fadeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const bulkTimeouts = useRef<ReturnType<typeof setTimeout>[]>([]);
 
@@ -73,6 +75,7 @@ export function MarbleSamplingWidget() {
     bulkTimeouts.current = [];
     if (fadeTimeout.current) clearTimeout(fadeTimeout.current);
     setIsAnimating(false);
+    setIsSnapping(false);
     drawCount.current = 0;
     setSamples([]);
     setTotalDraws(0);
@@ -82,16 +85,37 @@ export function MarbleSamplingWidget() {
     setLiveText("Samples cleared.");
   }
 
-  function handleDraw10() {
-    const newSamples = Array.from({ length: 10 }, () => {
+  function handleDrawN(n: number) {
+    const newSamples = Array.from({ length: n }, () => {
       const id = ++drawCount.current;
       const marbles = drawSample(N, P);
       return { id, marbles, count: countSample(marbles) };
     });
 
+    const stagger = Math.round(1000 / n);
+    const snap = stagger < 50;
+
     setIsAnimating(true);
     bulkTimeouts.current.forEach(clearTimeout);
     bulkTimeouts.current = [];
+
+    if (snap) {
+      const last = newSamples[newSamples.length - 1];
+      const totalNew = newSamples.reduce((sum, s) => sum + s.count, 0);
+      setIsSnapping(true);
+      const t = setTimeout(() => {
+        setSamples(newestFirst(newSamples, MAX_ROWS).map((s) => ({ id: s.id, marbles: s.marbles })));
+        setTotalDraws(last.id);
+        setRunningSum((prev) => prev + totalNew);
+        setLatestCount(last.count);
+        setNewestId(null);
+        setLiveText(`${n} samples drawn. Showing most recent ${MAX_ROWS}.`);
+        setIsSnapping(false);
+        setIsAnimating(false);
+      }, 400);
+      bulkTimeouts.current.push(t);
+      return;
+    }
 
     newSamples.forEach((sample, index) => {
       const t = setTimeout(() => {
@@ -108,17 +132,14 @@ export function MarbleSamplingWidget() {
         setLatestCount(sample.count);
         setLiveText(`Sample ${sample.id}: ${sample.count} out of ${N} green.`);
 
-        const ft = setTimeout(
-          () => setSamples((s) => s.filter((r) => !r.fading)),
-          FADE_DURATION
-        );
+        const ft = setTimeout(() => setSamples((s) => s.filter((r) => !r.fading)), FADE_DURATION);
         bulkTimeouts.current.push(ft);
 
         if (index === newSamples.length - 1) {
           const done = setTimeout(() => setIsAnimating(false), 800);
           bulkTimeouts.current.push(done);
         }
-      }, index * 100);
+      }, index * stagger);
 
       bulkTimeouts.current.push(t);
     });
@@ -210,12 +231,20 @@ export function MarbleSamplingWidget() {
           {/* Secondary row */}
           <div className="flex items-center gap-2">
             <button
-              onClick={handleDraw10}
+              onClick={() => handleDrawN(10)}
               disabled={isAnimating}
               aria-label="Draw 10 samples at once"
               className="flex-1 rounded-[10px] bg-foreground/10 py-2.5 text-sm font-semibold text-foreground transition-opacity hover:opacity-80 active:opacity-65 disabled:opacity-40"
             >
               Draw 10 samples
+            </button>
+            <button
+              onClick={() => handleDrawN(100)}
+              disabled={isAnimating}
+              aria-label="Draw 100 samples at once"
+              className="flex-1 rounded-[10px] bg-foreground/10 py-2.5 text-sm font-semibold text-foreground transition-opacity hover:opacity-80 active:opacity-65 disabled:opacity-40"
+            >
+              Draw 100 samples
             </button>
             {totalDraws > 0 && (
               <button
@@ -234,7 +263,7 @@ export function MarbleSamplingWidget() {
         <div aria-live="polite" className="sr-only">{liveText}</div>
 
         {/* Sample rows */}
-        <div className="flex flex-col items-center">
+        <div className={`flex flex-col items-center transition-opacity duration-200 ${isSnapping ? "opacity-20" : "opacity-100"}`}>
           {samples.length === 0 ? (
             <div className="flex justify-center gap-[3px] py-3">
               {Array.from({ length: N }, (_, i) => (
