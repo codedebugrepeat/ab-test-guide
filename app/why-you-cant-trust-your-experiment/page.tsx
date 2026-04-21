@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/container";
 import { CaseStudyCallout } from "@/components/tutorial/case-study-callout";
+import { MarbleSamplingWidget } from "@/components/tutorial/marble-sampling-widget";
 
 export const metadata: Metadata = {
   title: "A/B Testing — From Zero to Confident",
@@ -58,13 +59,8 @@ export default function Section1Page() {
         sample of 10 and count the green ones.
       </p>
 
-      <div
-        className="mt-6 flex min-h-[180px] items-center justify-center rounded-lg border border-dashed border-foreground/30"
-        aria-label="Marble sampling widget — coming soon"
-      >
-        <span className="text-sm text-foreground/40">
-          Marble sampling widget — coming soon
-        </span>
+      <div className="mt-6">
+        <MarbleSamplingWidget />
       </div>
 
       <div className="mt-6 space-y-4 text-foreground/70">

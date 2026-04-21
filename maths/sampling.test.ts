@@ -1,9 +1,10 @@
 import { describe, it, expect } from "vitest";
 import {
   drawSample,
-  drawCount,
+  countSample,
   binomialMean,
   binomialSD,
+  sampleMean,
 } from "./sampling";
 
 describe("drawSample", () => {
@@ -22,10 +23,18 @@ describe("drawSample", () => {
   });
 });
 
-describe("drawSampleCount", () => {
-  it("count is always between 0 and n", () => {
+describe("countSample", () => {
+  it("counts the true values in an array", () => {
+    expect(countSample([true, false, true, false, false])).toBe(2);
+  });
+
+  it("returns 0 for all-false array", () => {
+    expect(countSample([false, false, false])).toBe(0);
+  });
+
+  it("result is always between 0 and n when used with drawSample", () => {
     for (let i = 0; i < 100; i++) {
-      const count = drawCount(10, 0.2);
+      const count = countSample(drawSample(10, 0.2));
       expect(count).toBeGreaterThanOrEqual(0);
       expect(count).toBeLessThanOrEqual(10);
     }
@@ -44,9 +53,28 @@ describe("binomialSD", () => {
   });
 });
 
+describe("sampleMean", () => {
+  it("returns the mean of an array of counts", () => {
+    expect(sampleMean([1, 3])).toBe(2);
+  });
+
+  it("handles a single value", () => {
+    expect(sampleMean([4])).toBe(4);
+  });
+
+  it("returns 0 for an empty array", () => {
+    expect(sampleMean([])).toBe(0);
+  });
+
+  it("rounds correctly for display at 1 decimal", () => {
+    expect(sampleMean([1, 2, 3]).toFixed(1)).toBe("2.0");
+    expect(sampleMean([0, 3]).toFixed(1)).toBe("1.5");
+  });
+});
+
 describe("statistical smoke test", () => {
   it("empirical mean of 1000 samples is within ±0.2 of 2.0", () => {
-    const counts = Array.from({ length: 1000 }, () => drawCount(10, 0.2));
+    const counts = Array.from({ length: 1000 }, () => countSample(drawSample(10, 0.2)));
     const mean = counts.reduce((a, b) => a + b, 0) / counts.length;
     expect(mean).toBeGreaterThan(1.8);
     expect(mean).toBeLessThan(2.2);
