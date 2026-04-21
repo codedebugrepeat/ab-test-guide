@@ -3,23 +3,71 @@
 import { useState } from "react";
 import { drawSample, countSample, binomialMean, sampleMean } from "@/maths/sampling";
 import { MarbleRow } from "./marble-row";
+import { JarIllustration } from "./jar-illustration";
 
 const N = 10;
 const P = 0.2;
-const MAX_ROWS = 12;
-const FADE_DURATION = 200;
+const MAX_ROWS = 5;
+const FADE_DURATION = 250;
 
 type Sample = { id: number; marbles: boolean[] };
 
+// ── Stat card ─────────────────────────────────────────────────────────────────
+function StatCard({
+  label,
+  value,
+  sub,
+  highlight = false,
+}: {
+  label: string;
+  value: string;
+  sub?: string | null;
+  highlight?: boolean;
+}) {
+  return (
+    <div
+      className={`flex min-w-[90px] flex-col items-center gap-0.5 rounded-[10px] border px-5 py-2.5 ${highlight
+        ? "border-green-600/20 bg-green-600/[0.06]"
+        : "border-transparent"
+        }`}
+    >
+      <span
+        className={`text-[30px] font-bold leading-none tabular-nums tracking-tight ${highlight ? "text-green-600" : "text-foreground"
+          }`}
+      >
+        {value}
+      </span>
+      <span className="text-center text-[11px] leading-snug text-foreground/45">
+        {label}
+      </span>
+      {sub && (
+        <span className="mt-0.5 text-[10px] text-foreground/30">{sub}</span>
+      )}
+    </div>
+  );
+}
+
+// ── Main widget ───────────────────────────────────────────────────────────────
 export function MarbleSamplingWidget() {
   const [samples, setSamples] = useState<Sample[]>([]);
   const [totalDraws, setTotalDraws] = useState(0);
   const [allCounts, setAllCounts] = useState<number[]>([]);
   const [liveText, setLiveText] = useState("");
   const [fadingId, setFadingId] = useState<number | null>(null);
+  const [newestId, setNewestId] = useState<number | null>(null);
 
   const trueMean = binomialMean(N, P);
-  const currentMean = sampleMean(allCounts);
+  const currentMean = allCounts.length > 0 ? sampleMean(allCounts) : null;
+  const latestCount = allCounts.length > 0 ? allCounts[allCounts.length - 1] : null;
+
+  const meanDiff =
+    currentMean !== null ? currentMean - trueMean : null;
+  const diffLabel =
+    meanDiff !== null
+      ? meanDiff >= 0
+        ? `+${meanDiff.toFixed(2)} above true avg`
+        : `${meanDiff.toFixed(2)} below true avg`
+      : null;
 
   function handleDraw() {
     const marbles = drawSample(N, P);
@@ -38,91 +86,114 @@ export function MarbleSamplingWidget() {
     setSamples((prev) => [{ id: nextId, marbles }, ...prev].slice(0, MAX_ROWS + 1));
     setAllCounts((prev) => [...prev, count]);
     setTotalDraws(nextId);
-    setLiveText(`Sample ${nextId}: ${count} out of ${N} converted.`);
+    setNewestId(nextId);
+    setLiveText(`Sample ${nextId}: ${count} out of ${N} green.`);
   }
 
   const buttonLabel =
-    totalDraws === 0
-      ? "Draw a sample — see what you get"
-      : totalDraws >= 3
-        ? "Draw another"
-        : "Draw a sample";
+    totalDraws === 0 ? "Draw a sample" : "Draw another sample";
 
   return (
-    <div className="w-full rounded-lg border border-foreground/15 bg-foreground/[0.02] px-6 py-5">
-      {/* Prominent stats */}
-      <div className="mb-5 flex gap-8 border-b border-foreground/10 pb-5">
-        <div className="flex flex-col gap-1">
-          <span className="text-3xl font-bold leading-none tabular-nums">
-            {trueMean.toFixed(1)}
-          </span>
-          <span className="text-xs text-foreground/50">jar&apos;s true average</span>
-        </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-3xl font-bold leading-none tabular-nums">
-            {allCounts.length > 0 ? currentMean.toFixed(1) : "–"}
-          </span>
-          <span className="text-xs text-foreground/50">
-            {allCounts.length > 0 ? "your average so far" : "draw to see your average"}
-          </span>
-        </div>
+    <div className="w-full rounded-lg border border-foreground/10 bg-background px-8 py-7 shadow-sm">
+
+      {/* ── Illustration ── */}
+      <div className="mb-5 flex flex-col items-center">
+        <p className="mb-1 text-base font-bold tracking-tight">
+          1 in 5 marbles is green (true rate 20%)
+        </p>
+        <p className="mb-3.5 text-[12px] text-foreground/50">
+          We pick 10 marbles at random each time.
+        </p>
+        <JarIllustration />
       </div>
 
-      <div className="mb-4 inline-flex items-center rounded-full border border-foreground/15 bg-foreground/[0.04] px-3 py-1 text-xs text-foreground/50">
-        Every 1 in 5 marbles in this jar is green — a true rate of 20%.
+      {/* ── Stats ── */}
+      <div className="mb-5 flex items-stretch justify-center gap-2 border-y border-foreground/[0.08] py-3.5">
+        <StatCard label="true average" value={trueMean.toFixed(1)} />
+        <div className="mx-1 w-px self-stretch bg-foreground/[0.08]" />
+        <StatCard
+          label="your average so far"
+          value={currentMean !== null ? currentMean.toFixed(2) : "–"}
+          sub={diffLabel}
+        />
+        <div className="mx-1 w-px self-stretch bg-foreground/[0.08]" />
+        <StatCard
+          label="latest sample"
+          value={latestCount !== null ? `${latestCount}/${N}` : "–"}
+          highlight={latestCount !== null}
+        />
       </div>
 
-      <div>
+      {/* ── Draw button ── */}
+      <div className="mb-5 flex justify-center">
         <button
           onClick={handleDraw}
           aria-label={`${buttonLabel}. ${totalDraws} sample${totalDraws !== 1 ? "s" : ""} drawn so far.`}
-          className="rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-80 active:opacity-70"
+          className="rounded-md bg-foreground px-7 py-2.5 text-sm font-semibold text-background transition-opacity hover:opacity-80 active:opacity-65"
         >
           {buttonLabel}
         </button>
       </div>
 
+      {/* ── Screen-reader live region ── */}
       <div aria-live="polite" className="sr-only">
         {liveText}
       </div>
 
-      <div className="mt-5">
+      {/* ── Sample rows ── */}
+      <div className="min-h-[240px]">
         {samples.length === 0 ? (
-          <EmptyState />
-        ) : (
-          <div className="space-y-0.5">
-            {samples.map((s, i) => (
-              <MarbleRow
-                key={s.id}
-                marbles={s.marbles}
-                sampleNumber={s.id}
-                isFirst={i === 0}
-                isFading={s.id === fadingId}
+          <div className="flex justify-center gap-[3px] py-5">
+            {Array.from({ length: N }, (_, i) => (
+              <div
+                key={i}
+                aria-hidden="true"
+                className="h-[22px] w-[22px] rounded-full border border-dashed border-foreground/15"
               />
             ))}
           </div>
+        ) : (
+          <div className="flex flex-col items-center">
+            {/* Fixed-width inner block (label 68 + gap 10 + marbles 247 + gap 10 + count 36 = 371px) */}
+            <div className="w-[371px]">
+              {/* Column header */}
+              <div className="mb-1 flex items-center gap-[10px] border-b border-foreground/[0.08] pb-1.5">
+                <span className="w-[68px] shrink-0" />
+                <div className="flex shrink-0 gap-[3px]">
+                  {Array.from({ length: N }, (_, i) => (
+                    <div
+                      key={i}
+                      className="w-[22px] text-center text-[9px] font-semibold text-foreground/25"
+                    >
+                      {i + 1}
+                    </div>
+                  ))}
+                </div>
+                <span className="w-9 pl-0.5 text-[10px] font-semibold text-foreground/25">
+                  hits
+                </span>
+              </div>
+
+              {/* Rows */}
+              {samples.map((s) => (
+                <MarbleRow
+                  key={s.id}
+                  marbles={s.marbles}
+                  sampleNumber={s.id}
+                  isNew={s.id === newestId}
+                  isFading={s.id === fadingId}
+                />
+              ))}
+
+              {totalDraws > MAX_ROWS && (
+                <p className="mt-2 text-center text-[10px] text-foreground/30">
+                  showing last {MAX_ROWS} of {totalDraws} samples
+                </p>
+              )}
+            </div>
+          </div>
         )}
       </div>
-    </div>
-  );
-}
-
-function EmptyState() {
-  return (
-    <div className="flex items-center gap-2 py-1">
-      <span className="w-20 shrink-0" />
-      <div className="flex gap-1">
-        {Array.from({ length: N }, (_, i) => (
-          <div
-            key={i}
-            aria-hidden="true"
-            className="h-5 w-5 rounded-full border border-dashed border-foreground/20"
-          />
-        ))}
-      </div>
-      <span className="ml-2 text-xs text-foreground/30">
-        click the button to draw your first sample
-      </span>
     </div>
   );
 }

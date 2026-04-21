@@ -1,59 +1,58 @@
+import { countSample } from "@/maths/sampling";
+
 type Props = {
   marbles: boolean[];
   sampleNumber: number;
-  isFirst?: boolean;
+  isNew?: boolean;
   isFading?: boolean;
 };
 
 export function MarbleRow({
   marbles,
   sampleNumber,
-  isFirst = false,
+  isNew = false,
   isFading = false,
 }: Props) {
-  const count = marbles.filter(x => x === true).length;
-
+  const count = countSample(marbles);
   return (
     <div
-      className={`flex items-center gap-2 py-1 transition-opacity duration-200 ${isFading ? "opacity-0" : "opacity-100"
-        }`}
+      className={`flex items-center gap-[10px] py-1 transition-opacity duration-200 ${isFading ? "opacity-0" : "opacity-100"
+        } ${isNew ? "animate-slide-down" : ""}`}
     >
-      <span className="w-20 shrink-0 whitespace-nowrap text-right text-xs text-foreground/50">
-        Sample {sampleNumber}
+      {/* Label */}
+      <span className="w-[68px] shrink-0 whitespace-nowrap text-right text-[11px] text-foreground/40 tabular-nums">
+        #{sampleNumber}
       </span>
 
-      {/* Marble strip — relative so the mean line can be absolutely positioned */}
-      <div className="relative shrink-0">
-        <div
-          className="pointer-events-none absolute inset-y-0 border-l border-dashed border-foreground/40 opacity-70"
-          style={{ left: "20%" }}
-          aria-hidden="true"
-        >
-          {isFirst && (
-            <span className="absolute bottom-full left-1 whitespace-nowrap pb-0.5 text-[10px] text-foreground/40">
-              average: 2
-            </span>
-          )}
-        </div>
-
-        <div className="flex gap-1">
-          {marbles.map((converted, i) => (
-            <div
-              key={i}
-              aria-hidden="true"
-              className={`flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-bold ${converted
-                  ? "bg-green-500 text-white"
-                  : "border border-foreground/20 text-foreground/30"
-                }`}
-            >
-              {converted ? "✓" : "✗"}
-            </div>
-          ))}
-        </div>
+      {/* Marble dots */}
+      <div className="flex shrink-0 gap-[3px]">
+        {marbles.map((converted, i) => (
+          <div
+            key={i}
+            aria-hidden="true"
+            className={`relative flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full text-[9px] font-bold ${isNew ? "animate-pop-in" : ""
+              } ${converted
+                ? "bg-green-600 text-white"
+                : "border border-foreground/[0.18] text-foreground/25"
+              }`}
+          >
+            {converted && (
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute left-[4px] top-[3px] h-[4px] w-[6px] -rotate-[30deg] rounded-full bg-white/40"
+              />
+            )}
+            {converted ? "✓" : "✗"}
+          </div>
+        ))}
       </div>
 
-      <span className="w-12 shrink-0 text-sm font-semibold tabular-nums text-foreground/80">
-        {count} / 10
+      {/* Hit count */}
+      <span
+        className={`w-9 shrink-0 text-[13px] font-semibold tabular-nums ${count > 0 ? "text-green-600" : "text-foreground/35"
+          }`}
+      >
+        {count}/{marbles.length}
       </span>
     </div>
   );
