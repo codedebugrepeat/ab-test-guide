@@ -56,15 +56,23 @@ export function MarbleSamplingWidget() {
   const [latestCount, setLatestCount] = useState<number | null>(null);
   const [liveText, setLiveText] = useState("");
   const [newestId, setNewestId] = useState<number | null>(null);
+  const [isAnimating, setIsAnimating] = useState(false);
   const fadeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const bulkTimeouts = useRef<ReturnType<typeof setTimeout>[]>([]);
 
-  useEffect(() => () => { if (fadeTimeout.current) clearTimeout(fadeTimeout.current); }, []);
+  useEffect(() => () => {
+    if (fadeTimeout.current) clearTimeout(fadeTimeout.current);
+    bulkTimeouts.current.forEach(clearTimeout);
+  }, []);
 
   const trueMean = binomialMean(N, P);
   const currentMean = totalDraws > 0 ? runningSum / totalDraws : null;
 
   function handleReset() {
+    bulkTimeouts.current.forEach(clearTimeout);
+    bulkTimeouts.current = [];
     if (fadeTimeout.current) clearTimeout(fadeTimeout.current);
+    setIsAnimating(false);
     drawCount.current = 0;
     setSamples([]);
     setTotalDraws(0);
@@ -72,6 +80,48 @@ export function MarbleSamplingWidget() {
     setLatestCount(null);
     setNewestId(null);
     setLiveText("Samples cleared.");
+  }
+
+  function handleDraw10() {
+    const newSamples = Array.from({ length: 10 }, () => {
+      const id = ++drawCount.current;
+      const marbles = drawSample(N, P);
+      return { id, marbles, count: countSample(marbles) };
+    });
+
+    setIsAnimating(true);
+    bulkTimeouts.current.forEach(clearTimeout);
+    bulkTimeouts.current = [];
+
+    newSamples.forEach((sample, index) => {
+      const t = setTimeout(() => {
+        setSamples((prev) => {
+          const next = [{ id: sample.id, marbles: sample.marbles }, ...prev].slice(0, MAX_ROWS + 1);
+          if (prev.length >= MAX_ROWS) {
+            return next.map((s, i) => i === next.length - 1 ? { ...s, fading: true } : s);
+          }
+          return next;
+        });
+        setNewestId(sample.id);
+        setTotalDraws(sample.id);
+        setRunningSum((prev) => prev + sample.count);
+        setLatestCount(sample.count);
+        setLiveText(`Sample ${sample.id}: ${sample.count} out of ${N} green.`);
+
+        const ft = setTimeout(
+          () => setSamples((s) => s.filter((r) => !r.fading)),
+          FADE_DURATION
+        );
+        bulkTimeouts.current.push(ft);
+
+        if (index === newSamples.length - 1) {
+          const done = setTimeout(() => setIsAnimating(false), 800);
+          bulkTimeouts.current.push(done);
+        }
+      }, index * 100);
+
+      bulkTimeouts.current.push(t);
+    });
   }
 
   function handleDraw() {
@@ -146,24 +196,38 @@ export function MarbleSamplingWidget() {
           />
         </div>
 
-        {/* Button row */}
-        <div className="mb-4 flex items-center gap-2">
+        {/* Buttons */}
+        <div className="mb-4 flex flex-col gap-2">
+          {/* Primary */}
           <button
             onClick={handleDraw}
+            disabled={isAnimating}
             aria-label={`${buttonLabel}. ${totalDraws} sample${totalDraws !== 1 ? "s" : ""} drawn so far.`}
-            className="flex-1 rounded-[10px] bg-foreground py-3 text-sm font-semibold text-background transition-opacity hover:opacity-80 active:opacity-65"
+            className="w-full rounded-[10px] bg-foreground py-3 text-sm font-semibold text-background transition-opacity hover:opacity-80 active:opacity-65 disabled:opacity-40"
           >
             {buttonLabel}
           </button>
-          {totalDraws > 0 && (
+          {/* Secondary row */}
+          <div className="flex items-center gap-2">
             <button
-              onClick={handleReset}
-              aria-label="Clear all samples and start over"
-              className="rounded-[10px] border border-foreground/25 px-4 py-3 text-sm font-medium text-foreground/60 transition-opacity hover:opacity-80 active:opacity-65"
+              onClick={handleDraw10}
+              disabled={isAnimating}
+              aria-label="Draw 10 samples at once"
+              className="flex-1 rounded-[10px] bg-foreground/10 py-2.5 text-sm font-semibold text-foreground transition-opacity hover:opacity-80 active:opacity-65 disabled:opacity-40"
             >
-              ↺ Start over
+              Draw 10 samples
             </button>
-          )}
+            {totalDraws > 0 && (
+              <button
+                onClick={handleReset}
+                disabled={isAnimating}
+                aria-label="Clear all samples and start over"
+                className="rounded-[10px] border border-foreground/25 px-4 py-2.5 text-sm font-medium text-foreground/60 transition-opacity hover:opacity-80 active:opacity-65 disabled:opacity-40"
+              >
+                ↺ Start over
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Screen-reader live region */}
