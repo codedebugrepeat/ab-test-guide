@@ -1,6 +1,5 @@
 // Wide horizontal jar with 4 rows of marbles and 3 sample ovals circled inside.
 
-const N = 10;
 const P = 0.2;
 
 export const WJAR_W = 420;
@@ -17,8 +16,6 @@ const WROW_YS = [42, 78, 114, 150];
 // Oval circles cols 0–9 of each row
 const WOVAL_COLS = 10;
 const WOVAL_W = WOVAL_COLS * WMSTEP - WMGAP + 10;
-const WOVAL_CX = WSTART_X + (WOVAL_COLS * WMSTEP - WMGAP) / 2 + 2;
-const WOVAL_RX = WOVAL_W / 2;
 const WOVAL_RY = 18;
 
 function seededRandom(seed: number) {
