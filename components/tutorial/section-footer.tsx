@@ -1,15 +1,18 @@
-"use client";
+import Link from "next/link";
+
 
 interface SectionFooterProps {
   summary: string[];
   teaserText: string;
   nextLabel: string;
+  nextHref: string;
 }
 
 export function SectionFooter({
   summary,
   teaserText,
   nextLabel,
+  nextHref,
 }: SectionFooterProps) {
   return (
     <div className="mt-12 rounded-xl border border-foreground/15 bg-foreground/[0.04] px-8 py-7">
@@ -25,12 +28,12 @@ export function SectionFooter({
         ))}
       </ul>
       <p className="mt-5 text-foreground/50">{teaserText}</p>
-      <button
-        onClick={() => {}}
-        className="mt-5 rounded-lg bg-foreground px-5 py-2.5 text-sm font-medium text-background"
+      <Link
+        href={nextHref}
+        className="mt-5 inline-block rounded-lg bg-foreground px-5 py-2.5 text-sm font-medium text-background"
       >
         {nextLabel}
-      </button>
+      </Link>
     </div>
   );
 }
