@@ -57,6 +57,7 @@ export function MarbleSamplingWidget() {
   const [liveText, setLiveText] = useState("");
   const [newestId, setNewestId] = useState<number | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
+  const isAnimatingRef = useRef(false);
   const fadeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const bulkTimeouts = useRef<ReturnType<typeof setTimeout>[]>([]);
 
@@ -72,6 +73,7 @@ export function MarbleSamplingWidget() {
     bulkTimeouts.current.forEach(clearTimeout);
     bulkTimeouts.current = [];
     if (fadeTimeout.current) clearTimeout(fadeTimeout.current);
+    isAnimatingRef.current = false;
     setIsAnimating(false);
     drawCount.current = 0;
     setSamples([]);
@@ -83,10 +85,14 @@ export function MarbleSamplingWidget() {
   }
 
   function handleDrawN(n: number) {
+    if (isAnimatingRef.current) return;
+    isAnimatingRef.current = true;
+
+    // Pre-draw all marbles; IDs are assigned at commit time so a cancelled
+    // batch doesn't consume IDs and skew totalDraws/mean math.
     const newSamples = Array.from({ length: n }, () => {
-      const id = ++drawCount.current;
       const marbles = drawSample(N, P);
-      return { id, marbles, count: countSample(marbles) };
+      return { marbles, count: countSample(marbles) };
     });
 
     // Total animation ~1 s for n=10, ~3.2 s for n=100 (square-root scale).
@@ -95,27 +101,37 @@ export function MarbleSamplingWidget() {
     setIsAnimating(true);
     bulkTimeouts.current.forEach(clearTimeout);
     bulkTimeouts.current = [];
+    // Clear any pending single-draw fade so it can't fire during bulk animation.
+    if (fadeTimeout.current) clearTimeout(fadeTimeout.current);
 
     newSamples.forEach((sample, index) => {
       const t = setTimeout(() => {
+        const id = ++drawCount.current;
         setSamples((prev) => {
-          const next = [{ id: sample.id, marbles: sample.marbles }, ...prev].slice(0, MAX_ROWS + 1);
+          // Strip all existing fading flags so at most one row is fading at a time.
+          const clean = prev.map(s => s.fading ? { ...s, fading: false } : s);
+          const next = [{ id, marbles: sample.marbles }, ...clean].slice(0, MAX_ROWS + 1);
           if (prev.length >= MAX_ROWS) {
             return next.map((s, i) => i === next.length - 1 ? { ...s, fading: true } : s);
           }
           return next;
         });
-        setNewestId(sample.id);
-        setTotalDraws(sample.id);
+        setNewestId(id);
+        setTotalDraws(id);
         setRunningSum((prev) => prev + sample.count);
         setLatestCount(sample.count);
-        setLiveText(`Sample ${sample.id}: ${sample.count} out of ${N} green.`);
+        setLiveText(`Sample ${id}: ${sample.count} out of ${N} green.`);
 
-        const ft = setTimeout(() => setSamples((s) => s.filter((r) => !r.fading)), FADE_DURATION);
-        bulkTimeouts.current.push(ft);
+        // Reuse a single fade timeout; clearing the previous one ensures only
+        // one fading row is ever removed at a time.
+        if (fadeTimeout.current) clearTimeout(fadeTimeout.current);
+        fadeTimeout.current = setTimeout(() => setSamples((s) => s.filter((r) => !r.fading)), FADE_DURATION);
 
         if (index === newSamples.length - 1) {
-          const done = setTimeout(() => setIsAnimating(false), 800);
+          const done = setTimeout(() => {
+            isAnimatingRef.current = false;
+            setIsAnimating(false);
+          }, 800);
           bulkTimeouts.current.push(done);
         }
       }, index * stagger);

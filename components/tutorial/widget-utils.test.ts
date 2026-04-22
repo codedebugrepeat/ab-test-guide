@@ -22,6 +22,14 @@ describe("newestFirst", () => {
     expect(newestFirst([], 5)).toEqual([]);
   });
 
+  it("returns empty array when maxRows is 0", () => {
+    expect(newestFirst([1, 2, 3], 0)).toEqual([]);
+  });
+
+  it("returns empty array when maxRows is negative", () => {
+    expect(newestFirst([1, 2, 3], -1)).toEqual([]);
+  });
+
   it("does not mutate the original array", () => {
     const rows = [1, 2, 3, 4, 5];
     newestFirst(rows, 3);
