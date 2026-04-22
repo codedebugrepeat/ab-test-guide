@@ -17,6 +17,7 @@ export function TutorialNav({ horizontal = false }: { horizontal?: boolean }) {
               <li key={ch.href} className="shrink-0">
                 <Link
                   href={ch.href}
+                  aria-current={active ? "page" : undefined}
                   className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-sm transition-colors ${
                     active
                       ? "bg-foreground/[0.08] font-medium text-foreground"
@@ -48,6 +49,7 @@ export function TutorialNav({ horizontal = false }: { horizontal?: boolean }) {
             <li key={ch.href}>
               <Link
                 href={ch.href}
+                aria-current={active ? "page" : undefined}
                 className={`flex gap-3 rounded-md px-3 py-2 text-sm transition-colors ${
                   active
                     ? "bg-foreground/[0.07] font-medium text-foreground"
