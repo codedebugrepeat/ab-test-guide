@@ -4,8 +4,37 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { chapters } from "./chapters";
 
-export function TutorialNav() {
+export function TutorialNav({ horizontal = false }: { horizontal?: boolean }) {
   const pathname = usePathname();
+
+  if (horizontal) {
+    return (
+      <nav aria-label="Chapters">
+        <ol className="flex gap-2 overflow-x-auto pb-1">
+          {chapters.map((ch) => {
+            const active = pathname === ch.href;
+            return (
+              <li key={ch.href} className="shrink-0">
+                <Link
+                  href={ch.href}
+                  className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-sm transition-colors ${
+                    active
+                      ? "bg-foreground/[0.08] font-medium text-foreground"
+                      : "text-foreground/40 hover:bg-foreground/[0.04] hover:text-foreground/70"
+                  }`}
+                >
+                  <span className="tabular-nums text-foreground/30">
+                    {ch.number}
+                  </span>
+                  <span>{ch.shortTitle}</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ol>
+      </nav>
+    );
+  }
 
   return (
     <nav aria-label="Chapters">
