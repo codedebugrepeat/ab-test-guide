@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Container } from "@/components/container";
+import { TutorialLayout } from "@/components/tutorial/tutorial-layout";
 import { CaseStudyCallout } from "@/components/tutorial/case-study-callout";
 import { MarbleSamplingWidget } from "@/components/tutorial/marble-sampling-widget";
 import { Quote } from "@/components/tutorial/quote";
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function Section1Page() {
   return (
-    <Container>
+    <TutorialLayout>
       <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
         A/B Testing from first principles
       </h1>
@@ -147,6 +147,6 @@ export default function Section1Page() {
         teaserText="Next: where does the number of visitors you need actually come from?"
         nextLabel="Next: Sample size →"
       />
-    </Container>
+    </TutorialLayout>
   );
 }
