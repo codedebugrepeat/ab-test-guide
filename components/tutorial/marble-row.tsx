@@ -17,8 +17,7 @@ export function MarbleRow({
   const count = countSample(marbles);
   return (
     <div
-      className={`flex items-center gap-[10px] py-1 transition-opacity duration-200 ${isFading ? "opacity-0" : "opacity-100"
-        } ${isNew ? "animate-slide-down" : ""}`}
+      className={`flex items-center gap-[10px] py-1 ${isFading ? "animate-slide-out-down" : ""} ${isNew ? "animate-slide-down" : ""}`}
     >
       {/* Label */}
       <span className="w-[68px] shrink-0 whitespace-nowrap text-right text-[11px] text-foreground/40 tabular-nums">
