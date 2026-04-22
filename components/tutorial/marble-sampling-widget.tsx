@@ -9,6 +9,7 @@ const MAX_ROWS = 5;
 const FADE_DURATION = 250;
 const PULSE_DURATION = 1400;
 const BATCH_STAGGER = 110;
+const DONE_DELAY = 150;
 
 type Sample = { id: number; marbles: boolean[]; fading?: boolean };
 
@@ -148,7 +149,7 @@ export function MarbleSamplingWidget() {
               const done = setTimeout(() => {
                 isAnimatingRef.current = false;
                 setIsAnimating(false);
-              }, 800);
+              }, DONE_DELAY);
               bulkTimeouts.current.push(done);
             }
           }, index * BATCH_STAGGER);
@@ -191,7 +192,7 @@ export function MarbleSamplingWidget() {
             const done = setTimeout(() => {
               isAnimatingRef.current = false;
               setIsAnimating(false);
-            }, 800);
+            }, DONE_DELAY);
             bulkTimeouts.current.push(done);
           }
         }, index * stagger);
