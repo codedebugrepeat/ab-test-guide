@@ -44,6 +44,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    // suppressHydrationWarning is intentionally scoped to <html>: browser
+    // extensions inject attrs here at runtime. Non-recursive — child mismatches still surface.
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
