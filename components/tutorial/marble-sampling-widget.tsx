@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { drawSample, countSample, binomialMean } from "@/maths/sampling";
 import { MarbleRow } from "./marble-row";
-import { JarIllustration, WJAR_W } from "./jar-illustration";
+import { WJAR_W } from "./jar-illustration";
 import { N, P } from "./sampling-constants";
 const MAX_ROWS = 5;
 const FADE_DURATION = 250;
@@ -155,19 +155,6 @@ export function MarbleSamplingWidget() {
   return (
     <div className="flex flex-col items-center gap-5">
 
-      {/* ── Illustration (above card) ── */}
-      <div className="text-center">
-        <p className="mb-1 text-base font-bold tracking-tight">
-          1 in 5 marbles is green (true rate 20%)
-        </p>
-        <p className="mb-4 text-[12px] text-foreground/50">
-          We pick 10 marbles at random each time.
-        </p>
-        <JarIllustration />
-      </div>
-
-      {/* Divider */}
-      <div className="w-full max-w-[420px] border-t border-foreground/10" />
 
 
       {/* ── Widget card ── */}

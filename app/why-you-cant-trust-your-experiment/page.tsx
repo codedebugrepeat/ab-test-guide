@@ -4,6 +4,8 @@ import { CaseStudyCallout } from "@/components/tutorial/case-study-callout";
 import { MarbleSamplingWidget } from "@/components/tutorial/marble-sampling-widget";
 import { Quote } from "@/components/tutorial/quote";
 import { SectionFooter } from "@/components/tutorial/section-footer";
+import { WidgetFrame } from "@/components/tutorial/widget-frame";
+import { JarIllustration } from "@/components/tutorial/jar-illustration";
 
 export const metadata: Metadata = {
   title: "A/B Testing — From Zero to Confident",
@@ -22,27 +24,17 @@ export default function Section1Page() {
           Interactive guide
         </p>
         <p className="text-foreground/80">
-          Every concept has a visualization you can play with, starting with
-          pulling marbles from a jar. You&apos;ll build real intuition for the
-          levers that drive experiment results: sample size, baseline rate, the
-          lift you&apos;re trying to detect. No stats background required. We
-          walk through each one step by step, so you can run your experiments
-          with confidence.
+          Every concept has a visualization you can play with. You&apos;ll build
+          intuition for what actually drives experiment results, step by step, no
+          stats background required.
         </p>
       </div>
 
-      <div className="mt-8 space-y-3 text-foreground/70">
-        <p>
-          You ran an A/B test. The new version got more sign-ups. You
-          weren&apos;t sure whether to ship it. Or you opened a sample-size
-          calculator, hit a wall of jargon (statistical power, significance
-          thresholds, baseline conversion rates) and closed the tab.
-        </p>
-        <p>
-          This guide starts from scratch. Each section builds on the last. By
-          the end you&apos;ll know exactly what the calculator is doing and why.
-        </p>
-      </div>
+      <p className="mt-6 text-foreground/70">
+        You ran an A/B test, the new version looked better, and you
+        weren&apos;t sure whether to trust it. This guide explains why
+        — and how to know for certain.
+      </p>
 
       <hr className="my-10 border-foreground/10" />
 
@@ -69,8 +61,11 @@ export default function Section1Page() {
         and count the green ones.
       </p>
 
-      <div className="mt-6">
-        <MarbleSamplingWidget />
+      <div className="mt-6 flex flex-col items-center gap-4">
+        <JarIllustration />
+        <WidgetFrame>
+          <MarbleSamplingWidget />
+        </WidgetFrame>
       </div>
 
       <div className="mt-6 space-y-4 text-foreground/70">
