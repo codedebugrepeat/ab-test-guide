@@ -17,10 +17,19 @@ export default function Section1Page() {
       <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
         A/B Testing from first principles
       </h1>
-      <p className="mt-4 text-lg text-foreground/60">
-        An interactive guide to A/B testing that assumes you know nothing. By
-        the end, you can run a real test and trust the result.
-      </p>
+      <div className="mt-5 rounded-lg border border-foreground/15 bg-foreground/[0.03] px-6 py-5">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-foreground/40">
+          Interactive guide
+        </p>
+        <p className="text-foreground/80">
+          Every concept has a visualization you can play with, starting with
+          pulling marbles from a jar. You&apos;ll build real intuition for the
+          levers that drive experiment results: sample size, baseline rate, the
+          lift you&apos;re trying to detect. No stats background required. We
+          walk through each one step by step, so you can run your experiments
+          with confidence.
+        </p>
+      </div>
 
       <div className="mt-8 space-y-3 text-foreground/70">
         <p>
@@ -30,14 +39,16 @@ export default function Section1Page() {
           thresholds, baseline conversion rates) and closed the tab.
         </p>
         <p>
-          This guide starts from scratch. Each section builds on the last, with
-          interactive visuals so you see the concepts working rather than just
-          reading about them. By the end you&apos;ll know exactly what the
-          calculator is doing and why.
+          This guide starts from scratch. Each section builds on the last. By
+          the end you&apos;ll know exactly what the calculator is doing and why.
         </p>
       </div>
 
       <hr className="my-10 border-foreground/10" />
+
+      <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+        Why you can&apos;t trust your experiment with a small sample size
+      </h2>
 
       <CaseStudyCallout />
 
