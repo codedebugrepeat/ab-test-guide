@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Container } from "@/components/container";
 import { CaseStudyCallout } from "@/components/tutorial/case-study-callout";
 import { MarbleSamplingWidget } from "@/components/tutorial/marble-sampling-widget";
+import { Quote } from "@/components/tutorial/quote";
+import { SectionFooter } from "@/components/tutorial/section-footer";
 
 export const metadata: Metadata = {
   title: "A/B Testing — From Zero to Confident",
@@ -39,18 +41,17 @@ export default function Section1Page() {
 
       <hr className="my-10 border-foreground/10" />
 
-      <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-        100 visitors. 15 signups vs. 10. Ship the winner, right?
+      <CaseStudyCallout />
+
+      <h2 className="mt-8 text-2xl font-semibold tracking-tight sm:text-3xl">
+        I ran the experiment and sign-ups went from 10 to 15. Ship version B,
+        right?
       </h2>
 
       <p className="mt-4 text-foreground/70">
-        Almost everyone makes this call. The numbers point one way, the
-        conclusion feels obvious, and waiting longer just means leaving money on
-        the table. But the obvious conclusion here is wrong — and the next few
-        minutes will show you exactly why.
+        This is a common call to make, and an intuitive one. But it&apos;s a
+        pitfall — and the next few minutes will show you exactly why.
       </p>
-
-      <CaseStudyCallout />
 
       <p className="mt-8 text-foreground/70">
         Imagine every potential visitor is a marble in a jar. Green means they
@@ -67,9 +68,13 @@ export default function Section1Page() {
         <p>
           What you just saw is <strong>sampling error</strong> — the natural
           spread in outcomes you get when drawing a small random sample, even
-          when nothing about the jar changed. The jar&apos;s truth didn&apos;t
-          move; your draws did.
+          when nothing about the jar changed.
         </p>
+      </div>
+
+      <Quote>The jar&apos;s truth didn&apos;t move. Your draws did.</Quote>
+
+      <div className="space-y-4 text-foreground/70">
         <p>
           At 10 marbles per draw, the count bounces around considerably.
           Getting 1 when the expected value is 2 is common. Getting 3 is common
@@ -109,6 +114,14 @@ export default function Section1Page() {
           like 10 vs. 15 by pure chance at this sample size. Random variation at
           small scales is that large.
         </p>
+      </div>
+
+      <Quote>
+        At 100 visitors per group, even two <em>identical</em> versions would
+        routinely show a gap like this by pure chance.
+      </Quote>
+
+      <div className="space-y-4 text-foreground/70">
         <p>
           That means you cannot tell, from 100 visitors per group, whether B is
           genuinely better or you got lucky. Shipping on this evidence is a coin
@@ -116,10 +129,15 @@ export default function Section1Page() {
         </p>
       </div>
 
-      <p className="mt-8 text-foreground/50">
-        How many visitors <em>would</em> it take? That depends on a few
-        things — unpacked in the next sections.
-      </p>
+      <SectionFooter
+        summary={[
+          "Small samples produce noisy results — a 10 vs. 15 gap is common by chance alone.",
+          "You can't tell signal from noise without knowing how much data you actually need.",
+          "That's what the rest of this guide teaches.",
+        ]}
+        teaserText="Next: where does the number of visitors you need actually come from?"
+        nextLabel="Next: Sample size →"
+      />
     </Container>
   );
 }
