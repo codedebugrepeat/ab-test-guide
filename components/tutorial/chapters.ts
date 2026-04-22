@@ -4,4 +4,9 @@ export const chapters = [
     number: 1,
     title: "Why you can't trust small samples",
   },
+  {
+    href: "/how-many-visitors-do-you-need",
+    number: 2,
+    title: "How many visitors do you need?",
+  },
 ];

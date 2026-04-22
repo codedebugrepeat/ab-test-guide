@@ -146,6 +146,7 @@ export default function Section1Page() {
         ]}
         teaserText="Next: where does the number of visitors you need actually come from?"
         nextLabel="Next: Sample size →"
+        nextHref="/how-many-visitors-do-you-need"
       />
     </TutorialLayout>
   );
