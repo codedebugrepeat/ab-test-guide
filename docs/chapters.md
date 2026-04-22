@@ -125,10 +125,37 @@ A key "aha" moment to make visible: dragging minimum lift from 10% down to 1% ca
 - "Skip to calculator" always visible in the nav.
 - No forced linear lock — every section is skippable.
 
+## Narrative design decisions
+
+### The hook/content tension is intentional
+
+The guide opens with a post-experiment scenario ("I ran a test, B got more signups, ship it?") but teaches pre-experiment planning concepts and ends with a pre-experiment calculator. This is a deliberate choice, not an inconsistency.
+
+The hook works because most beginners have already run a sloppy experiment and want to know if the result is trustworthy. That creates immediate recognition and motivation. The implicit message: *you may have done exactly this — this guide will show you why you can't trust that result yet, and how to run the next one properly.*
+
+The framing to nail at the top of page 1 — one sentence in the intro callout — is something like:
+
+> "If you've already run an experiment, this will explain what you can and can't conclude from it. If you're planning one, it'll show you how to set it up so the results actually mean something."
+
+That one sentence resolves the tension without backpedaling.
+
+### The calculator is pre-experiment (by design)
+
+The guide teaches exactly the three inputs the calculator needs — baseline (section 2), confidence level (section 3), minimum detectable lift (section 4) — and the calculator closes the loop: plug those numbers in, get your required sample size, go run the experiment. That's the right payoff for this ICP (beginners).
+
+A post-experiment significance tester would be more immediately useful to someone who already ran something, but it's also more dangerous for beginners: someone plugging numbers into a p-value calculator without understanding what they're doing is how bad A/B testing culture spreads.
+
+The calculator lives at `/calculator` as a separate route. The section 4 footer must make the connection explicit — by the time the reader reaches it, they've seen all three inputs; the CTA should name them: *"You've now seen all three inputs. The calculator takes them and gives you the number."*
+
+### Post-experiment sanity check — deferred to v2
+
+A lightweight secondary entry point on the calculator: *"Already ran something?"* — user enters visitors and conversions, gets back whether their sample was large enough. No p-values, no significance testing. Just: *"your sample was about right / you'd have needed 3× more visitors."* Honest and actionable without being a full post-experiment tool.
+
+---
+
 ## Open questions
 
 - Single scrolling page vs. one route per section? (see architecture.md — defaulting to single page for MVP)
 - Does the tutorial end with a "your numbers so far" summary card before the calculator CTA?
-- Post-experiment tutorial (reading results after the test): separate flow or part of the calculator page? (out of scope for v1)
 - Advanced deep-dives / stats sidecar per section: deferred post-MVP
 - Exact copy and scenario numbers (e.g., "your current signup rate is 3%") — to be written when building each section
