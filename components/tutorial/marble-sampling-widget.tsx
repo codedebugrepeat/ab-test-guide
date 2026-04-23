@@ -54,11 +54,13 @@ function StatCard({
 type MarbleSamplingWidgetProps = {
   onSample?: (count: number) => void;
   onReset?: () => void;
+  hideRows?: boolean;
 };
 
 export function MarbleSamplingWidget({
   onSample,
   onReset,
+  hideRows = false,
 }: MarbleSamplingWidgetProps = {}) {
   const [samples, setSamples] = useState<Sample[]>([]);
   const drawCount = useRef(0);
@@ -326,7 +328,7 @@ export function MarbleSamplingWidget({
         {/* Screen-reader live region */}
         <div aria-live="polite" className="sr-only">{liveText}</div>
 
-        <div className="flex flex-col items-center">
+        {!hideRows && <div className="flex flex-col items-center">
           {batchPending ? (
             // Phase 1 of 100-draw: pulse indicator while stats settle
             <div
@@ -383,7 +385,7 @@ export function MarbleSamplingWidget({
               )}
             </div>
           )}
-        </div>
+        </div>}
       </div>
     </div>
   );
