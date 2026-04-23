@@ -8,7 +8,7 @@ type Props = { counts: number[] };
 
 const WIDTH = WJAR_W;
 const HEIGHT = 320;
-const PAD_L = 24;
+const PAD_L = 42;
 const PAD_R = 18;
 const PAD_TOP = 40;
 const PAD_BOTTOM = 46;
@@ -21,6 +21,20 @@ const DOT_R_NOMINAL = 4;
 const DOT_STEP_NOMINAL = 10;
 const PLACEHOLDER_ROWS = 3;
 
+function yTicks(maxBucket: number, step: number): number[] {
+  const interval =
+    maxBucket <= 5 ? 1 :
+    maxBucket <= 20 ? 5 :
+    maxBucket <= 50 ? 10 :
+    maxBucket <= 100 ? 25 : 50;
+  const ticks: number[] = [];
+  for (let v = 0; v <= maxBucket; v += interval) {
+    const y = HEIGHT - PAD_BOTTOM - v * step;
+    if (y >= PAD_TOP) ticks.push(v);
+  }
+  return ticks;
+}
+
 export function DiscreteSamplingDistribution({ counts }: Props) {
   const buckets = Array.from({ length: COL_COUNT }, () => 0);
   for (const c of counts) {
@@ -32,6 +46,7 @@ export function DiscreteSamplingDistribution({ counts }: Props) {
   const scale = maxBucket <= maxDotsNominal ? 1 : maxDotsNominal / maxBucket;
   const step = DOT_STEP_NOMINAL * scale;
   const r = DOT_R_NOMINAL * Math.min(1, Math.max(0.6, scale));
+  const ticks = yTicks(maxBucket, step);
 
   const colX = (col: number) => PAD_L + COL_W * (col + 0.5);
   const dotY = (row: number) => HEIGHT - PAD_BOTTOM - r - row * step;
@@ -67,6 +82,62 @@ export function DiscreteSamplingDistribution({ counts }: Props) {
           strokeOpacity={0.14}
           strokeWidth={1}
         />
+
+        {/* Y-axis line */}
+        <line
+          x1={PAD_L}
+          y1={PAD_TOP}
+          x2={PAD_L}
+          y2={HEIGHT - PAD_BOTTOM}
+          stroke="currentColor"
+          strokeOpacity={0.14}
+          strokeWidth={1}
+        />
+
+        {/* Y-axis ticks and labels */}
+        {ticks.map((v) => {
+          const y = HEIGHT - PAD_BOTTOM - v * step;
+          return (
+            <g key={`ytick-${v}`}>
+              <line
+                x1={PAD_L - 4}
+                y1={y}
+                x2={PAD_L}
+                y2={y}
+                stroke="currentColor"
+                strokeOpacity={0.25}
+                strokeWidth={1}
+              />
+              <text
+                x={PAD_L - 7}
+                y={y}
+                textAnchor="end"
+                dominantBaseline="middle"
+                fontSize="10"
+                fontWeight={500}
+                fill="currentColor"
+                fillOpacity={0.35}
+              >
+                {v}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* Y-axis label */}
+        <text
+          x={9}
+          y={HEIGHT / 2}
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fontSize="10"
+          fontWeight={500}
+          fill="currentColor"
+          fillOpacity={0.35}
+          transform={`rotate(-90, 9, ${HEIGHT / 2})`}
+        >
+          times drawn
+        </text>
 
         {/* True-mean marker */}
         <line
