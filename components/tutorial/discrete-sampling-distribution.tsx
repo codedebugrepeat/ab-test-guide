@@ -49,14 +49,13 @@ export function DiscreteSamplingDistribution({ counts }: Props) {
   });
 
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex w-full max-w-[420px] flex-col items-center gap-2">
       <svg
-        width={WIDTH}
-        height={HEIGHT}
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+        preserveAspectRatio="xMidYMid meet"
         role="img"
         aria-label={`Discrete sampling distribution of ${counts.length} draws across green-marble counts 0 to ${N}.`}
-        style={{ display: "block" }}
+        className="block h-auto w-full"
       >
         {/* Baseline */}
         <line
