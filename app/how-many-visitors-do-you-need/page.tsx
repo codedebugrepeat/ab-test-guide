@@ -4,6 +4,7 @@ import { Quote } from "@/components/tutorial/quote";
 import { SectionFooter } from "@/components/tutorial/section-footer";
 import { WidgetFrame } from "@/components/tutorial/widget-frame";
 import { SamplingDistributionBuilder } from "@/components/tutorial/sampling-distribution-builder";
+import { BaselineDistributionWidget } from "@/components/tutorial/baseline-distribution-widget";
 import { getChapter, totalChapters } from "@/components/tutorial/chapters";
 import { siteConfig } from "@/lib/site-config";
 
@@ -81,6 +82,13 @@ export default function Section2Page() {
           <SamplingDistributionBuilder />
         </WidgetFrame>
       </div>
+
+      <div className="mt-8">
+        <WidgetFrame>
+          <BaselineDistributionWidget />
+        </WidgetFrame>
+      </div>
+
 
       <div className="mt-8 space-y-4 text-foreground/70">
         <p>

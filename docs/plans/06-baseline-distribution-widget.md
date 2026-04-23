@@ -1,5 +1,7 @@
 # Phase 2 — Build Widget 2: "Baseline changes the shape"
 
+**Update (pivot):** For the improved “baseline vs lift” framing (two average markers), see `docs/plans/08-widget2-pivot-lift-marker.md`.
+
 **Status:** Ready to implement. Widget 1 (`SamplingDistributionBuilder`) is done. This document covers the three files to create and one page edit to wire it in.
 
 ---
