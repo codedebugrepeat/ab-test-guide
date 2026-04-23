@@ -6,47 +6,40 @@ import { Quote } from "@/components/tutorial/quote";
 import { SectionFooter } from "@/components/tutorial/section-footer";
 import { WidgetFrame } from "@/components/tutorial/widget-frame";
 import { JarIllustration } from "@/components/tutorial/jar-illustration";
+import { getChapter, totalChapters } from "@/components/tutorial/chapters";
+import { siteConfig } from "@/lib/site-config";
+
+const chapter = getChapter(1);
 
 export const metadata: Metadata = {
-  title: "A/B Testing — From Zero to Confident",
-  description:
-    "A hands-on guide to A/B testing with interactive visualizations. No assumed theory, just clear explanations, a running example, and a calculator you'll actually know how to use.",
+  title: chapter.browserTitle,
+  description: chapter.description,
 };
 
 export default function Section1Page() {
   return (
     <TutorialLayout>
-      <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-        A/B Testing from first principles
+      <p className="text-xs font-semibold uppercase tracking-widest text-foreground/40">
+        {siteConfig.name} · Chapter {chapter.number} of {totalChapters}
+      </p>
+      <h1 className="mt-2 text-4xl font-semibold tracking-tight sm:text-5xl">
+        {chapter.title}
       </h1>
-      <div className="mt-5 rounded-lg border border-foreground/15 bg-foreground/[0.03] px-6 py-5">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-foreground/40">
-          Interactive guide
-        </p>
-        <p className="text-foreground/80">
-          Every concept has a visualization you can play with. You&apos;ll build
-          intuition for what actually drives experiment results, step by step, no
-          stats background required.
-        </p>
-      </div>
 
       <p className="mt-6 text-foreground/70">
         You ran an A/B test, the new version looked better, and you
-        weren&apos;t sure whether to trust it. This guide explains why
-        — and how to know for certain.
+        weren&apos;t sure whether to trust it. This guide explains why — and
+        how to know for certain. Every concept has an interactive visualization
+        you can play with, so you build intuition step by step. No stats
+        background required.
       </p>
 
       <hr className="my-10 border-foreground/10" />
 
-      <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-        Why you can&apos;t trust your experiment with a small sample size
-      </h2>
-
       <CaseStudyCallout />
 
       <h2 className="mt-8 text-2xl font-semibold tracking-tight sm:text-3xl">
-        I ran the experiment and sign-ups went from 10 to 15. Ship version B,
-        right?
+        Ship version B, right?
       </h2>
 
       <p className="mt-4 text-foreground/70">
@@ -68,7 +61,11 @@ export default function Section1Page() {
         </WidgetFrame>
       </div>
 
-      <div className="mt-6 space-y-4 text-foreground/70">
+      <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
+        What you&apos;re really looking at: sampling error
+      </h2>
+
+      <div className="mt-4 space-y-4 text-foreground/70">
         <p>
           What you just saw is <strong>sampling error</strong>: the natural
           spread in outcomes you get from a small random sample, even when
@@ -93,30 +90,26 @@ export default function Section1Page() {
         </p>
       </div>
 
-      <h2 className="mt-8 text-xl font-semibold tracking-tight">
-        The instinct: B beat A, so ship B
+      <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
+        The instinct vs. the reality
       </h2>
-      <p className="mt-3 text-foreground/70">
-        Group B converted at 15%. Group A converted at 10%. That&apos;s a
-        five-point gap, 50% better in relative terms. The data is right there.
-        Of course you ship the winner.
-      </p>
-
-      <h2 className="mt-8 text-xl font-semibold tracking-tight">
-        Why that conclusion is premature
-      </h2>
-      <div className="mt-3 space-y-4 text-foreground/70">
+      <div className="mt-4 space-y-4 text-foreground/70">
         <p>
-          At 100 visitors per group, the numbers are fragile. One signup either
-          way moves the conversion rate by a full percentage point. The
+          Group B converted at 15%. Group A converted at 10%. That&apos;s a
+          five-point gap, 50% better in relative terms. The data is right
+          there. Of course you ship the winner.
+        </p>
+        <p>
+          But at 100 visitors per group, the numbers are fragile. One signup
+          either way moves the conversion rate by a full percentage point. The
           difference between &ldquo;10%&rdquo; and &ldquo;11%&rdquo; is a
           single person.
         </p>
         <p>
           Even two <em>identical</em> versions of your button, the exact same
-          copy shown to equivalent audiences, would routinely produce a gap like
-          10 vs. 15 by pure chance at this sample size. Random variation at
-          small scales is that large.
+          copy shown to equivalent audiences, would routinely produce a gap
+          like 10 vs. 15 by pure chance at this sample size. Random variation
+          at small scales is that large.
         </p>
       </div>
 
@@ -127,9 +120,9 @@ export default function Section1Page() {
 
       <div className="space-y-4 text-foreground/70">
         <p>
-          That means you cannot tell, from 100 visitors per group, whether B is
-          genuinely better or you got lucky. Shipping on this evidence is a coin
-          flip in a trenchcoat.
+          That means you cannot tell, from 100 visitors per group, whether B
+          is genuinely better or you got lucky. Shipping on this evidence is a
+          coin flip in a trenchcoat.
         </p>
       </div>
 

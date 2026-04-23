@@ -3,18 +3,24 @@ import { TutorialLayout } from "@/components/tutorial/tutorial-layout";
 import { Quote } from "@/components/tutorial/quote";
 import { SectionFooter } from "@/components/tutorial/section-footer";
 import { WidgetFrame } from "@/components/tutorial/widget-frame";
+import { getChapter, totalChapters } from "@/components/tutorial/chapters";
+import { siteConfig } from "@/lib/site-config";
+
+const chapter = getChapter(2);
 
 export const metadata: Metadata = {
-  title: "How Many Visitors Do You Need?",
-  description:
-    "Before you can know how many visitors you need, you need to know your baseline. This chapter explains why baseline rate is the starting point for every sample size calculation.",
+  title: chapter.browserTitle,
+  description: chapter.description,
 };
 
 export default function Section2Page() {
   return (
     <TutorialLayout>
-      <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-        How many visitors do you need?
+      <p className="text-xs font-semibold uppercase tracking-widest text-foreground/40">
+        {siteConfig.name} · Chapter {chapter.number} of {totalChapters}
+      </p>
+      <h1 className="mt-2 text-4xl font-semibold tracking-tight sm:text-5xl">
+        {chapter.title}
       </h1>
 
       <p className="mt-6 text-foreground/70">
@@ -46,18 +52,11 @@ export default function Section2Page() {
         data you need more than almost anything else.
       </p>
 
-      <h2 className="mt-8 text-xl font-semibold tracking-tight">
-        Back to our experiment
-      </h2>
-
-      <p className="mt-3 text-foreground/70">
-        In our case study, version A was getting 10 signups from 100 visitors:
-        a 10% baseline. That&apos;s on the high side. Many real signup flows
-        convert somewhere between 1% and 5%.
-      </p>
-
       <p className="mt-4 text-foreground/70">
-        The difference matters a lot. Here&apos;s why.
+        Back to our experiment: version A was getting 10 signups from 100
+        visitors, a 10% baseline. That&apos;s on the high side. Many real
+        signup flows convert somewhere between 1% and 5%, and the difference
+        matters a lot. Here&apos;s why.
       </p>
 
       <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
