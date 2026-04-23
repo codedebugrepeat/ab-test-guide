@@ -92,7 +92,11 @@ export function SamplingRateDistribution({ rates, buckets, baseline }: Props) {
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
         preserveAspectRatio="xMidYMid meet"
         role="img"
-        aria-label={`Theoretical sampling distribution at ${baselinePct.toFixed(1)}% baseline (N=${CH2_N}), with a ${liftLabel} marker.`}
+        aria-label={
+          rates
+            ? `Empirical sampling distribution from ${rates.length} draws at ${baselinePct.toFixed(1)}% baseline, with a ${liftLabel} marker.`
+            : `Theoretical sampling distribution at ${baselinePct.toFixed(1)}% baseline (N=${CH2_N}), with a ${liftLabel} marker.`
+        }
         className="block h-auto w-full"
       >
         <Group left={MARGIN.left} top={MARGIN.top}>

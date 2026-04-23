@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef, type ChangeEvent } from "react";
 import { binomialSD } from "@/maths/sampling";
 import { SamplingRateDistribution } from "./sampling-rate-distribution";
 import {
@@ -42,10 +42,8 @@ function buildTheoreticalBuckets({
   // P(K=0) = (1-p)^n
   let prob = Math.pow(1 - p, n);
   for (let k = 0; k <= n; k += 1) {
-    const ratePct = Math.round((k / n) * 100);
-    if (ratePct >= 0 && ratePct <= maxBin) {
-      raw[ratePct] += prob;
-    }
+    const ratePct = Math.min(maxBin, Math.round((k / n) * 100));
+    raw[ratePct] += prob;
 
     // P(K=k+1) = P(K=k) * (n-k)/(k+1) * p/(1-p)
     if (k < n) {
@@ -60,6 +58,8 @@ function buildTheoreticalBuckets({
     return buckets;
   }
 
+  // rawSum ≈ 1 because all overflow is clamped into raw[maxBin]; divide only
+  // to guard against floating-point drift away from exactly 1.
   const scaled = raw.map((v) => (v / rawSum) * totalDots);
   const floored = scaled.map((v) => Math.floor(v));
   let remaining = totalDots - floored.reduce((acc, v) => acc + v, 0);
@@ -107,7 +107,7 @@ export function BaselineDistributionWidget() {
     debounceRef.current = setTimeout(() => {
       const lifted = Math.min(CH2_AXIS_MAX, next * (1 + CH2_LIFT));
       setLiveText(
-        `Baseline changed to ${(next * 100).toFixed(1)}%. Lift marker at ${(lifted * 100).toFixed(1)}%. Showing the theoretical distribution for 100 visitors.`,
+        `Baseline changed to ${(next * 100).toFixed(1)}%. Lift marker at ${(lifted * 100).toFixed(1)}%. Showing the theoretical distribution for ${CH2_N} visitors.`,
       );
     }, CH2_DEBOUNCE_MS);
     return () => {
@@ -115,14 +115,10 @@ export function BaselineDistributionWidget() {
     };
   }, [baseline]);
 
-  const handleBaselineChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBaselineChange = (e: ChangeEvent<HTMLInputElement>) => {
     const idx = Number(e.target.value);
     const next = CH2_BASELINE_STEPS[Math.min(CH2_BASELINE_STEPS.length - 1, Math.max(0, idx))];
     setBaseline(next);
-    const lifted = Math.min(CH2_AXIS_MAX, next * (1 + CH2_LIFT));
-    setLiveText(
-      `Baseline changed to ${(next * 100).toFixed(0)}%. Lift marker at ${(lifted * 100).toFixed(1)}%.`,
-    );
   };
 
   const theoryBuckets = useMemo(() => {
