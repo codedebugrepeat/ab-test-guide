@@ -28,8 +28,16 @@ const axisLabelProps = {
   fontWeight: 500,
 };
 
+function buildTickValues(maxBin: number, interval: number) {
+  const ticks: number[] = [];
+  for (let v = 0; v <= maxBin; v += interval) ticks.push(v);
+  if (ticks[ticks.length - 1] !== maxBin) ticks.push(maxBin);
+  return ticks;
+}
+
 export function SamplingRateDistribution({ rates, baseline }: Props) {
   const cols = Array.from({ length: MAX_BIN + 1 }, (_, i) => i);
+  const xTicks = buildTickValues(MAX_BIN, 10);
   const buckets = cols.map(() => 0);
   for (const r of rates) {
     const bin = Math.min(MAX_BIN, Math.max(0, Math.round(r * 100)));
@@ -135,7 +143,7 @@ export function SamplingRateDistribution({ rates, baseline }: Props) {
             stroke="currentColor"
             axisLineClassName="[stroke-opacity:0.14]"
             hideTicks
-            tickValues={[0, 5, 10, 15, 20, 25, 30, 35]}
+            tickValues={xTicks}
             tickFormat={(v) => `${v}%`}
             tickLabelProps={(col) => ({
               fontSize: 11,

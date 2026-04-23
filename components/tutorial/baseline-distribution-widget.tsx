@@ -45,7 +45,7 @@ export function BaselineDistributionWidget() {
             setHasDrawn(true);
             const sd = binomialSD(CH2_N, currentBaseline) / CH2_N;
             const lo = Math.max(0, (currentBaseline - 2 * sd) * 100);
-            const hi = Math.min(35, (currentBaseline + 2 * sd) * 100);
+            const hi = Math.min(CH2_AXIS_MAX * 100, (currentBaseline + 2 * sd) * 100);
             const lifted = Math.min(CH2_AXIS_MAX, currentBaseline * (1 + CH2_LIFT));
             setLiveText(
               `Drew 100 samples at ${(currentBaseline * 100).toFixed(1)}% baseline. Lift marker at ${(lifted * 100).toFixed(1)}%. Range ${lo.toFixed(0)}% to ${hi.toFixed(0)}%.`,
@@ -81,7 +81,7 @@ export function BaselineDistributionWidget() {
     setBaseline(next);
     const sd = binomialSD(CH2_N, next) / CH2_N;
     const lo = Math.max(0, (next - 2 * sd) * 100);
-    const hi = Math.min(35, (next + 2 * sd) * 100);
+    const hi = Math.min(CH2_AXIS_MAX * 100, (next + 2 * sd) * 100);
     const lifted = Math.min(CH2_AXIS_MAX, next * (1 + CH2_LIFT));
     setLiveText(
       `Baseline changed to ${(next * 100).toFixed(1)}%. Lift marker at ${(lifted * 100).toFixed(1)}%. Redrawing. Expected range ${lo.toFixed(0)}% to ${hi.toFixed(0)}%.`,
@@ -90,7 +90,7 @@ export function BaselineDistributionWidget() {
 
   const sd = binomialSD(CH2_N, baseline) / CH2_N;
   const lo = Math.max(0, (baseline - 2 * sd) * 100);
-  const hi = Math.min(35, (baseline + 2 * sd) * 100);
+  const hi = Math.min(CH2_AXIS_MAX * 100, (baseline + 2 * sd) * 100);
   const liftPoints = baseline * CH2_LIFT * 100;
   const liftLabel = `+${(CH2_LIFT * 100).toFixed(0)}%`;
 
