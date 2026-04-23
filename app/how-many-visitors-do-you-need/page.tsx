@@ -84,6 +84,12 @@ export default function Section2Page() {
       </div>
 
       <div className="mt-8">
+        <p className="mb-4 text-foreground/70">
+          To keep the picture stable, this next chart does not draw random
+          samples. It shows the theoretical shape you would get if you ran this
+          100-visitor experiment over and over. In Chapter 3, we will unpack
+          where that shape comes from.
+        </p>
         <WidgetFrame>
           <BaselineDistributionWidget />
         </WidgetFrame>

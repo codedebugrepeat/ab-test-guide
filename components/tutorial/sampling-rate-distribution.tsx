@@ -3,11 +3,11 @@
 import { AxisBottom, AxisLeft } from "@visx/axis";
 import { Group } from "@visx/group";
 import { scaleBand, scaleLinear } from "@visx/scale";
-import { binomialSD } from "@/maths/sampling";
 import { CH2_AXIS_MAX, CH2_LIFT, CH2_N } from "./chapter-2-constants";
 
 type Props = {
-  rates: number[];
+  rates?: number[];
+  buckets?: number[];
   baseline: number;
 };
 
@@ -18,8 +18,7 @@ const PLOT_W = WIDTH - MARGIN.left - MARGIN.right;
 const PLOT_H = HEIGHT - MARGIN.top - MARGIN.bottom;
 const DOT_R_NOMINAL = 4;
 const DOT_STEP_NOMINAL = 10;
-const PLACEHOLDER_ROWS = 3;
-const MAX_BIN = Math.round(CH2_AXIS_MAX * 100); // 35
+const MAX_BIN = Math.round(CH2_AXIS_MAX * 100);
 
 const axisLabelProps = {
   fill: "currentColor",
@@ -35,16 +34,22 @@ function buildTickValues(maxBin: number, interval: number) {
   return ticks;
 }
 
-export function SamplingRateDistribution({ rates, baseline }: Props) {
+export function SamplingRateDistribution({ rates, buckets, baseline }: Props) {
   const cols = Array.from({ length: MAX_BIN + 1 }, (_, i) => i);
   const xTicks = buildTickValues(MAX_BIN, 10);
-  const buckets = cols.map(() => 0);
-  for (const r of rates) {
-    const bin = Math.min(MAX_BIN, Math.max(0, Math.round(r * 100)));
-    buckets[bin] += 1;
+  const bucketCounts = cols.map(() => 0);
+  if (buckets) {
+    for (let i = 0; i < bucketCounts.length; i += 1) {
+      bucketCounts[i] = Math.max(0, Math.floor(buckets[i] ?? 0));
+    }
+  } else if (rates) {
+    for (const r of rates) {
+      const bin = Math.min(MAX_BIN, Math.max(0, Math.round(r * 100)));
+      bucketCounts[bin] += 1;
+    }
   }
 
-  const maxBucket = Math.max(1, ...buckets);
+  const maxBucket = Math.max(1, ...bucketCounts);
   const maxDotsNominal = Math.floor(PLOT_H / DOT_STEP_NOMINAL);
   const scale = maxBucket <= maxDotsNominal ? 1 : maxDotsNominal / maxBucket;
   const step = DOT_STEP_NOMINAL * scale;
@@ -66,26 +71,20 @@ export function SamplingRateDistribution({ rates, baseline }: Props) {
     (_, i) => i * tickInterval,
   );
 
-  const sd = binomialSD(CH2_N, baseline) / CH2_N;
-  const loFrac = Math.max(0, baseline - 2 * sd);
-  const hiFrac = Math.min(CH2_AXIS_MAX, baseline + 2 * sd);
-  const loBin = Math.round(loFrac * 100);
-  const hiBin = Math.round(hiFrac * 100);
-
-  const bandLeft = xScale(loBin) ?? 0;
-  const bandRight = (xScale(hiBin) ?? 0) + xScale.bandwidth();
-
   const baselinePct = baseline * 100;
   const lifted = Math.min(CH2_AXIS_MAX, baseline * (1 + CH2_LIFT));
   const liftedPct = lifted * 100;
   const baselineBin = Math.round(baselinePct);
   const liftLabel = `+${(CH2_LIFT * 100).toFixed(0)}% lift: ${liftedPct.toFixed(1)}%`;
 
-  const columnCounters = cols.map(() => 0);
-  const dots = rates.flatMap((r, idx) => {
-    const bin = Math.min(MAX_BIN, Math.max(0, Math.round(r * 100)));
-    return [{ key: idx, col: bin, row: columnCounters[bin]++ }];
-  });
+  const dots: Array<{ key: string; col: number; row: number }> = [];
+  for (const col of cols) {
+    const count = bucketCounts[col] ?? 0;
+    for (let row = 0; row < count; row += 1) {
+      dots.push({ key: `${col}-${row}`, col, row });
+    }
+  }
+  const dotTotal = dots.length;
 
   return (
     <div className="flex w-full max-w-[560px] flex-col items-center gap-2">
@@ -93,31 +92,10 @@ export function SamplingRateDistribution({ rates, baseline }: Props) {
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
         preserveAspectRatio="xMidYMid meet"
         role="img"
-        aria-label={`Sampling rate distribution of ${rates.length} draws at ${baselinePct.toFixed(1)}% baseline, with a ${liftLabel} marker, ranging from ${(loFrac * 100).toFixed(0)}% to ${(hiFrac * 100).toFixed(0)}%.`}
+        aria-label={`Theoretical sampling distribution at ${baselinePct.toFixed(1)}% baseline (N=${CH2_N}), with a ${liftLabel} marker.`}
         className="block h-auto w-full"
       >
         <Group left={MARGIN.left} top={MARGIN.top}>
-          {/* ±2σ band */}
-          <rect
-            x={bandLeft}
-            y={0}
-            width={Math.max(0, bandRight - bandLeft)}
-            height={PLOT_H}
-            fill="currentColor"
-            fillOpacity={0.05}
-          />
-          <text
-            x={bandRight - 4}
-            y={8}
-            textAnchor="end"
-            fontSize="9"
-            fontWeight={500}
-            fill="currentColor"
-            fillOpacity={0.3}
-          >
-            typical range
-          </text>
-
           <AxisLeft
             scale={yScale}
             tickValues={yTicks}
@@ -126,7 +104,7 @@ export function SamplingRateDistribution({ rates, baseline }: Props) {
             tickStroke="currentColor"
             tickClassName="[stroke-opacity:0.25]"
             tickLength={4}
-            label="times drawn"
+            label="relative likelihood"
             labelOffset={24}
             labelProps={{ ...axisLabelProps, textAnchor: "middle" }}
             tickLabelProps={() => ({
@@ -179,14 +157,14 @@ export function SamplingRateDistribution({ rates, baseline }: Props) {
           />
           <text
             x={xValueScale(baselinePct)}
-            y={-12}
+            y={-24}
             textAnchor="middle"
             fontSize="10"
             fontWeight="600"
             fill="currentColor"
             fillOpacity={0.55}
           >
-            average: {baselinePct.toFixed(1)}%
+            average: {baselinePct.toFixed(0)}%
           </text>
 
           {/* Lift marker line */}
@@ -195,45 +173,26 @@ export function SamplingRateDistribution({ rates, baseline }: Props) {
             y1={-6}
             x2={xValueScale(liftedPct)}
             y2={PLOT_H}
-            stroke="#16a34a"
+            stroke="currentColor"
             strokeOpacity={0.75}
             strokeDasharray="6 2"
             strokeWidth={1.5}
+            className="text-blue-500 dark:text-blue-400"
           />
           <text
             x={xValueScale(liftedPct)}
-            y={-24}
+            y={-12}
             textAnchor="middle"
             fontSize="10"
             fontWeight="600"
-            fill="#16a34a"
+            fill="currentColor"
             fillOpacity={0.8}
+            className="text-blue-500 dark:text-blue-400"
           >
             {liftLabel}
           </text>
 
-          {/* Placeholder slots */}
-          {cols.map((col) =>
-            Array.from({ length: PLACEHOLDER_ROWS }, (_, k) => {
-              const cy = dotCy(buckets[col] + k);
-              if (cy < 0) return null;
-              return (
-                <circle
-                  key={`ph-${col}-${k}`}
-                  cx={colX(col)}
-                  cy={cy}
-                  r={dotR}
-                  fill="none"
-                  stroke="currentColor"
-                  strokeOpacity={0.12 - k * 0.03}
-                  strokeDasharray="2 2"
-                  strokeWidth={1}
-                />
-              );
-            }),
-          )}
-
-          {/* Drawn samples as stacked dots */}
+          {/* Stacked dots */}
           {dots.map((d) => (
             <circle
               key={d.key}
@@ -241,17 +200,17 @@ export function SamplingRateDistribution({ rates, baseline }: Props) {
               cy={dotCy(d.row)}
               r={dotR}
               fill="#16a34a"
-              className="animate-dot-drop"
-              style={{ transformBox: "fill-box" as const }}
             />
           ))}
         </Group>
       </svg>
 
       <div className="text-[11px] text-foreground/45 tabular-nums">
-        {rates.length === 0
-          ? "Draw samples to begin."
-          : `${rates.length} sample${rates.length !== 1 ? "s" : ""} drawn`}
+        {dotTotal === 0
+          ? ""
+          : buckets
+            ? "Theoretical shape (not a random draw)."
+            : "Empirical draws."}
       </div>
     </div>
   );

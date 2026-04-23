@@ -1,92 +1,138 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import { drawSample, countSample, binomialSD } from "@/maths/sampling";
+import { useState, useEffect, useMemo, useRef } from "react";
+import { binomialSD } from "@/maths/sampling";
 import { SamplingRateDistribution } from "./sampling-rate-distribution";
 import {
-  CH2_BASELINE_MIN,
-  CH2_BASELINE_MAX,
   CH2_BASELINE_DEFAULT,
+  CH2_BASELINE_STEPS,
   CH2_AXIS_MAX,
   CH2_LIFT,
   CH2_N,
-  CH2_SAMPLE_COUNT,
-  CH2_STAGGER_MS,
   CH2_DEBOUNCE_MS,
+  CH2_THEORY_DOT_COUNT,
 } from "./chapter-2-constants";
+
+function buildTheoreticalBuckets({
+  n,
+  p,
+  maxBin,
+  totalDots,
+}: {
+  n: number;
+  p: number;
+  maxBin: number;
+  totalDots: number;
+}) {
+  const buckets = Array.from({ length: maxBin + 1 }, () => 0);
+  if (p <= 0) {
+    buckets[0] = totalDots;
+    return buckets;
+  }
+  if (p >= 1) {
+    buckets[maxBin] = totalDots;
+    return buckets;
+  }
+
+  // Binomial PMF via recurrence to avoid huge binomial coefficients.
+  // We first compute raw weights per visible bin, then allocate exactly totalDots
+  // using a largest-remainder method. This avoids rounding drift.
+  const raw = Array.from({ length: maxBin + 1 }, () => 0);
+
+  // P(K=0) = (1-p)^n
+  let prob = Math.pow(1 - p, n);
+  for (let k = 0; k <= n; k += 1) {
+    const ratePct = Math.round((k / n) * 100);
+    if (ratePct >= 0 && ratePct <= maxBin) {
+      raw[ratePct] += prob;
+    }
+
+    // P(K=k+1) = P(K=k) * (n-k)/(k+1) * p/(1-p)
+    if (k < n) {
+      prob = (prob * (n - k)) / (k + 1);
+      prob = (prob * p) / (1 - p);
+    }
+  }
+
+  const rawSum = raw.reduce((acc, v) => acc + v, 0);
+  if (rawSum <= 0) {
+    buckets[Math.min(maxBin, Math.max(0, Math.round(p * 100)))] = totalDots;
+    return buckets;
+  }
+
+  const scaled = raw.map((v) => (v / rawSum) * totalDots);
+  const floored = scaled.map((v) => Math.floor(v));
+  let remaining = totalDots - floored.reduce((acc, v) => acc + v, 0);
+
+  const remainders = scaled
+    .map((v, idx) => ({ idx, frac: v - Math.floor(v) }))
+    .sort((a, b) => b.frac - a.frac);
+
+  for (let i = 0; i < remainders.length && remaining > 0; i += 1) {
+    floored[remainders[i].idx] += 1;
+    remaining -= 1;
+  }
+
+  for (let i = 0; i < buckets.length; i += 1) {
+    buckets[i] = floored[i];
+  }
+
+  return buckets;
+}
 
 export function BaselineDistributionWidget() {
   const [baseline, setBaseline] = useState(CH2_BASELINE_DEFAULT);
-  const [rates, setRates] = useState<number[]>([]);
-  const [isDrawing, setIsDrawing] = useState(false);
-  const [hasDrawn, setHasDrawn] = useState(false);
   const [liveText, setLiveText] = useState("");
-
-  const drawTimeouts = useRef<ReturnType<typeof setTimeout>[]>([]);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const triggerDraw = useCallback(
-    (currentBaseline: number) => {
-      if (isDrawing) return;
-      setIsDrawing(true);
-      setRates([]);
+  const baselineIndex = useMemo(() => {
+    const exact = CH2_BASELINE_STEPS.indexOf(baseline as (typeof CH2_BASELINE_STEPS)[number]);
+    if (exact !== -1) return exact;
 
-      const computed = Array.from({ length: CH2_SAMPLE_COUNT }, () => {
-        const marbles = drawSample(CH2_N, currentBaseline);
-        return countSample(marbles) / CH2_N;
-      });
-
-      const timeouts: ReturnType<typeof setTimeout>[] = [];
-      computed.forEach((rate, i) => {
-        const t = setTimeout(() => {
-          setRates((prev) => [...prev, rate]);
-          if (i === computed.length - 1) {
-            setIsDrawing(false);
-            setHasDrawn(true);
-            const sd = binomialSD(CH2_N, currentBaseline) / CH2_N;
-            const lo = Math.max(0, (currentBaseline - 2 * sd) * 100);
-            const hi = Math.min(CH2_AXIS_MAX * 100, (currentBaseline + 2 * sd) * 100);
-            const lifted = Math.min(CH2_AXIS_MAX, currentBaseline * (1 + CH2_LIFT));
-            setLiveText(
-              `Drew 100 samples at ${(currentBaseline * 100).toFixed(1)}% baseline. Lift marker at ${(lifted * 100).toFixed(1)}%. Range ${lo.toFixed(0)}% to ${hi.toFixed(0)}%.`,
-            );
-          }
-        }, i * CH2_STAGGER_MS);
-        timeouts.push(t);
-      });
-
-      drawTimeouts.current = timeouts;
-    },
-    [isDrawing],
-  );
-
-  useEffect(() => {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => triggerDraw(baseline), CH2_DEBOUNCE_MS);
-    return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    let bestIdx = 0;
+    let bestDist = Infinity;
+    for (let i = 0; i < CH2_BASELINE_STEPS.length; i += 1) {
+      const dist = Math.abs(CH2_BASELINE_STEPS[i] - baseline);
+      if (dist < bestDist) {
+        bestDist = dist;
+        bestIdx = i;
+      }
+    }
+    return bestIdx;
   }, [baseline]);
 
   useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    const next = baseline;
+    debounceRef.current = setTimeout(() => {
+      const lifted = Math.min(CH2_AXIS_MAX, next * (1 + CH2_LIFT));
+      setLiveText(
+        `Baseline changed to ${(next * 100).toFixed(1)}%. Lift marker at ${(lifted * 100).toFixed(1)}%. Showing the theoretical distribution for 100 visitors.`,
+      );
+    }, CH2_DEBOUNCE_MS);
     return () => {
-      drawTimeouts.current.forEach(clearTimeout);
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, []);
+  }, [baseline]);
 
   const handleBaselineChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const next = Number(e.target.value) / 100;
+    const idx = Number(e.target.value);
+    const next = CH2_BASELINE_STEPS[Math.min(CH2_BASELINE_STEPS.length - 1, Math.max(0, idx))];
     setBaseline(next);
-    const sd = binomialSD(CH2_N, next) / CH2_N;
-    const lo = Math.max(0, (next - 2 * sd) * 100);
-    const hi = Math.min(CH2_AXIS_MAX * 100, (next + 2 * sd) * 100);
     const lifted = Math.min(CH2_AXIS_MAX, next * (1 + CH2_LIFT));
     setLiveText(
-      `Baseline changed to ${(next * 100).toFixed(1)}%. Lift marker at ${(lifted * 100).toFixed(1)}%. Redrawing. Expected range ${lo.toFixed(0)}% to ${hi.toFixed(0)}%.`,
+      `Baseline changed to ${(next * 100).toFixed(0)}%. Lift marker at ${(lifted * 100).toFixed(1)}%.`,
     );
   };
+
+  const theoryBuckets = useMemo(() => {
+    return buildTheoreticalBuckets({
+      n: CH2_N,
+      p: baseline,
+      maxBin: Math.round(CH2_AXIS_MAX * 100),
+      totalDots: CH2_THEORY_DOT_COUNT,
+    });
+  }, [baseline]);
 
   const sd = binomialSD(CH2_N, baseline) / CH2_N;
   const lo = Math.max(0, (baseline - 2 * sd) * 100);
@@ -96,11 +142,11 @@ export function BaselineDistributionWidget() {
 
   let insightText: string;
   if (baseline <= 0.03) {
-    insightText = `At ${(baseline * 100).toFixed(1)}% baseline, a ${liftLabel} lift is only ~${liftPoints.toFixed(1)} points. That's buried inside the usual wobble of a 100-visitor sample (${lo.toFixed(0)}%–${hi.toFixed(0)}%).`;
+    insightText = `At ${(baseline * 100).toFixed(0)}% baseline, a ${liftLabel} lift is only ~${liftPoints.toFixed(1)} points. That's buried inside the usual wobble of a 100-visitor sample (${lo.toFixed(0)}%–${hi.toFixed(0)}%).`;
   } else if (baseline <= 0.1) {
-    insightText = `At ${(baseline * 100).toFixed(1)}% baseline, the lift line moves by ~${liftPoints.toFixed(1)} points, but single samples still bounce around (${lo.toFixed(0)}%–${hi.toFixed(0)}%). You can tell broad differences apart, not small ones.`;
+    insightText = `At ${(baseline * 100).toFixed(0)}% baseline, the lift line moves by ~${liftPoints.toFixed(1)} points, but single samples still bounce around (${lo.toFixed(0)}%–${hi.toFixed(0)}%). You can tell broad differences apart, not small ones.`;
   } else {
-    insightText = `At ${(baseline * 100).toFixed(1)}% baseline, a ${liftLabel} lift is ~${liftPoints.toFixed(1)} points, so the two averages separate on the axis. But a single 100-visitor sample still varies by a few points (${lo.toFixed(0)}%–${hi.toFixed(0)}%).`;
+    insightText = `At ${(baseline * 100).toFixed(0)}% baseline, a ${liftLabel} lift is ~${liftPoints.toFixed(1)} points, so the two averages separate on the axis. But a single 100-visitor sample still varies by a few points (${lo.toFixed(0)}%–${hi.toFixed(0)}%).`;
   }
 
   return (
@@ -111,29 +157,21 @@ export function BaselineDistributionWidget() {
         </label>
         <input
           type="range"
-          min={CH2_BASELINE_MIN * 100}
-          max={CH2_BASELINE_MAX * 100}
-          step={0.5}
-          value={baseline * 100}
+          min={0}
+          max={CH2_BASELINE_STEPS.length - 1}
+          step={1}
+          value={baselineIndex}
           onChange={handleBaselineChange}
           aria-label="Baseline conversion rate"
-          aria-valuetext={`${(baseline * 100).toFixed(1)}%`}
+          aria-valuetext={`${(baseline * 100).toFixed(0)}%`}
           className="flex-1"
         />
         <span className="w-12 shrink-0 text-right text-sm font-semibold tabular-nums text-foreground/80">
-          {(baseline * 100).toFixed(1)}%
+          {(baseline * 100).toFixed(0)}%
         </span>
       </div>
 
-      <SamplingRateDistribution rates={rates} baseline={baseline} />
-
-      <button
-        onClick={() => triggerDraw(baseline)}
-        disabled={isDrawing}
-        className="rounded-md bg-foreground/8 px-4 py-2 text-sm font-medium text-foreground/70 transition hover:bg-foreground/12 disabled:cursor-not-allowed disabled:opacity-40"
-      >
-        {hasDrawn ? "Redraw" : "Draw 100 samples"}
-      </button>
+      <SamplingRateDistribution buckets={theoryBuckets} baseline={baseline} />
 
       <p className="max-w-[480px] text-center text-sm text-foreground/60">
         {insightText}
