@@ -6,8 +6,7 @@ import { scaleBand, scaleLinear } from "@visx/scale";
 import { CH2_AXIS_MAX, CH2_LIFT, CH2_N } from "./chapter-2-constants";
 
 type Props = {
-  rates?: number[];
-  buckets?: number[];
+  buckets: number[];
   baseline: number;
 };
 
@@ -34,20 +33,10 @@ function buildTickValues(maxBin: number, interval: number) {
   return ticks;
 }
 
-export function SamplingRateDistribution({ rates, buckets, baseline }: Props) {
+export function SamplingRateDistribution({ buckets, baseline }: Props) {
   const cols = Array.from({ length: MAX_BIN + 1 }, (_, i) => i);
   const xTicks = buildTickValues(MAX_BIN, 10);
-  const bucketCounts = cols.map(() => 0);
-  if (buckets) {
-    for (let i = 0; i < bucketCounts.length; i += 1) {
-      bucketCounts[i] = Math.max(0, Math.floor(buckets[i] ?? 0));
-    }
-  } else if (rates) {
-    for (const r of rates) {
-      const bin = Math.min(MAX_BIN, Math.max(0, Math.round(r * 100)));
-      bucketCounts[bin] += 1;
-    }
-  }
+  const bucketCounts = cols.map((_, i) => Math.max(0, Math.floor(buckets[i] ?? 0)));
 
   const maxBucket = Math.max(1, ...bucketCounts);
   const maxDotsNominal = Math.floor(PLOT_H / DOT_STEP_NOMINAL);
@@ -84,7 +73,6 @@ export function SamplingRateDistribution({ rates, buckets, baseline }: Props) {
       dots.push({ key: `${col}-${row}`, col, row });
     }
   }
-  const dotTotal = dots.length;
 
   return (
     <div className="flex w-full max-w-[560px] flex-col items-center gap-2">
@@ -92,11 +80,7 @@ export function SamplingRateDistribution({ rates, buckets, baseline }: Props) {
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
         preserveAspectRatio="xMidYMid meet"
         role="img"
-        aria-label={
-          rates
-            ? `Empirical sampling distribution from ${rates.length} draws at ${baselinePct.toFixed(1)}% baseline, with a ${liftLabel} marker.`
-            : `Theoretical sampling distribution at ${baselinePct.toFixed(1)}% baseline (N=${CH2_N}), with a ${liftLabel} marker.`
-        }
+        aria-label={`Theoretical sampling distribution at ${baselinePct.toFixed(1)}% baseline (N=${CH2_N}), with a ${liftLabel} marker.`}
         className="block h-auto w-full"
       >
         <Group left={MARGIN.left} top={MARGIN.top}>
@@ -210,11 +194,7 @@ export function SamplingRateDistribution({ rates, buckets, baseline }: Props) {
       </svg>
 
       <div className="text-[11px] text-foreground/45 tabular-nums">
-        {dotTotal === 0
-          ? ""
-          : buckets
-            ? "Theoretical shape (not a random draw)."
-            : "Empirical draws."}
+        Theoretical shape (not a random draw).
       </div>
     </div>
   );
