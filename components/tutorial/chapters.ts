@@ -23,7 +23,7 @@ export const totalChapters = chapters.length;
 
 export type Chapter = (typeof chapters)[number];
 
-export function getChapter(number: number): Chapter {
+export function getChapter(number: Chapter["number"]): Chapter {
   const chapter = chapters.find((c) => c.number === number);
   if (!chapter) throw new Error(`Unknown chapter number: ${number}`);
   return chapter;
