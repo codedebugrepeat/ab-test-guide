@@ -42,8 +42,10 @@ function buildTheoreticalBuckets({
   // P(K=0) = (1-p)^n
   let prob = Math.pow(1 - p, n);
   for (let k = 0; k <= n; k += 1) {
-    const ratePct = Math.min(maxBin, Math.round((k / n) * 100));
-    raw[ratePct] += prob;
+    const ratePct = Math.round((k / n) * 100);
+    if (ratePct <= maxBin) raw[ratePct] += prob;
+    // out-of-range outcomes are silently dropped; we scale against the full
+    // probability mass (1.0) below so visible bins stay proportionally faithful.
 
     // P(K=k+1) = P(K=k) * (n-k)/(k+1) * p/(1-p)
     if (k < n) {
@@ -52,17 +54,17 @@ function buildTheoreticalBuckets({
     }
   }
 
-  const rawSum = raw.reduce((acc, v) => acc + v, 0);
-  if (rawSum <= 0) {
+  const visibleMass = raw.reduce((acc, v) => acc + v, 0);
+  if (visibleMass <= 0) {
     buckets[Math.min(maxBin, Math.max(0, Math.round(p * 100)))] = totalDots;
     return buckets;
   }
 
-  // rawSum ≈ 1 because all overflow is clamped into raw[maxBin]; divide only
-  // to guard against floating-point drift away from exactly 1.
-  const scaled = raw.map((v) => (v / rawSum) * totalDots);
+  // Scale against 1.0 (full probability), not visibleMass, so that each bin
+  // reflects its true share of totalDots and overflow tails don't spike the edge.
+  const scaled = raw.map((v) => v * totalDots);
   const floored = scaled.map((v) => Math.floor(v));
-  let remaining = totalDots - floored.reduce((acc, v) => acc + v, 0);
+  let remaining = Math.round(visibleMass * totalDots) - floored.reduce((acc, v) => acc + v, 0);
 
   const remainders = scaled
     .map((v, idx) => ({ idx, frac: v - Math.floor(v) }))
