@@ -51,7 +51,17 @@ function StatCard({
 }
 
 // ── Main widget ───────────────────────────────────────────────────────────────
-export function MarbleSamplingWidget() {
+type MarbleSamplingWidgetProps = {
+  onSample?: (count: number) => void;
+  onReset?: () => void;
+  hideRows?: boolean;
+};
+
+export function MarbleSamplingWidget({
+  onSample,
+  onReset,
+  hideRows = false,
+}: MarbleSamplingWidgetProps = {}) {
   const [samples, setSamples] = useState<Sample[]>([]);
   const drawCount = useRef(0);
   const [totalDraws, setTotalDraws] = useState(0);
@@ -87,6 +97,7 @@ export function MarbleSamplingWidget() {
     setLatestCount(null);
     setNewestId(null);
     setLiveText("Samples cleared.");
+    onReset?.();
   }
 
   function handleDrawN(n: number) {
@@ -116,6 +127,14 @@ export function MarbleSamplingWidget() {
       setRunningSum((prev) => prev + totalNewSum);
       setLatestCount(lastSample.count);
       setBatchPending(true);
+
+      if (onSample) {
+        const stagger = PULSE_DURATION / n;
+        newSamples.forEach((sample, i) => {
+          const t = setTimeout(() => onSample(sample.count), i * stagger);
+          bulkTimeouts.current.push(t);
+        });
+      }
 
       const phase2 = setTimeout(() => {
         setBatchPending(false);
@@ -178,6 +197,7 @@ export function MarbleSamplingWidget() {
           setTotalDraws(id);
           setRunningSum((prev) => prev + sample.count);
           setLatestCount(sample.count);
+          onSample?.(sample.count);
 
           if (fadeTimeout.current) clearTimeout(fadeTimeout.current);
           fadeTimeout.current = setTimeout(
@@ -225,6 +245,7 @@ export function MarbleSamplingWidget() {
     setLatestCount(count);
     setNewestId(nextId);
     setLiveText(`Sample ${nextId}: ${count} out of ${N} green.`);
+    onSample?.(count);
   }
 
   const buttonLabel =
@@ -307,7 +328,7 @@ export function MarbleSamplingWidget() {
         {/* Screen-reader live region */}
         <div aria-live="polite" className="sr-only">{liveText}</div>
 
-        <div className="flex flex-col items-center">
+        {!hideRows && <div className="flex flex-col items-center">
           {batchPending ? (
             // Phase 1 of 100-draw: pulse indicator while stats settle
             <div
@@ -364,7 +385,7 @@ export function MarbleSamplingWidget() {
               )}
             </div>
           )}
-        </div>
+        </div>}
       </div>
     </div>
   );

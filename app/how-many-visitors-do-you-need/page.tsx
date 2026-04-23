@@ -3,6 +3,7 @@ import { TutorialLayout } from "@/components/tutorial/tutorial-layout";
 import { Quote } from "@/components/tutorial/quote";
 import { SectionFooter } from "@/components/tutorial/section-footer";
 import { WidgetFrame } from "@/components/tutorial/widget-frame";
+import { SamplingDistributionBuilder } from "@/components/tutorial/sampling-distribution-builder";
 import { getChapter, totalChapters } from "@/components/tutorial/chapters";
 import { siteConfig } from "@/lib/site-config";
 
@@ -77,9 +78,7 @@ export default function Section2Page() {
 
       <div className="mt-8">
         <WidgetFrame>
-          <div className="flex min-h-[200px] items-center justify-center text-sm text-foreground/30">
-            Baseline comparison widget — coming soon
-          </div>
+          <SamplingDistributionBuilder />
         </WidgetFrame>
       </div>
 
