@@ -7,6 +7,8 @@ import {
   CH2_BASELINE_MIN,
   CH2_BASELINE_MAX,
   CH2_BASELINE_DEFAULT,
+  CH2_AXIS_MAX,
+  CH2_LIFT,
   CH2_N,
   CH2_SAMPLE_COUNT,
   CH2_STAGGER_MS,
@@ -44,8 +46,9 @@ export function BaselineDistributionWidget() {
             const sd = binomialSD(CH2_N, currentBaseline) / CH2_N;
             const lo = Math.max(0, (currentBaseline - 2 * sd) * 100);
             const hi = Math.min(35, (currentBaseline + 2 * sd) * 100);
+            const lifted = Math.min(CH2_AXIS_MAX, currentBaseline * (1 + CH2_LIFT));
             setLiveText(
-              `Drew 100 samples at ${(currentBaseline * 100).toFixed(1)}% baseline, ranging from ${lo.toFixed(0)}% to ${hi.toFixed(0)}%.`,
+              `Drew 100 samples at ${(currentBaseline * 100).toFixed(1)}% baseline. Lift marker at ${(lifted * 100).toFixed(1)}%. Range ${lo.toFixed(0)}% to ${hi.toFixed(0)}%.`,
             );
           }
         }, i * CH2_STAGGER_MS);
@@ -79,23 +82,25 @@ export function BaselineDistributionWidget() {
     const sd = binomialSD(CH2_N, next) / CH2_N;
     const lo = Math.max(0, (next - 2 * sd) * 100);
     const hi = Math.min(35, (next + 2 * sd) * 100);
+    const lifted = Math.min(CH2_AXIS_MAX, next * (1 + CH2_LIFT));
     setLiveText(
-      `Baseline changed to ${(next * 100).toFixed(1)}%; redrawing. Expected range ${lo.toFixed(0)}% to ${hi.toFixed(0)}%.`,
+      `Baseline changed to ${(next * 100).toFixed(1)}%. Lift marker at ${(lifted * 100).toFixed(1)}%. Redrawing. Expected range ${lo.toFixed(0)}% to ${hi.toFixed(0)}%.`,
     );
   };
 
   const sd = binomialSD(CH2_N, baseline) / CH2_N;
   const lo = Math.max(0, (baseline - 2 * sd) * 100);
   const hi = Math.min(35, (baseline + 2 * sd) * 100);
-  const spread = hi - lo;
+  const liftPoints = baseline * CH2_LIFT * 100;
+  const liftLabel = `+${(CH2_LIFT * 100).toFixed(0)}%`;
 
   let insightText: string;
   if (baseline <= 0.03) {
-    insightText = `At ${(baseline * 100).toFixed(1)}% baseline, a sample of 100 could show anywhere from ${lo.toFixed(0)}% to ${hi.toFixed(0)}%. That's a spread of ${spread.toFixed(1)} points — more than double the truth itself.`;
+    insightText = `At ${(baseline * 100).toFixed(1)}% baseline, a ${liftLabel} lift is only ~${liftPoints.toFixed(1)} points. That's buried inside the usual wobble of a 100-visitor sample (${lo.toFixed(0)}%–${hi.toFixed(0)}%).`;
   } else if (baseline <= 0.1) {
-    insightText = `At ${(baseline * 100).toFixed(1)}% baseline, your sample will land roughly between ${lo.toFixed(0)}% and ${hi.toFixed(0)}%. You can tell broad differences apart, not small ones.`;
+    insightText = `At ${(baseline * 100).toFixed(1)}% baseline, the lift line moves by ~${liftPoints.toFixed(1)} points, but single samples still bounce around (${lo.toFixed(0)}%–${hi.toFixed(0)}%). You can tell broad differences apart, not small ones.`;
   } else {
-    insightText = `At ${(baseline * 100).toFixed(1)}% baseline, your sample will land within ~${(spread / 2).toFixed(1)} points of the truth. That's tight enough to spot a real change.`;
+    insightText = `At ${(baseline * 100).toFixed(1)}% baseline, a ${liftLabel} lift is ~${liftPoints.toFixed(1)} points, so the two averages separate on the axis. But a single 100-visitor sample still varies by a few points (${lo.toFixed(0)}%–${hi.toFixed(0)}%).`;
   }
 
   return (

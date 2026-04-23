@@ -4,7 +4,7 @@ import { AxisBottom, AxisLeft } from "@visx/axis";
 import { Group } from "@visx/group";
 import { scaleBand, scaleLinear } from "@visx/scale";
 import { binomialSD } from "@/maths/sampling";
-import { CH2_N, CH2_AXIS_MAX } from "./chapter-2-constants";
+import { CH2_AXIS_MAX, CH2_LIFT, CH2_N } from "./chapter-2-constants";
 
 type Props = {
   rates: number[];
@@ -43,6 +43,10 @@ export function SamplingRateDistribution({ rates, baseline }: Props) {
   const dotR = DOT_R_NOMINAL * Math.min(1, Math.max(0.6, scale));
 
   const xScale = scaleBand<number>({ domain: cols, range: [0, PLOT_W] });
+  const xValueScale = scaleLinear<number>({
+    domain: [-0.5, MAX_BIN + 0.5],
+    range: [0, PLOT_W],
+  });
   const yScale = scaleLinear<number>({ domain: [0, maxBucket], range: [PLOT_H, 0] });
   const colX = (col: number) => (xScale(col) ?? 0) + xScale.bandwidth() / 2;
   const dotCy = (row: number) => PLOT_H - dotR - row * step;
@@ -63,7 +67,11 @@ export function SamplingRateDistribution({ rates, baseline }: Props) {
   const bandLeft = xScale(loBin) ?? 0;
   const bandRight = (xScale(hiBin) ?? 0) + xScale.bandwidth();
 
-  const trueBin = Math.round(baseline * 100);
+  const baselinePct = baseline * 100;
+  const lifted = Math.min(CH2_AXIS_MAX, baseline * (1 + CH2_LIFT));
+  const liftedPct = lifted * 100;
+  const baselineBin = Math.round(baselinePct);
+  const liftLabel = `+${(CH2_LIFT * 100).toFixed(0)}% lift: ${liftedPct.toFixed(1)}%`;
 
   const columnCounters = cols.map(() => 0);
   const dots = rates.flatMap((r, idx) => {
@@ -77,7 +85,7 @@ export function SamplingRateDistribution({ rates, baseline }: Props) {
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
         preserveAspectRatio="xMidYMid meet"
         role="img"
-        aria-label={`Sampling rate distribution of ${rates.length} draws at ${(baseline * 100).toFixed(1)}% baseline, ranging from ${(loFrac * 100).toFixed(0)}% to ${(hiFrac * 100).toFixed(0)}%.`}
+        aria-label={`Sampling rate distribution of ${rates.length} draws at ${baselinePct.toFixed(1)}% baseline, with a ${liftLabel} marker, ranging from ${(loFrac * 100).toFixed(0)}% to ${(hiFrac * 100).toFixed(0)}%.`}
         className="block h-auto w-full"
       >
         <Group left={MARGIN.left} top={MARGIN.top}>
@@ -99,7 +107,7 @@ export function SamplingRateDistribution({ rates, baseline }: Props) {
             fill="currentColor"
             fillOpacity={0.3}
           >
-            ~95% of samples
+            typical range
           </text>
 
           <AxisLeft
@@ -131,9 +139,9 @@ export function SamplingRateDistribution({ rates, baseline }: Props) {
             tickFormat={(v) => `${v}%`}
             tickLabelProps={(col) => ({
               fontSize: 11,
-              fontWeight: col === trueBin ? 600 : 500,
+              fontWeight: col === baselineBin ? 600 : 500,
               fill: "currentColor",
-              fillOpacity: col === trueBin ? 0.7 : 0.4,
+              fillOpacity: col === baselineBin ? 0.7 : 0.4,
               textAnchor: "middle",
               dy: "0.9em",
             })}
@@ -150,11 +158,11 @@ export function SamplingRateDistribution({ rates, baseline }: Props) {
             Observed conversion rate per sample
           </text>
 
-          {/* True baseline line */}
+          {/* Baseline average line */}
           <line
-            x1={colX(trueBin)}
+            x1={xValueScale(baselinePct)}
             y1={-6}
-            x2={colX(trueBin)}
+            x2={xValueScale(baselinePct)}
             y2={PLOT_H}
             stroke="currentColor"
             strokeOpacity={0.3}
@@ -162,7 +170,7 @@ export function SamplingRateDistribution({ rates, baseline }: Props) {
             strokeWidth={1}
           />
           <text
-            x={colX(trueBin)}
+            x={xValueScale(baselinePct)}
             y={-12}
             textAnchor="middle"
             fontSize="10"
@@ -170,7 +178,30 @@ export function SamplingRateDistribution({ rates, baseline }: Props) {
             fill="currentColor"
             fillOpacity={0.55}
           >
-            truth: {(baseline * 100).toFixed(1)}%
+            average: {baselinePct.toFixed(1)}%
+          </text>
+
+          {/* Lift marker line */}
+          <line
+            x1={xValueScale(liftedPct)}
+            y1={-6}
+            x2={xValueScale(liftedPct)}
+            y2={PLOT_H}
+            stroke="#16a34a"
+            strokeOpacity={0.75}
+            strokeDasharray="6 2"
+            strokeWidth={1.5}
+          />
+          <text
+            x={xValueScale(liftedPct)}
+            y={-24}
+            textAnchor="middle"
+            fontSize="10"
+            fontWeight="600"
+            fill="#16a34a"
+            fillOpacity={0.8}
+          >
+            {liftLabel}
           </text>
 
           {/* Placeholder slots */}
