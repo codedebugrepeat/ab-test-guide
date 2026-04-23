@@ -5,7 +5,7 @@ import { SectionFooter } from "@/components/tutorial/section-footer";
 import { WidgetFrame } from "@/components/tutorial/widget-frame";
 
 export const metadata: Metadata = {
-  title: "How Many Visitors Do You Need? — A/B Testing Guide",
+  title: "How Many Visitors Do You Need?",
   description:
     "Before you can know how many visitors you need, you need to know your baseline. This chapter explains why baseline rate is the starting point for every sample size calculation.",
 };
