@@ -4,6 +4,7 @@ import { Quote } from "@/components/tutorial/quote";
 import { SectionFooter } from "@/components/tutorial/section-footer";
 import { WidgetFrame } from "@/components/tutorial/widget-frame";
 import { SamplingDistributionBuilder } from "@/components/tutorial/sampling-distribution-builder";
+import { BaselineDistributionWidget } from "@/components/tutorial/baseline-distribution-widget";
 import { getChapter, totalChapters } from "@/components/tutorial/chapters";
 import { siteConfig } from "@/lib/site-config";
 
@@ -25,15 +26,49 @@ export default function Section2Page() {
       </h1>
 
       <p className="mt-6 text-foreground/70">
-        You know small samples lie. So the next question is obvious: how many
-        visitors do you actually need? There&apos;s no universal number. It
-        depends on three things, and we&apos;ll work through each one. First
-        up: your baseline conversion rate.
+        Small samples are noisy. You saw that in chapter 1. What wasn&apos;t
+        obvious yet is that noise has a shape, and the shape depends on a
+        single number: how often your visitors currently convert. Once that
+        shape is on the page, &ldquo;how many visitors do I need&rdquo; stops
+        being a vibe and starts being something you can answer.
       </p>
 
       <hr className="my-10 border-foreground/10" />
 
       <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+        The shape of noise
+      </h2>
+
+      <p className="mt-4 text-foreground/70">
+        Back to the marble jar from page 1. Same 20% true rate, same 10-marble
+        draw. This time, forget the single sample. Keep drawing and stack
+        every count onto the chart below. You&apos;re building up a tally of
+        which outcomes show up, and how often.
+      </p>
+
+      <div className="mt-6">
+        <WidgetFrame>
+          <SamplingDistributionBuilder />
+        </WidgetFrame>
+      </div>
+
+      <div className="mt-8 space-y-4 text-foreground/70">
+        <p>
+          What you just stacked has a name: a{" "}
+          <strong>sampling distribution</strong>. Each column is a possible
+          outcome of one draw, and the height is how often that outcome has
+          turned up so far. The shape is jagged because 10 marbles is a tiny
+          sample and a few dozen draws is a small pile. Scale both up, to 100
+          visitors per sample and many thousands of draws, and the histogram
+          smooths into a bell.
+        </p>
+        <p>
+          That bell isn&apos;t fixed, though. Its width moves with your
+          baseline.
+        </p>
+      </div>
+
+      <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
         What&apos;s a baseline?
       </h2>
 
@@ -54,46 +89,50 @@ export default function Section2Page() {
       </p>
 
       <p className="mt-4 text-foreground/70">
-        Back to our experiment: version A was getting 10 signups from 100
-        visitors, a 10% baseline. That&apos;s on the high side. Many real
-        signup flows convert somewhere between 1% and 5%, and the difference
-        matters a lot. Here&apos;s why.
+        In the case study, version A got 10 signups from 100 visitors, so the
+        baseline is 10%. That&apos;s on the high side. Many real signup flows
+        sit somewhere between 1% and 5%, and the difference matters a lot.
+        Here&apos;s what it looks like on the distribution.
       </p>
 
       <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
-        Two products, two completely different problems
+        Baseline changes the shape
       </h2>
 
       <p className="mt-4 text-foreground/70">
-        Imagine two SaaS products, both testing new signup button copy, both
-        hoping for a 20% relative lift. One converts at 2%. The other at 20%.
+        Two products, both hoping a new signup button lifts conversions by
+        10%. One converts at 2% today; the other at 20%. Same &ldquo;10%
+        better&rdquo; on paper. On the distribution, they are not the same
+        story.
       </p>
 
       <p className="mt-4 text-foreground/70">
-        At 2%, 100 visitors gives you roughly 2 signups. A 20% lift would take
-        that to 2.4 — less than one extra person in a hundred. At 20%, 100
-        visitors gives you 20 signups, and the same lift takes that to 24.
-        Move the slider below and watch what that looks like.
+        The widget below is the smoothed version of what you just drew,
+        scaled to 100 visitors per sample. Slide the baseline to pick a
+        product. The solid line is that product&apos;s current average. The
+        dashed line is where version B lands if it really does lift by 10%.
+        The question to sit with: does the lift line poke out of the bell, or
+        is it still inside the average&apos;s usual wobble?
       </p>
 
-      <div className="mt-8">
+      <div className="mt-6">
         <WidgetFrame>
-          <SamplingDistributionBuilder />
+          <BaselineDistributionWidget />
         </WidgetFrame>
       </div>
 
       <div className="mt-8 space-y-4 text-foreground/70">
         <p>
-          At low baseline, the expected gap between A and B is less than one
-          signup per 100 visitors. That&apos;s smaller than the random noise
-          you&apos;d get by chance. You could run the test and see 2 vs. 2, or
-          2 vs. 3, or 3 vs. 2, and none of it would tell you anything. The
-          signal is buried.
+          At 2%, the lift line sits deep inside the spread. Run the test at
+          100 visitors and you&apos;d see 2 vs. 2 one day, 2 vs. 3 the next, 3
+          vs. 2 the day after. The real improvement is there; it is buried
+          under the sample-to-sample bouncing.
         </p>
         <p>
-          At higher baseline, the gap grows large enough that at least
-          something is visible. It&apos;s still noisy at 100 visitors, but
-          there&apos;s something to work with.
+          Slide the baseline up to 20% and the lift line separates from the
+          average. Single samples still vary, but the gap is wide enough that
+          &ldquo;B is better&rdquo; starts to hold up from one run to the
+          next. Same 10% improvement, very different picture.
         </p>
       </div>
 
@@ -125,30 +164,42 @@ export default function Section2Page() {
           That gap compounds fast. A landing page at 2% baseline typically
           needs 10 to 20 times more visitors than a checkout flow at 30% to
           run the same test at the same confidence. Same relative improvement,
-          completely different data requirement, because the signal is that
-          much rarer.
+          very different data requirement, because the signal is that much
+          rarer.
         </p>
         <p>
-          This is why there&apos;s no universal answer to &ldquo;how many
-          visitors do I need?&rdquo; You have to start with your own baseline.
+          That&apos;s why there&apos;s no universal answer to &ldquo;how many
+          visitors do I need?&rdquo; You start with your own baseline.
         </p>
         <p>
-          One thing worth naming: we&apos;ve been using 100 visitors throughout
-          because the numbers are easy to follow. Real A/B tests don&apos;t run
-          at that scale. By the time you finish this guide, you&apos;ll see that
-          depending on your baseline, a well-designed experiment might need
-          thousands of visitors per group, not hundreds. The examples are simple
-          on purpose. The actual numbers rarely are.
+          We&apos;ve been using 100 visitors throughout because the numbers
+          are easy to follow. Real A/B tests rarely run at that scale. By the
+          time you finish this guide, you&apos;ll see that depending on your
+          baseline, a well-designed experiment might need thousands of
+          visitors per group, not hundreds. The examples are simple on
+          purpose. The actual numbers rarely are.
         </p>
       </div>
 
+      <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
+        What&apos;s still missing
+      </h2>
+
+      <p className="mt-4 text-foreground/70">
+        We drew one bell: the control&apos;s. Version B has its own bell,
+        centered on a slightly different average. When the two bells overlap
+        a lot, you can&apos;t tell them apart from a single experiment. When
+        they pull apart, you can. That&apos;s the whole game, and it&apos;s
+        where we go next.
+      </p>
+
       <SectionFooter
         summary={[
-          "Your baseline is your current conversion rate before any changes.",
-          "Low baseline means rare conversions, so you need much more data to detect a real difference.",
-          "The same relative improvement is far harder to see at 2% than at 15%.",
+          "Noise has a shape. Keep drawing samples and that shape fills in: a sampling distribution.",
+          "Baseline controls the shape. The lower the baseline, the more the spread swamps small differences.",
+          "Whether a lift is visible depends on whether it separates from the spread. At 2%, a 10% lift hides. At 20%, it shows.",
         ]}
-        teaserText="Next: even with the right sample size, how confident do you need to be in the result?"
+        teaserText="Next: draw version B's bell alongside the control and watch when the two actually pull apart."
         nextLabel="Next: Confidence →"
         nextHref="/how-sure-do-you-need-to-be"
       />
