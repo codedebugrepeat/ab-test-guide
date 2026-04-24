@@ -109,10 +109,11 @@ export default function Section3Page() {
         There&apos;s a tidy way to talk about &ldquo;near&rdquo; and
         &ldquo;far.&rdquo; A bell has a typical width, and statisticians call
         one unit of that width a <strong>standard deviation</strong>.
-        It&apos;s a ruler you can lay across the chart. Inside one standard
-        deviation of the mean, you find roughly 68% of all samples. Inside
-        two, roughly 95%. Past two standard deviations, you&apos;re in the
-        tails: about 1 sample in 20 lands out there on either side.
+        It&apos;s a ruler you can lay across the chart. As a shape rule,
+        roughly 68% of samples land within one standard deviation of the
+        mean on either side, and roughly 95% within two. The remaining
+        handful of percent live out in the tails, split between the two
+        sides.
       </p>
 
       <div className="mt-6">
@@ -127,6 +128,15 @@ export default function Section3Page() {
         rare. A result out there is the sort of thing A only manages by
         accident once in a while. That difference is the whole basis for
         calling a winner.
+      </p>
+
+      <p className="mt-4 text-foreground/70">
+        One thing to set aside before we keep going: the 68/95 numbers above
+        describe the shape of a bell, looking at both tails together.
+        They&apos;re a feel for the distribution, not the line we&apos;re
+        about to draw. The decision line slices off only the right-hand
+        tail, and the percentage attached to it is a different cut of the
+        same bell. Don&apos;t conflate the two.
       </p>
 
       <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
@@ -172,19 +182,30 @@ export default function Section3Page() {
       </p>
 
       <p className="mt-4 text-foreground/70">
-        A 95% confidence level is the standard default. Draw the line at the
-        edge of A&apos;s 95% band and you&apos;ve said: I&apos;m willing to be
-        fooled about 1 time in 20. If A and B were really the same and you
-        ran this experiment over and over, A alone would wander past the line
-        roughly 5% of the time and look like a winner that wasn&apos;t there.
-        That 5% is the significance level, spelled out.
+        A 95% confidence level is the standard default. Draw the line so 95%
+        of A&apos;s bell sits to the left of it, and only a 5% sliver pokes
+        out to the right. You&apos;ve said: I&apos;m willing to be fooled
+        about 1 time in 20. If A and B were really the same and you ran this
+        experiment over and over, A alone would wander past the line roughly
+        5% of the time and look like a winner that wasn&apos;t there. That 5%
+        is the significance level, spelled out.
       </p>
 
       <p className="mt-4 text-foreground/70">
-        Flip the framing and it&apos;s the same idea. Say you want your test
-        to catch the real rate inside its confidence range 95 times out of
-        100. The other 5 runs miss. More confidence, fewer misses. Fewer
-        misses, more data to get there.
+        Note the line sits in A&apos;s right tail, not on both sides. We&apos;re
+        hunting a lift: B is either enough better than A to clear the line, or
+        it isn&apos;t. A suspiciously low sample from B isn&apos;t what this
+        guide treats as a winner, so the left tail of A&apos;s bell stays out
+        of the decision.
+      </p>
+
+      <p className="mt-4 text-foreground/70">
+        Flip the framing and it&apos;s the same idea. If B really isn&apos;t
+        any better than A, about 95 runs in 100 your test will sit tight and
+        you&apos;ll be right to do so. The other 5, noise alone would push
+        A&apos;s sample past the line and fool you into calling a winner.
+        More confidence, fewer false alarms. Fewer false alarms, more data
+        to get there.
       </p>
 
       <Quote>

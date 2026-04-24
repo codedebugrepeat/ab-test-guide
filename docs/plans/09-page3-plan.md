@@ -26,6 +26,19 @@ Keep the running case study (signup button, baseline 10%, 10% relative lift) as 
 
 ---
 
+## Convention: one-sided throughout
+
+Chapters 3 through 5 use a **one-sided test**. The reader is hunting for a lift; B either clears A by enough to call a winner, or it doesn't. The left tail of A's bell isn't a rejection region in this guide.
+
+Implications for ch3 specifically:
+
+- `DecisionThresholdWidget` draws a single line in A's right tail. Shaded region = A's right-tail false-positive area. Do not render or shade A's left tail as rejection.
+- "95% confidence" = α of 5% in A's right tail. Critical value sits at z_α ≈ 1.645 standard deviations above A's mean, not 1.96.
+- `NormalVsExtremeWidget` can still show ±1σ / ±2σ bilaterally — that widget is about the shape of a bell, not about rejection regions. Keep the copy around it focused on "middle is routine, tails are rare" without implying both tails are the decision region.
+- The "three names for the same line" copy already treats the line as a single right-tail threshold. Keep it that way.
+
+---
+
 ## Widgets
 
 ### Widget 1 — Two bells (primary)

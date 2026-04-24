@@ -118,15 +118,27 @@ Default to the wrapper. Saves future headaches when either chapter's widget need
 
 ### Sample size math for Widget 2
 
-Standard two-proportion formula for required N per variant (two-sided, 80% power by default):
+Standard two-proportion formula for required N per variant, **one-sided** (see convention note below), 80% power by default:
 
 ```
-n ≈ ( (z_α/2 + z_β)^2 * (p1(1-p1) + p2(1-p2)) ) / (p2 - p1)^2
+n ≈ ( (z_α + z_β)^2 * (p1(1-p1) + p2(1-p2)) ) / (p2 - p1)^2
 ```
 
-Where p1 = baseline, p2 = baseline * (1 + lift). Put this in `maths/sampling.ts` so chapter 5's calculator imports the same function. Do not re-implement the formula per-chapter.
+Where p1 = baseline, p2 = baseline * (1 + lift), and `z_α` is the one-tailed critical value (≈1.645 at α=0.05, i.e. 95% confidence). Put this in `maths/sampling.ts` so chapter 5's calculator imports the same function. Do not re-implement the formula per-chapter.
 
 Expose `power` and `alpha` as constants for now (80% and 5%) and document that chapter 5 will unpin them. Chapter 4 keeps them implicit to avoid piling jargon on the reader mid-arc.
+
+### Convention: one-sided throughout
+
+Chapters 3 through 5 use a **one-sided test**. The reader is hunting for a lift. Version B is either better than A by enough to clear the line, or it isn't. We don't care about the left tail of A's bell (B being dramatically worse is not the outcome the reader is reasoning about in this guide).
+
+Consequences for the widgets and copy:
+
+- Only A's right tail is the rejection region. `DecisionThresholdWidget` shades the right tail as the false-positive region; the left tail stays unshaded.
+- "95% confidence" = α of 5%, with the whole 5% in A's right tail. z_α ≈ 1.645, not 1.96.
+- The ch3 "three names for the same line" copy is already consistent with this (single line, right of A's mean, confidence + significance = 100%). Keep it that way.
+- `NormalVsExtremeWidget` can still show ±1σ and ±2σ bilaterally for the "middle is normal, tails are rare" intuition — that widget is about distribution shape, not rejection regions. Just make sure the copy around the threshold widget uses "the 95% band" language loosely (for intuition) without implying a two-sided rejection region.
+- Chapter 5 inherits the same convention in the full calculator. If a future version of the guide adds two-sided as an option, it should be an explicit mode switch, not a silent default change.
 
 ### Edge cases on the lift slider
 
