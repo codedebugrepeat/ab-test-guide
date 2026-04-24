@@ -84,10 +84,17 @@ export function TwoBellsDistribution({ pA, pB, maxBin, baseline }: Props) {
 
   const { lo, hi } = trimSupport(pmfA, pmfB);
 
-  const dataA: Datum[] = toData(pmfA.slice(lo, hi + 1)).map((d, i) => ({ x: lo + i, y: d.y }));
-  const dataB: Datum[] = toData(pmfB.slice(lo, hi + 1)).map((d, i) => ({ x: lo + i, y: d.y }));
+  // Normalize each curve to peak = 1 before slicing so both bells have
+  // identical height and kurtosis. The goal is purely didactic: the reader
+  // should focus on horizontal distance, not on subtle peak-height differences
+  // that arise from different p values (which are mathematically real but
+  // visually distracting and irrelevant to the lesson here).
+  const peakA = Math.max(1e-6, ...pmfA);
+  const peakB = Math.max(1e-6, ...pmfB);
+  const dataA: Datum[] = toData(pmfA.slice(lo, hi + 1)).map((d, i) => ({ x: lo + i, y: d.y / peakA }));
+  const dataB: Datum[] = toData(pmfB.slice(lo, hi + 1)).map((d, i) => ({ x: lo + i, y: d.y / peakB }));
 
-  const maxY = Math.max(1e-6, ...dataA.map((d) => d.y), ...dataB.map((d) => d.y));
+  const maxY = 1;
 
   const xValueScale = scaleLinear<number>({
     domain: [-0.5, maxBin + 0.5],

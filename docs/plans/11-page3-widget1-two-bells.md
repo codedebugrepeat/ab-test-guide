@@ -101,6 +101,10 @@ Overlap bucket: heavy if baseline ≤ 0.05, moderate if ≤ 0.20, else light. Cr
 - ch2 widget still renders identically after the `buildTheoreticalBuckets` extraction.
 - No regressions to the chapter 2 page — verify by visual diff.
 
+## Visual normalization (implemented)
+
+Both bell curves are normalized to the same peak height (peak = 1) before rendering. Different `p` values produce binomials with different standard deviations, meaning narrower (higher-p or lower-p) distributions would naturally have a taller peak — a mathematically correct but visually distracting difference that pulls the reader's eye away from the only thing that matters here: the horizontal gap between the two means. Normalizing makes the two silhouettes identical in shape; only their position on the x-axis differs. This is an intentional didactic trade-off, not an oversight.
+
 ## Risks
 
 - **Form change from dots to silhouettes:** the reader has spent all of ch2 on dots. Mitigated by the one-sentence page note establishing the new convention. If playtest readers trip on it, the fallback is to keep dots under the silhouette (very low opacity) for one chart before retiring them — but ship silhouette-only first.
