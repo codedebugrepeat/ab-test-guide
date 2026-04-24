@@ -17,6 +17,24 @@ export const chapters = [
     description:
       "Before you can know how many visitors you need, you need to know your baseline. This chapter explains why baseline rate is the starting point for every sample size calculation.",
   },
+  {
+    href: "/how-sure-do-you-need-to-be",
+    number: 3,
+    title: "How sure do you need to be?",
+    shortTitle: "Confidence",
+    browserTitle: "How sure do you need to be?",
+    description:
+      "Version B has its own bell. Put it next to the control and the question becomes visual: when do the two distributions pull apart enough to call a winner?",
+  },
+  {
+    href: "/how-big-a-jump-are-you-looking-for",
+    number: 4,
+    title: "How big a jump are you looking for?",
+    shortTitle: "Effect size",
+    browserTitle: "How big a jump are you looking for?",
+    description:
+      "The minimum lift you want to detect is a lever, just like baseline and confidence. Aim small and you need a lot more data. Aim big and the picture separates on its own.",
+  },
 ] as const;
 
 export const totalChapters = chapters.length;

@@ -26,6 +26,19 @@ Keep the running case study (signup button, baseline 10%, 10% relative lift) as 
 
 ---
 
+## Convention: one-sided throughout
+
+Chapters 3 through 5 use a **one-sided test**. The reader is hunting for a lift; B either clears A by enough to call a winner, or it doesn't. The left tail of A's bell isn't a rejection region in this guide.
+
+Implications for ch3 specifically:
+
+- `DecisionThresholdWidget` draws a single line in A's right tail. Shaded region = A's right-tail false-positive area. Do not render or shade A's left tail as rejection.
+- "95% confidence" = α of 5% in A's right tail. Critical value sits at z_α ≈ 1.645 standard deviations above A's mean, not 1.96.
+- `NormalVsExtremeWidget` can still show ±1σ / ±2σ bilaterally — that widget is about the shape of a bell, not about rejection regions. Keep the copy around it focused on "middle is routine, tails are rare" without implying both tails are the decision region.
+- The "three names for the same line" copy already treats the line as a single right-tail threshold. Keep it that way.
+
+---
+
 ## Widgets
 
 ### Widget 1 — Two bells (primary)
@@ -49,15 +62,40 @@ Working name: `TwoBellsWidget` (or reuse `BaselineDistributionWidget` with a pro
 
 Lift stays fixed at `CH2_LIFT = 0.10` to keep the "same relative improvement, different pictures" thread from ch2.
 
-### Widget 2 — Where do you draw the line? (optional, second half of chapter)
+### Widget 2 — Middle is normal, tails are rare
 
-Either a second widget or an extension of Widget 1:
+Working name: `NormalVsExtremeWidget`.
 
-- Add a vertical "decision threshold" line between the two bells.
+A single bell (no variant). The point is to teach the ruler before the reader sees a line drawn with it.
+
+**What it shows:**
+- One sampling distribution (any shape consistent with ch2 will do; keep the case study baseline at 10% for continuity).
+- Vertical markers at ±1 standard deviation and ±2 standard deviations from the mean.
+- Shaded bands inside the markers, labeled with the share of the distribution they contain: ~68% inside 1σ, ~95% inside 2σ.
+- Lightly shaded tails past ±2σ, labeled as the roughly 5% "rare" region (about 1 sample in 20 on either side combined).
+
+**Controls:** none by default. The concept is more important than the levers here. If a lever helps, expose baseline only, so the reader can confirm the 68/95 rule holds regardless of where the bell sits.
+
+**Why this widget exists:**
+- The reader needs to feel that "middle of the bell is common, tails are rare" before the threshold widget asks them to pick a line. Without this beat, the threshold slider is a lever with no intuition behind it.
+- It also pre-loads the language the chapter uses afterwards: standard deviation as a ruler, 95% band as the default reference, tails as the "rare" region. Names like critical value, confidence, and significance land cleanly once that ruler is on the page.
+
+Keep this widget deliberately simple. No two bells, no overlap. One bell, labeled bands, move on.
+
+### Widget 3 — Where do you draw the line?
+
+Working name: `DecisionThresholdWidget`, or an extension of Widget 1.
+
+**What it shows:**
+- Back to two bells from Widget 1, same default state.
+- A vertical "decision threshold" line drawn past A's mean, in A's right tail.
 - Shade the area of A's bell to the right of the threshold (false positives) and the area of B's bell to the left of the threshold (false negatives / missed wins).
-- Slider for confidence level (80 / 90 / 95 / 99%) moves the threshold.
+- Slider for confidence level (80 / 90 / 95 / 99%) moves the threshold. The line literally sits at the edge of A's x% band, tying straight back to Widget 2's ruler.
+- Optional: annotate the line with its x-value and call it the "critical value" once the reader has been introduced to the term in copy.
 
-Only introduce this once the two-bell picture is locked in. If it makes the chapter too dense, defer to chapter 4 and keep ch3 focused on overlap.
+**Controls:** confidence slider. Baseline stays pinned at the case study default so the reader only changes one thing at a time relative to Widget 1.
+
+Only ship this once the two-bell picture (Widget 1) and the tails ruler (Widget 2) are locked in. Without both, the threshold slider is abstract.
 
 ---
 
@@ -71,13 +109,20 @@ Only introduce this once the two-bell picture is locked in. If it makes the chap
 4. Post-widget: walk through what the overlap means. Use concrete numbers: at 10% baseline with N=100, A's 95% range is roughly 4–16%; B's is roughly 5–17%. A single sample can't reliably tell them apart.
 5. h2: "Slide the baseline and watch the overlap move"
    - Prompt the reader to try 2% and 20%. Describe what they should see in prose afterwards.
-6. h2: "Where do you draw the line?" (only if Widget 2 ships in ch3)
-   - Introduce the decision-threshold idea; widget 2 or extended widget 1.
-   - Paragraph on the tradeoff: stricter threshold = fewer false positives, needs more separation = more data.
-7. Quote: something like "A winner is a gap big enough that you would not see it by chance."
-8. h2: "What confidence actually costs"
-   - Short: higher confidence shifts the threshold further out, which means more data to clear it. Connect to ch4.
-9. SectionFooter teasing chapter 4 (minimum detectable lift and the full calculator).
+6. h2: "Middle is normal, tails are rare"
+   - Introduce standard deviation as a ruler. Lay out the 68% / 95% rule of thumb.
+   - `NormalVsExtremeWidget` with the labeled 1σ / 2σ bands.
+   - Post-widget: middle of the bell is routine noise, tails are the rare results. Sets up the next beat.
+7. h2: "Where do you draw the line?"
+   - Introduce the decision-threshold idea. Tradeoff: pull the line toward A and you catch more real wins plus some noise; push it toward B and you filter noise at the price of missed real wins.
+   - `DecisionThresholdWidget`.
+8. h2: "Three names for the same line"
+   - Name critical value (where the line sits), confidence level (share of A's bell inside), significance level (sliver outside). Confidence + significance = 100%.
+   - Both framings of 95%: "fooled 1 in 20 if A and B are really the same" and "catch the real rate 95 times out of 100."
+9. Quote: something like "A winner is a gap big enough that you would not see it by chance."
+10. h2: "What confidence actually costs"
+    - Short: stricter confidence shifts the critical value further out, which means a real lift has to be larger to clear it, which means more data. Connect to ch4.
+11. SectionFooter teasing chapter 4 (minimum detectable lift).
 
 All prose should be drafted in the `writing-like-a-human` voice before shipping. Keep sentences varied, no em dashes, no "crucial/pivotal," no triplet overuse.
 
@@ -87,7 +132,9 @@ All prose should be drafted in the `writing-like-a-human` voice before shipping.
 
 - `app/how-sure-do-you-need-to-be/page.tsx` — new.
 - `components/tutorial/chapters.ts` — add chapter 3 entry (`title`, `shortTitle`, `browserTitle`, `description`).
-- `components/tutorial/two-bells-widget.tsx` — new, or extend `baseline-distribution-widget.tsx` to accept a `variant` mode.
+- `components/tutorial/two-bells-widget.tsx` — new, or extend `baseline-distribution-widget.tsx` to accept a `variant` mode. (Placeholder shipped.)
+- `components/tutorial/normal-vs-extreme-widget.tsx` — new. Single-bell widget with 1σ / 2σ bands and the share of the distribution inside each. (Placeholder shipped.)
+- `components/tutorial/decision-threshold-widget.tsx` — new, or extension of `two-bells-widget.tsx`. Threshold line driven by a confidence slider. (Placeholder shipped.)
 - `components/tutorial/chapter-3-constants.ts` — new, or reuse CH2_N, CH2_LIFT, CH2_BASELINE_STEPS so the two chapters stay in sync.
 - `components/tutorial/tutorial-nav.tsx` — no change if it reads from `chapters.ts`.
 - `app/how-many-visitors-do-you-need/page.tsx` — `nextHref` already points at the new route; no change.
@@ -120,5 +167,6 @@ Two bells means the ch2 aria-label pattern ("Theoretical sampling distribution a
 ## Open questions
 
 - Does chapter 3 own the N slider, or does that belong in chapter 4 with the full calculator? Current lean: **N slider belongs to chapter 4** so chapter 3 has one clean lever (baseline) and one clean idea (overlap → confidence). Revisit if the two-bell picture alone is too static without N.
-- Title: "How sure do you need to be?" (confidence-forward) vs. "When can you tell them apart?" (overlap-forward). Pick during drafting.
-- Should the chapter end with the confidence/threshold widget, or defer it to chapter 4 entirely? If it defers, chapter 3 is a short, tight chapter on overlap alone. That might read better than one long chapter on overlap + confidence.
+- Title: "How sure do you need to be?" — picked during drafting and shipped.
+- Should the chapter end with the confidence/threshold widget, or defer it to chapter 4 entirely? — resolved. Threshold widget ships in ch3. Chapter 4 is MDE, not confidence.
+- Does the tails ruler (Widget 2) warrant its own chapter rather than a beat inside ch3? Current lean: **no**. It's the bridge between "two bells overlap" and "name the line," and pulling it out makes both surrounding chapters weaker. Revisit only if the ch3 page starts feeling overstuffed once real widgets replace the placeholders.
