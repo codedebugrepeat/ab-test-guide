@@ -18,7 +18,9 @@ The site walks you through a series of chapters, one concept per chapter, each w
 
 ## Stack
 
-- Next.js + React, hosted on Vercel
+- Next.js 16 + React 19, hosted on Vercel
+- Tailwind CSS v4 for styling
+- visx (axis, group, scale) for SVG chart primitives
 - Statically generated pages for SEO, client-side hydration for interactive charts
 - No server or database needed
 
