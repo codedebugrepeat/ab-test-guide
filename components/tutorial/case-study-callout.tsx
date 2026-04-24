@@ -7,8 +7,8 @@ export function CaseStudyCallout() {
         Case study
       </p>
       <p className="mb-4 text-sm text-foreground/80">
-        You run a SaaS. You want more signups. You A/B tested your signup button
-        copy.
+        You have a sign-up button on your website and want to increase sign-ups.
+        You A/B tested the button copy.
       </p>
       <ExperimentIllustration />
       <p className="mb-4 text-sm text-foreground/60">

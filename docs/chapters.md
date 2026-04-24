@@ -2,7 +2,7 @@
 
 ## Running example (used in every section)
 
-> You run a SaaS product. You want to know: if you change the copy around your signup button, will more people sign up?
+> You have a sign-up button on your website and want to increase sign-ups. You're testing whether changing the button copy will make a difference.
 
 - **Control (A):** original button copy + surrounding text
 - **Variant (B):** new copy
