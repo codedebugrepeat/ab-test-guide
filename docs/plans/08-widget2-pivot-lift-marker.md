@@ -24,7 +24,7 @@ At baseline = 2%, this is 2.0% → 2.2% (gap 0.2pp). At baseline = 20%, it’s 2
 
 In `SamplingRateDistribution`:
 
-- Keep the dot plot and x-axis exactly as-is (0%–35%, 1pp columns).
+- Keep the dot plot and x-axis exactly as-is (0%–35%, 1pp columns). *(v2 edit: implementation intentionally expanded the axis to 0%–60%, 61 columns, for better visual contrast between low and high baselines — e.g. the 50% bell fits fully on screen without crowding.)*
 - Keep the shaded band, but change the label from `~95% of samples` to something more literal like `typical range` (optionally add `(±2σ)` in smaller text if it fits).
 - Rename the existing marker label from `truth` to `average` (or `baseline avg`).
 - Add a second marker for the lifted average:

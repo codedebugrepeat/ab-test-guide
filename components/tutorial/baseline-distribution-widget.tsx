@@ -35,8 +35,9 @@ function buildTheoreticalBuckets({
   }
 
   // Binomial PMF via recurrence to avoid huge binomial coefficients.
-  // We first compute raw weights per visible bin, then allocate exactly totalDots
-  // using a largest-remainder method. This avoids rounding drift.
+  // We first compute raw weights per visible bin, then renormalize to exactly
+  // totalDots using a largest-remainder method. This gives stable visual density
+  // regardless of how much probability mass falls outside maxBin.
   const raw = Array.from({ length: maxBin + 1 }, () => 0);
 
   // P(K=0) = (1-p)^n
@@ -44,8 +45,8 @@ function buildTheoreticalBuckets({
   for (let k = 0; k <= n; k += 1) {
     const ratePct = Math.round((k / n) * 100);
     if (ratePct <= maxBin) raw[ratePct] += prob;
-    // out-of-range outcomes are silently dropped; we scale against the full
-    // probability mass (1.0) below so visible bins stay proportionally faithful.
+    // out-of-range outcomes are silently dropped; visibleMass renormalization
+    // below ensures the visible bins always sum to totalDots.
 
     // P(K=k+1) = P(K=k) * (n-k)/(k+1) * p/(1-p)
     if (k < n) {
@@ -60,11 +61,10 @@ function buildTheoreticalBuckets({
     return buckets;
   }
 
-  // Scale against 1.0 (full probability), not visibleMass, so that each bin
-  // reflects its true share of totalDots and overflow tails don't spike the edge.
-  const scaled = raw.map((v) => v * totalDots);
+  // Renormalize against visibleMass so buckets always sum to exactly totalDots.
+  const scaled = raw.map((v) => (v / visibleMass) * totalDots);
   const floored = scaled.map((v) => Math.floor(v));
-  let remaining = Math.round(visibleMass * totalDots) - floored.reduce((acc, v) => acc + v, 0);
+  let remaining = totalDots - floored.reduce((acc, v) => acc + v, 0);
 
   const remainders = scaled
     .map((v, idx) => ({ idx, frac: v - Math.floor(v) }))
@@ -150,17 +150,17 @@ export function BaselineDistributionWidget() {
   return (
     <div className="flex flex-col items-center gap-6">
       <div className="flex w-full max-w-[560px] items-center gap-4">
-        <label className="shrink-0 text-sm font-medium text-foreground/70">
+        <label htmlFor="baseline-slider" className="shrink-0 text-sm font-medium text-foreground/70">
           Baseline:
         </label>
         <input
+          id="baseline-slider"
           type="range"
           min={0}
           max={CH2_BASELINE_STEPS.length - 1}
           step={1}
           value={baselineIndex}
           onChange={handleBaselineChange}
-          aria-label="Baseline conversion rate"
           aria-valuetext={`${(baseline * 100).toFixed(0)}%`}
           className="flex-1"
         />

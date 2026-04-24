@@ -35,7 +35,7 @@ function buildTickValues(maxBin: number, interval: number) {
 
 export function SamplingRateDistribution({ buckets, baseline }: Props) {
   const cols = Array.from({ length: MAX_BIN + 1 }, (_, i) => i);
-  const xTicks = buildTickValues(MAX_BIN, 10);
+  const xTicksBase = buildTickValues(MAX_BIN, 10);
   const bucketCounts = cols.map((_, i) => Math.max(0, Math.floor(buckets[i] ?? 0)));
 
   const maxBucket = Math.max(1, ...bucketCounts);
@@ -64,6 +64,7 @@ export function SamplingRateDistribution({ buckets, baseline }: Props) {
   const lifted = Math.min(CH2_AXIS_MAX, baseline * (1 + CH2_LIFT));
   const liftedPct = lifted * 100;
   const baselineBin = Math.round(baselinePct);
+  const xTicks = [...new Set([...xTicksBase, baselineBin])].sort((a, b) => a - b);
   const liftLabel = `+${(CH2_LIFT * 100).toFixed(0)}% lift: ${liftedPct.toFixed(1)}%`;
 
   const dots: Array<{ key: string; col: number; row: number }> = [];
@@ -129,7 +130,7 @@ export function SamplingRateDistribution({ buckets, baseline }: Props) {
             fill="currentColor"
             fillOpacity={0.4}
           >
-            Observed conversion rate per sample
+            Conversion rate per 100-visitor sample
           </text>
 
           {/* Baseline average line */}
