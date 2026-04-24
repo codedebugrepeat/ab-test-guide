@@ -150,17 +150,17 @@ export function BaselineDistributionWidget() {
   return (
     <div className="flex flex-col items-center gap-6">
       <div className="flex w-full max-w-[560px] items-center gap-4">
-        <label className="shrink-0 text-sm font-medium text-foreground/70">
+        <label htmlFor="baseline-slider" className="shrink-0 text-sm font-medium text-foreground/70">
           Baseline:
         </label>
         <input
+          id="baseline-slider"
           type="range"
           min={0}
           max={CH2_BASELINE_STEPS.length - 1}
           step={1}
           value={baselineIndex}
           onChange={handleBaselineChange}
-          aria-label="Baseline conversion rate"
           aria-valuetext={`${(baseline * 100).toFixed(0)}%`}
           className="flex-1"
         />

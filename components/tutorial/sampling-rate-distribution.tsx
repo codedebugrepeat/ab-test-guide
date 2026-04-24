@@ -129,7 +129,7 @@ export function SamplingRateDistribution({ buckets, baseline }: Props) {
             fill="currentColor"
             fillOpacity={0.4}
           >
-            Observed conversion rate per sample
+            Conversion rate per 100-visitor sample
           </text>
 
           {/* Baseline average line */}
