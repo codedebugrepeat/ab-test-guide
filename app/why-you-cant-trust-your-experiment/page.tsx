@@ -51,7 +51,8 @@ export default function Section1Page() {
         Imagine every potential visitor is a marble in a jar. Green means they
         signed up; grey means they didn&apos;t. The jar below has a true
         conversion rate of 20%: 2 in every 10, on average. Draw a sample of 10
-        and count the green ones.
+        and count the green ones. What do you notice about the average as you
+        draw more and more samples?
       </p>
 
       <div className="mt-6 flex flex-col items-center gap-4">

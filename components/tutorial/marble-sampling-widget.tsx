@@ -264,13 +264,13 @@ export function MarbleSamplingWidget({
           <StatCard
             label="latest sample"
             value={latestCount !== null ? `${latestCount}/${N}` : "–"}
-            highlight={latestCount !== null}
           />
           <div className="mx-1 w-px self-stretch bg-foreground/[0.08]" />
           <StatCard
             label="your average"
             sub={`${totalDraws} sample${totalDraws !== 1 ? "s" : ""}`}
             value={currentMean !== null ? currentMean.toFixed(2) : "–"}
+            highlight={currentMean !== null}
           />
           <div className="mx-1 w-px self-stretch bg-foreground/[0.08]" />
           <StatCard
@@ -379,7 +379,7 @@ export function MarbleSamplingWidget({
               </div>
 
               {totalDraws > MAX_ROWS && (
-                <p className="mt-3 rounded-md px-3 py-2 text-center text-[12px] font-medium bg-foreground/[0.06] text-foreground/60">
+                <p className="mt-3 text-center text-[12px] text-foreground/40">
                   Showing the {MAX_ROWS} most recent — {totalDraws} drawn in total
                 </p>
               )}
