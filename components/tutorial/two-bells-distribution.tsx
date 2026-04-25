@@ -113,7 +113,7 @@ export function TwoBellsDistribution({ pA, pB, maxBin }: Props) {
             tickClassName="[stroke-opacity:0.25]"
             tickLength={4}
             tickFormat={() => ""}
-            label="relative likelihood"
+            label="likelihood"
             labelOffset={14}
             labelProps={{ ...axisLabelProps, textAnchor: "middle" }}
           />
@@ -144,7 +144,7 @@ export function TwoBellsDistribution({ pA, pB, maxBin }: Props) {
             fill="currentColor"
             fillOpacity={0.4}
           >
-            Conversion rate per 100-visitor sample
+            Conversion rate per {CH2_N}-visitor sample
           </text>
 
           {/* A (control) filled silhouette */}

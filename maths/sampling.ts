@@ -22,9 +22,8 @@ export function sampleMean(counts: number[]): number {
 
 // Binomial PMF via recurrence to avoid huge binomial coefficients.
 // Returns raw float probability mass per integer-percent bin.
-// Out-of-range outcomes (bin > maxBin) are silently accumulated into the
-// nearest in-range bin via the Math.round mapping and are dropped if > maxBin;
-// callers that need the visible mass to sum to a fixed total must renormalize.
+// Outcomes that map to a bin > maxBin are dropped (truncated), so the values
+// may sum to less than 1; callers that need a fixed total must renormalize.
 export function binomialPMF(n: number, p: number, maxBin: number): number[] {
   const raw = new Array<number>(maxBin + 1).fill(0);
   if (p <= 0) { raw[0] = 1; return raw; }

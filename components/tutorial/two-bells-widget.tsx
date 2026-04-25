@@ -67,7 +67,7 @@ export function TwoBellsWidget() {
   };
 
   const maxBin = Math.round(CH2_AXIS_MAX * 100);
-  const gapPts = baseline * CH2_LIFT * 100;
+  const gapPts = (liftedBaseline - baseline) * 100;
 
   let insightText: string;
   if (baseline <= 0.02) {
