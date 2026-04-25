@@ -3,8 +3,8 @@
 import { useState, useRef, useEffect } from "react";
 import { drawSample, countSample, binomialMean } from "@/maths/sampling";
 import { MarbleRow } from "./marble-row";
-import { WJAR_W } from "./jar-illustration";
-import { N, P } from "./sampling-constants";
+import { WJAR_W } from "../illustrations/jar-illustration";
+import { N, P } from "../constants/sampling-constants";
 const MAX_ROWS = 5;
 const FADE_DURATION = 250;
 const PULSE_DURATION = 1400;

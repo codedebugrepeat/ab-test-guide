@@ -8,7 +8,7 @@ import {
   CH2_DEBOUNCE_MS,
   CH2_LIFT,
   CH2_N,
-} from "./chapter-2-constants";
+} from "../constants/chapter-2-constants";
 import { useBaselineSlider } from "./use-baseline-slider";
 
 // Chapter 3 opens on the case study's 10% baseline, per the narrative copy.

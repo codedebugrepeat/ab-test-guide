@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { TutorialLayout } from "@/components/tutorial/tutorial-layout";
 import { Quote } from "@/components/tutorial/quote";
 import { SectionFooter } from "@/components/tutorial/section-footer";
-import { WidgetFrame } from "@/components/tutorial/widget-frame";
-import { SamplingDistributionBuilder } from "@/components/tutorial/sampling-distribution-builder";
-import { BaselineDistributionWidget } from "@/components/tutorial/baseline-distribution-widget";
+import { WidgetFrame } from "@/components/tutorial/widgets/widget-frame";
+import { SamplingDistributionBuilder } from "@/components/tutorial/widgets/sampling-distribution-builder";
+import { BaselineDistributionWidget } from "@/components/tutorial/widgets/baseline-distribution-widget";
 import { getChapter, totalChapters } from "@/components/tutorial/chapters";
 import { siteConfig } from "@/lib/site-config";
 

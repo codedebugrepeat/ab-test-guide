@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { TutorialLayout } from "@/components/tutorial/tutorial-layout";
 import { CaseStudyCallout } from "@/components/tutorial/case-study-callout";
-import { MarbleSamplingWidget } from "@/components/tutorial/marble-sampling-widget";
+import { MarbleSamplingWidget } from "@/components/tutorial/widgets/marble-sampling-widget";
 import { Quote } from "@/components/tutorial/quote";
 import { SectionFooter } from "@/components/tutorial/section-footer";
-import { WidgetFrame } from "@/components/tutorial/widget-frame";
-import { JarIllustration } from "@/components/tutorial/jar-illustration";
+import { WidgetFrame } from "@/components/tutorial/widgets/widget-frame";
+import { JarIllustration } from "@/components/tutorial/illustrations/jar-illustration";
 import { getChapter, totalChapters } from "@/components/tutorial/chapters";
 import { siteConfig } from "@/lib/site-config";
 

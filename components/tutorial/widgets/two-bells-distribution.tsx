@@ -5,7 +5,7 @@ import { curveMonotoneX } from "@visx/curve";
 import { Group } from "@visx/group";
 import { scaleLinear } from "@visx/scale";
 import { AreaClosed, LinePath } from "@visx/shape";
-import { CH2_N } from "./chapter-2-constants";
+import { CH2_N } from "../constants/chapter-2-constants";
 
 type Props = {
   pA: number;

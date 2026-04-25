@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, type ChangeEvent } from "react";
-import { CH2_BASELINE_STEPS } from "./chapter-2-constants";
+import { CH2_BASELINE_STEPS } from "../constants/chapter-2-constants";
 
 export function useBaselineSlider(initialBaseline: number) {
   const [baseline, setBaseline] = useState(initialBaseline);

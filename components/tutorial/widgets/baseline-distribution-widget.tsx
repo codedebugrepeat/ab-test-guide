@@ -11,7 +11,7 @@ import {
   CH2_N,
   CH2_DEBOUNCE_MS,
   CH2_THEORY_DOT_COUNT,
-} from "./chapter-2-constants";
+} from "../constants/chapter-2-constants";
 import { useBaselineSlider } from "./use-baseline-slider";
 
 export function BaselineDistributionWidget() {

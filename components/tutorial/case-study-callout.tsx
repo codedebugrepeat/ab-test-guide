@@ -1,4 +1,4 @@
-import { ExperimentIllustration } from "@/components/tutorial/experiment-illustration";
+import { ExperimentIllustration } from "@/components/tutorial/illustrations/experiment-illustration";
 
 export function CaseStudyCallout() {
   return (

@@ -3,20 +3,21 @@
 import { AxisBottom, AxisLeft } from "@visx/axis";
 import { Group } from "@visx/group";
 import { scaleBand, scaleLinear } from "@visx/scale";
-import { N, P } from "./sampling-constants";
-import { WJAR_W } from "./jar-illustration";
-import { binomialMean } from "@/maths/sampling";
+import { CH2_AXIS_MAX, CH2_LIFT, CH2_N } from "../constants/chapter-2-constants";
 
-type Props = { counts: number[] };
+type Props = {
+  buckets: number[];
+  baseline: number;
+};
 
-const WIDTH = WJAR_W;
+const WIDTH = 560;
 const HEIGHT = 320;
-const MARGIN = { top: 40, right: 18, bottom: 46, left: 42 };
+const MARGIN = { top: 44, right: 20, bottom: 50, left: 46 };
 const PLOT_W = WIDTH - MARGIN.left - MARGIN.right;
 const PLOT_H = HEIGHT - MARGIN.top - MARGIN.bottom;
 const DOT_R_NOMINAL = 4;
 const DOT_STEP_NOMINAL = 10;
-const PLACEHOLDER_ROWS = 3;
+const MAX_BIN = Math.round(CH2_AXIS_MAX * 100);
 
 const axisLabelProps = {
   fill: "currentColor",
@@ -25,21 +26,32 @@ const axisLabelProps = {
   fontWeight: 500,
 };
 
-export function DiscreteSamplingDistribution({ counts }: Props) {
-  const cols = Array.from({ length: N + 1 }, (_, i) => i);
-  const buckets = cols.map(() => 0);
-  for (const c of counts) if (c >= 0 && c <= N) buckets[c] += 1;
+function buildTickValues(maxBin: number, interval: number) {
+  const ticks: number[] = [];
+  for (let v = 0; v <= maxBin; v += interval) ticks.push(v);
+  if (ticks[ticks.length - 1] !== maxBin) ticks.push(maxBin);
+  return ticks;
+}
 
-  const maxBucket = Math.max(1, ...buckets);
+export function SamplingRateDistribution({ buckets, baseline }: Props) {
+  const cols = Array.from({ length: MAX_BIN + 1 }, (_, i) => i);
+  const xTicksBase = buildTickValues(MAX_BIN, 10);
+  const bucketCounts = cols.map((_, i) => Math.max(0, Math.floor(buckets[i] ?? 0)));
+
+  const maxBucket = Math.max(1, ...bucketCounts);
   const maxDotsNominal = Math.floor(PLOT_H / DOT_STEP_NOMINAL);
   const scale = maxBucket <= maxDotsNominal ? 1 : maxDotsNominal / maxBucket;
   const step = DOT_STEP_NOMINAL * scale;
-  const r = DOT_R_NOMINAL * Math.min(1, Math.max(0.6, scale));
+  const dotR = DOT_R_NOMINAL * Math.min(1, Math.max(0.6, scale));
 
   const xScale = scaleBand<number>({ domain: cols, range: [0, PLOT_W] });
+  const xValueScale = scaleLinear<number>({
+    domain: [-0.5, MAX_BIN + 0.5],
+    range: [0, PLOT_W],
+  });
   const yScale = scaleLinear<number>({ domain: [0, maxBucket], range: [PLOT_H, 0] });
   const colX = (col: number) => (xScale(col) ?? 0) + xScale.bandwidth() / 2;
-  const dotCy = (row: number) => PLOT_H - r - row * step;
+  const dotCy = (row: number) => PLOT_H - dotR - row * step;
 
   const tickInterval =
     maxBucket <= 5 ? 1 : maxBucket <= 20 ? 5 : maxBucket <= 50 ? 10 : maxBucket <= 100 ? 25 : 50;
@@ -48,21 +60,28 @@ export function DiscreteSamplingDistribution({ counts }: Props) {
     (_, i) => i * tickInterval,
   );
 
-  const trueMean = binomialMean(N, P);
+  const baselinePct = baseline * 100;
+  const lifted = Math.min(CH2_AXIS_MAX, baseline * (1 + CH2_LIFT));
+  const liftedPct = lifted * 100;
+  const baselineBin = Math.round(baselinePct);
+  const xTicks = [...new Set([...xTicksBase, baselineBin])].sort((a, b) => a - b);
+  const liftLabel = `+${(CH2_LIFT * 100).toFixed(0)}% lift: ${liftedPct.toFixed(1)}%`;
 
-  // Keyed by insertion index so each dot mounts once — animation fires only on arrival.
-  const columnCounters = cols.map(() => 0);
-  const dots = counts.flatMap((c, idx) =>
-    c >= 0 && c <= N ? [{ key: idx, col: c, row: columnCounters[c]++ }] : [],
-  );
+  const dots: Array<{ key: string; col: number; row: number }> = [];
+  for (const col of cols) {
+    const count = bucketCounts[col] ?? 0;
+    for (let row = 0; row < count; row += 1) {
+      dots.push({ key: `${col}-${row}`, col, row });
+    }
+  }
 
   return (
-    <div className="flex w-full max-w-[420px] flex-col items-center gap-2">
+    <div className="flex w-full max-w-[560px] flex-col items-center gap-2">
       <svg
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
         preserveAspectRatio="xMidYMid meet"
         role="img"
-        aria-label={`Discrete sampling distribution of ${counts.length} draws across green-marble counts 0 to ${N}.`}
+        aria-label={`Theoretical sampling distribution at ${baselinePct.toFixed(1)}% baseline (N=${CH2_N}), with a ${liftLabel} marker.`}
         className="block h-auto w-full"
       >
         <Group left={MARGIN.left} top={MARGIN.top}>
@@ -74,7 +93,7 @@ export function DiscreteSamplingDistribution({ counts }: Props) {
             tickStroke="currentColor"
             tickClassName="[stroke-opacity:0.25]"
             tickLength={4}
-            label="times drawn"
+            label="relative likelihood"
             labelOffset={24}
             labelProps={{ ...axisLabelProps, textAnchor: "middle" }}
             tickLabelProps={() => ({
@@ -91,12 +110,13 @@ export function DiscreteSamplingDistribution({ counts }: Props) {
             stroke="currentColor"
             axisLineClassName="[stroke-opacity:0.14]"
             hideTicks
-            tickFormat={(v) => String(v)}
+            tickValues={xTicks}
+            tickFormat={(v) => `${v}%`}
             tickLabelProps={(col) => ({
               fontSize: 11,
-              fontWeight: col === trueMean ? 600 : 500,
+              fontWeight: col === baselineBin ? 600 : 500,
               fill: "currentColor",
-              fillOpacity: col === trueMean ? 0.7 : 0.4,
+              fillOpacity: col === baselineBin ? 0.7 : 0.4,
               textAnchor: "middle",
               dy: "0.9em",
             })}
@@ -110,14 +130,14 @@ export function DiscreteSamplingDistribution({ counts }: Props) {
             fill="currentColor"
             fillOpacity={0.4}
           >
-            Number of green marbles per sample
+            Conversion rate per 100-visitor sample
           </text>
 
-          {/* True-mean marker */}
+          {/* Baseline average line */}
           <line
-            x1={colX(trueMean)}
+            x1={xValueScale(baselinePct)}
             y1={-6}
-            x2={colX(trueMean)}
+            x2={xValueScale(baselinePct)}
             y2={PLOT_H}
             stroke="currentColor"
             strokeOpacity={0.3}
@@ -125,57 +145,57 @@ export function DiscreteSamplingDistribution({ counts }: Props) {
             strokeWidth={1}
           />
           <text
-            x={colX(trueMean)}
-            y={-12}
+            x={xValueScale(baselinePct)}
+            y={-24}
             textAnchor="middle"
             fontSize="10"
             fontWeight="600"
             fill="currentColor"
             fillOpacity={0.55}
           >
-            true rate: {Math.round(P * 100)}% → {trueMean} per {N}
+            average: {baselinePct.toFixed(0)}%
           </text>
 
-          {/* Dashed placeholder slots above each column's current stack */}
-          {cols.map((col) =>
-            Array.from({ length: PLACEHOLDER_ROWS }, (_, k) => {
-              const cy = dotCy(buckets[col] + k);
-              if (cy < 0) return null;
-              return (
-                <circle
-                  key={`ph-${col}-${k}`}
-                  cx={colX(col)}
-                  cy={cy}
-                  r={r}
-                  fill="none"
-                  stroke="currentColor"
-                  strokeOpacity={0.12 - k * 0.03}
-                  strokeDasharray="2 2"
-                  strokeWidth={1}
-                />
-              );
-            }),
-          )}
+          {/* Lift marker line */}
+          <line
+            x1={xValueScale(liftedPct)}
+            y1={-6}
+            x2={xValueScale(liftedPct)}
+            y2={PLOT_H}
+            stroke="currentColor"
+            strokeOpacity={0.75}
+            strokeDasharray="6 2"
+            strokeWidth={1.5}
+            className="text-blue-500 dark:text-blue-400"
+          />
+          <text
+            x={xValueScale(liftedPct)}
+            y={-12}
+            textAnchor="middle"
+            fontSize="10"
+            fontWeight="600"
+            fill="currentColor"
+            fillOpacity={0.8}
+            className="text-blue-500 dark:text-blue-400"
+          >
+            {liftLabel}
+          </text>
 
-          {/* Drawn samples as stacked dots */}
+          {/* Stacked dots */}
           {dots.map((d) => (
             <circle
               key={d.key}
               cx={colX(d.col)}
               cy={dotCy(d.row)}
-              r={r}
+              r={dotR}
               fill="#16a34a"
-              className="animate-dot-drop"
-              style={{ transformBox: "fill-box" as const }}
             />
           ))}
         </Group>
       </svg>
 
       <div className="text-[11px] text-foreground/45 tabular-nums">
-        {counts.length === 0
-          ? "Draw a sample to begin."
-          : `${counts.length} sample${counts.length !== 1 ? "s" : ""} drawn`}
+        Theoretical shape (not a random draw).
       </div>
     </div>
   );

@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { TutorialLayout } from "@/components/tutorial/tutorial-layout";
 import { Quote } from "@/components/tutorial/quote";
 import { SectionFooter } from "@/components/tutorial/section-footer";
-import { WidgetFrame } from "@/components/tutorial/widget-frame";
-import { TwoBellsWidget } from "@/components/tutorial/two-bells-widget";
-import { DecisionThresholdWidget } from "@/components/tutorial/decision-threshold-widget";
-import { NormalVsExtremeWidget } from "@/components/tutorial/normal-vs-extreme-widget";
+import { WidgetFrame } from "@/components/tutorial/widgets/widget-frame";
+import { TwoBellsWidget } from "@/components/tutorial/widgets/two-bells-widget";
+import { DecisionThresholdWidget } from "@/components/tutorial/widgets/decision-threshold-widget";
+import { NormalVsExtremeWidget } from "@/components/tutorial/widgets/normal-vs-extreme-widget";
 import { getChapter, totalChapters } from "@/components/tutorial/chapters";
 import { siteConfig } from "@/lib/site-config";
 
