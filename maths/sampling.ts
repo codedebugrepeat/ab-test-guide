@@ -20,6 +20,28 @@ export function sampleMean(counts: number[]): number {
   return counts.reduce((a, b) => a + b, 0) / counts.length;
 }
 
+// Binomial PMF via recurrence to avoid huge binomial coefficients.
+// Returns raw float probability mass per integer-percent bin.
+// Out-of-range outcomes (bin > maxBin) are silently accumulated into the
+// nearest in-range bin via the Math.round mapping and are dropped if > maxBin;
+// callers that need the visible mass to sum to a fixed total must renormalize.
+export function binomialPMF(n: number, p: number, maxBin: number): number[] {
+  const raw = new Array<number>(maxBin + 1).fill(0);
+  if (p <= 0) { raw[0] = 1; return raw; }
+  if (p >= 1) { raw[maxBin] = 1; return raw; }
+
+  let prob = Math.pow(1 - p, n);
+  for (let k = 0; k <= n; k += 1) {
+    const bin = Math.round((k / n) * 100);
+    if (bin <= maxBin) raw[bin] += prob;
+    if (k < n) {
+      prob = (prob * (n - k)) / (k + 1);
+      prob = (prob * p) / (1 - p);
+    }
+  }
+  return raw;
+}
+
 export function buildTheoreticalBuckets({
   n,
   p,
@@ -41,26 +63,10 @@ export function buildTheoreticalBuckets({
     return buckets;
   }
 
-  // Binomial PMF via recurrence to avoid huge binomial coefficients.
   // We first compute raw weights per visible bin, then renormalize to exactly
   // totalDots using a largest-remainder method. This gives stable visual density
   // regardless of how much probability mass falls outside maxBin.
-  const raw = Array.from({ length: maxBin + 1 }, () => 0);
-
-  // P(K=0) = (1-p)^n
-  let prob = Math.pow(1 - p, n);
-  for (let k = 0; k <= n; k += 1) {
-    const ratePct = Math.round((k / n) * 100);
-    if (ratePct <= maxBin) raw[ratePct] += prob;
-    // out-of-range outcomes are silently dropped; visibleMass renormalization
-    // below ensures the visible bins always sum to totalDots.
-
-    // P(K=k+1) = P(K=k) * (n-k)/(k+1) * p/(1-p)
-    if (k < n) {
-      prob = (prob * (n - k)) / (k + 1);
-      prob = (prob * p) / (1 - p);
-    }
-  }
+  const raw = binomialPMF(n, p, maxBin);
 
   const visibleMass = raw.reduce((acc, v) => acc + v, 0);
   if (visibleMass <= 0) {

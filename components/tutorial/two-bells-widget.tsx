@@ -107,7 +107,6 @@ export function TwoBellsWidget() {
         pA={baseline}
         pB={liftedBaseline}
         maxBin={maxBin}
-        baseline={baseline}
       />
 
       <p className="max-w-[480px] text-center text-sm text-foreground/60">

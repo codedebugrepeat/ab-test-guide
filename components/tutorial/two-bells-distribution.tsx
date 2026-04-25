@@ -5,13 +5,13 @@ import { curveMonotoneX } from "@visx/curve";
 import { Group } from "@visx/group";
 import { scaleLinear } from "@visx/scale";
 import { AreaClosed, LinePath } from "@visx/shape";
+import { binomialPMF } from "@/maths/sampling";
 import { CH2_N } from "./chapter-2-constants";
 
 type Props = {
   pA: number;
   pB: number;
   maxBin: number;
-  baseline: number;
 };
 
 const WIDTH = 560;
@@ -38,22 +38,6 @@ function buildTickValues(maxBin: number, interval: number) {
   return ticks;
 }
 
-// Raw float binomial PMF at each integer percentage bin.
-// No integer rounding — produces smooth density values for curve rendering.
-function floatPMF(n: number, p: number, maxBin: number): number[] {
-  const raw = new Array<number>(maxBin + 1).fill(0);
-  if (p <= 0) { raw[0] = 1; return raw; }
-  if (p >= 1) { raw[maxBin] = 1; return raw; }
-
-  let prob = Math.pow(1 - p, n);
-  for (let k = 0; k <= n; k++) {
-    const bin = Math.round((k / n) * 100);
-    if (bin <= maxBin) raw[bin] += prob;
-    if (k < n) prob = (prob * (n - k)) / (k + 1) * p / (1 - p);
-  }
-  return raw;
-}
-
 type Datum = { x: number; y: number };
 
 function toData(pmf: number[]): Datum[] {
@@ -76,11 +60,11 @@ function trimSupport(a: number[], b: number[]): { lo: number; hi: number } {
   return { lo: Math.max(0, lo - 2), hi: Math.min(n - 1, hi + 2) };
 }
 
-export function TwoBellsDistribution({ pA, pB, maxBin, baseline }: Props) {
+export function TwoBellsDistribution({ pA, pB, maxBin }: Props) {
   const xTicksBase = buildTickValues(maxBin, 10);
 
-  const pmfA = floatPMF(CH2_N, pA, maxBin);
-  const pmfB = floatPMF(CH2_N, pB, maxBin);
+  const pmfA = binomialPMF(CH2_N, pA, maxBin);
+  const pmfB = binomialPMF(CH2_N, pB, maxBin);
 
   const { lo, hi } = trimSupport(pmfA, pmfB);
 
@@ -100,16 +84,12 @@ export function TwoBellsDistribution({ pA, pB, maxBin, baseline }: Props) {
     domain: [-0.5, maxBin + 0.5],
     range: [0, PLOT_W],
   });
-  const xScale = scaleLinear<number>({
-    domain: [0, maxBin],
-    range: [0, PLOT_W],
-  });
   const yScale = scaleLinear<number>({
     domain: [0, maxY * 1.12],
     range: [PLOT_H, 0],
   });
 
-  const baselinePct = baseline * 100;
+  const baselinePct = pA * 100;
   const liftedPct = pB * 100;
   const xTicks = xTicksBase;
 
@@ -141,7 +121,7 @@ export function TwoBellsDistribution({ pA, pB, maxBin, baseline }: Props) {
 
           <AxisBottom
             top={PLOT_H}
-            scale={xScale}
+            scale={xValueScale}
             stroke="currentColor"
             axisLineClassName="[stroke-opacity:0.14]"
             hideTicks
