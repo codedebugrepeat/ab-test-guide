@@ -58,6 +58,11 @@ export default function Section3Page() {
           <TwoBellsWidget />
         </WidgetFrame>
       </div>
+      <p className="mt-4 text-sm text-foreground/55">
+        We&apos;re drawing the bells as smooth silhouettes from here on. Each
+        bell is still the same distribution you saw in chapter 2, just without
+        the individual dots.
+      </p>
 
       <div className="mt-8 space-y-4 text-foreground/70">
         <p>
