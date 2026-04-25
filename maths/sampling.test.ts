@@ -7,6 +7,8 @@ import {
   sampleMean,
   binomialPMF,
   buildTheoreticalBuckets,
+  gaussianCurve,
+  standardNormalCurve,
 } from "./sampling";
 
 describe("drawSample", () => {
@@ -162,6 +164,124 @@ describe("buildTheoreticalBuckets", () => {
   it("totalDots=0 produces all-zero buckets", () => {
     const buckets = buildTheoreticalBuckets({ n: 100, p: 0.5, maxBin: 100, totalDots: 0 });
     expect(buckets.every((v) => v === 0)).toBe(true);
+  });
+});
+
+describe("gaussianCurve", () => {
+  it("returns `steps` points spanning [xMin, xMax] inclusive", () => {
+    const data = gaussianCurve(0.1, 100, 0, 25, 50);
+    expect(data).toHaveLength(50);
+    expect(data[0].x).toBe(0);
+    expect(data[data.length - 1].x).toBe(25);
+  });
+
+  it("defaults to 300 steps", () => {
+    expect(gaussianCurve(0.1, 100, 0, 25)).toHaveLength(300);
+  });
+
+  it("y peaks at 1 when the mean is in the sampled grid", () => {
+    // x range chosen so x=10 (the mean for p=0.1) is exactly hit at i=10
+    const data = gaussianCurve(0.1, 100, 0, 20, 21);
+    expect(data[10].x).toBe(10);
+    expect(data[10].y).toBeCloseTo(1, 10);
+  });
+
+  it("max y across a finely-sampled curve is at most 1 and very close to it", () => {
+    const data = gaussianCurve(0.1, 100, 0, 25);
+    const maxY = Math.max(...data.map((d) => d.y));
+    expect(maxY).toBeLessThanOrEqual(1 + 1e-9);
+    expect(maxY).toBeGreaterThan(0.99);
+  });
+
+  it("is symmetric around the mean", () => {
+    const sd = Math.sqrt(100 * 0.1 * 0.9);
+    const mean = 10;
+    const data = gaussianCurve(0.1, 100, mean - 2 * sd, mean + 2 * sd, 11);
+    for (let i = 0; i < data.length; i += 1) {
+      expect(data[i].y).toBeCloseTo(data[data.length - 1 - i].y, 9);
+    }
+  });
+
+  it("matches the gaussian formula y = exp(-z^2/2) at ±1 SD and ±2 SD", () => {
+    const sd = Math.sqrt(100 * 0.1 * 0.9);
+    const mean = 10;
+    // Sample exactly two points: one at mean+sd, one at mean+2sd.
+    const [oneSd] = gaussianCurve(0.1, 100, mean + sd, mean + sd + 1, 2);
+    const [twoSd] = gaussianCurve(0.1, 100, mean + 2 * sd, mean + 2 * sd + 1, 2);
+    expect(oneSd.y).toBeCloseTo(Math.exp(-0.5), 6);
+    expect(twoSd.y).toBeCloseTo(Math.exp(-2), 6);
+  });
+
+  it("y values are non-negative and bounded by 1", () => {
+    const data = gaussianCurve(0.3, 100, 0, 60);
+    expect(data.every((d) => d.y >= 0 && d.y <= 1 + 1e-9)).toBe(true);
+  });
+
+  it("p=0 collapses to a single point at x=0 with y=1", () => {
+    const data = gaussianCurve(0, 100, 0, 25);
+    expect(data).toEqual([{ x: 0, y: 1 }]);
+  });
+
+  it("p=1 collapses to a single point at x=100 with y=1", () => {
+    const data = gaussianCurve(1, 100, 0, 100);
+    expect(data).toEqual([{ x: 100, y: 1 }]);
+  });
+
+  it("n=0 collapses to a single point", () => {
+    const data = gaussianCurve(0.5, 0, 0, 100);
+    expect(data).toHaveLength(1);
+    expect(data[0].y).toBe(1);
+  });
+});
+
+describe("standardNormalCurve", () => {
+  it("returns `steps` points spanning [xMin, xMax] inclusive", () => {
+    const data = standardNormalCurve(-3.5, 3.5, 50);
+    expect(data).toHaveLength(50);
+    expect(data[0].x).toBeCloseTo(-3.5, 10);
+    expect(data[data.length - 1].x).toBeCloseTo(3.5, 10);
+  });
+
+  it("defaults to 300 steps", () => {
+    expect(standardNormalCurve(-3, 3)).toHaveLength(300);
+  });
+
+  it("y=1 at x=0 (the mean)", () => {
+    // With an odd step count, x=0 is hit exactly at the midpoint.
+    const data = standardNormalCurve(-2, 2, 5);
+    expect(data[2].x).toBe(0);
+    expect(data[2].y).toBe(1);
+  });
+
+  it("y=exp(-0.5) at x=±1 SD", () => {
+    const data = standardNormalCurve(-1, 1, 3);
+    expect(data[0].y).toBeCloseTo(Math.exp(-0.5), 10);
+    expect(data[2].y).toBeCloseTo(Math.exp(-0.5), 10);
+  });
+
+  it("y=exp(-2) at x=±2 SD", () => {
+    const data = standardNormalCurve(-2, 2, 3);
+    expect(data[0].y).toBeCloseTo(Math.exp(-2), 10);
+    expect(data[2].y).toBeCloseTo(Math.exp(-2), 10);
+  });
+
+  it("is symmetric: y(x) === y(-x)", () => {
+    const data = standardNormalCurve(-3, 3, 13);
+    for (let i = 0; i < data.length; i++) {
+      expect(data[i].y).toBeCloseTo(data[data.length - 1 - i].y, 10);
+    }
+  });
+
+  it("all y values are in (0, 1]", () => {
+    const data = standardNormalCurve(-4, 4);
+    expect(data.every((d) => d.y > 0 && d.y <= 1)).toBe(true);
+  });
+
+  it("monotonically decreasing from center outward", () => {
+    const data = standardNormalCurve(0, 4, 50);
+    for (let i = 1; i < data.length; i++) {
+      expect(data[i].y).toBeLessThanOrEqual(data[i - 1].y);
+    }
   });
 });
 

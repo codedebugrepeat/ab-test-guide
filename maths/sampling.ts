@@ -42,6 +42,39 @@ export function binomialPMF(n: number, p: number, maxBin: number): number[] {
   return raw;
 }
 
+export type GaussianPoint = { x: number; y: number };
+
+// Standard-normal curve in z-score (SD) units: x=0 is the mean, x=±1 is ±1 SD.
+// y is normalized to peak=1. Use when the axis should show SD distances rather
+// than raw measurement units (e.g. the ruler-teaching widget in chapter 3).
+export function standardNormalCurve(xMin: number, xMax: number, steps = 300): GaussianPoint[] {
+  return Array.from({ length: steps }, (_, i) => {
+    const x = xMin + (i / (steps - 1)) * (xMax - xMin);
+    return { x, y: Math.exp(-0.5 * x * x) };
+  });
+}
+
+// Continuous normal-curve samples for the binomial Bin(n, p), normalized to
+// peak=1, evaluated at `steps` evenly-spaced x-values over [xMin, xMax]
+// (where x is in percentage-point units, i.e. p*100). Used for smooth bell
+// silhouettes; the binomial PMF at small p is too coarse to render well.
+export function gaussianCurve(
+  p: number,
+  n: number,
+  xMin: number,
+  xMax: number,
+  steps = 300,
+): GaussianPoint[] {
+  const mean = p * 100;
+  const sd = Math.sqrt(n * p * (1 - p));
+  if (sd < 1e-6) return [{ x: mean, y: 1 }];
+  return Array.from({ length: steps }, (_, i) => {
+    const x = xMin + (i / (steps - 1)) * (xMax - xMin);
+    const z = (x - mean) / sd;
+    return { x, y: Math.exp(-0.5 * z * z) };
+  });
+}
+
 export function buildTheoreticalBuckets({
   n,
   p,
