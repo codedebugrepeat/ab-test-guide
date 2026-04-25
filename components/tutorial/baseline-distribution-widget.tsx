@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef, type ChangeEvent } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { binomialSD, buildTheoreticalBuckets } from "@/maths/sampling";
 import { SamplingRateDistribution } from "./sampling-rate-distribution";
 import {
@@ -12,27 +12,12 @@ import {
   CH2_DEBOUNCE_MS,
   CH2_THEORY_DOT_COUNT,
 } from "./chapter-2-constants";
+import { useBaselineSlider } from "./use-baseline-slider";
 
 export function BaselineDistributionWidget() {
-  const [baseline, setBaseline] = useState(CH2_BASELINE_DEFAULT);
+  const { baseline, baselineIndex, handleBaselineChange } = useBaselineSlider(CH2_BASELINE_DEFAULT);
   const [liveText, setLiveText] = useState("");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const baselineIndex = useMemo(() => {
-    const exact = CH2_BASELINE_STEPS.indexOf(baseline as (typeof CH2_BASELINE_STEPS)[number]);
-    if (exact !== -1) return exact;
-
-    let bestIdx = 0;
-    let bestDist = Infinity;
-    for (let i = 0; i < CH2_BASELINE_STEPS.length; i += 1) {
-      const dist = Math.abs(CH2_BASELINE_STEPS[i] - baseline);
-      if (dist < bestDist) {
-        bestDist = dist;
-        bestIdx = i;
-      }
-    }
-    return bestIdx;
-  }, [baseline]);
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -47,12 +32,6 @@ export function BaselineDistributionWidget() {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
   }, [baseline]);
-
-  const handleBaselineChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const idx = Number(e.target.value);
-    const next = CH2_BASELINE_STEPS[Math.min(CH2_BASELINE_STEPS.length - 1, Math.max(0, idx))];
-    setBaseline(next);
-  };
 
   const theoryBuckets = useMemo(() => {
     return buildTheoreticalBuckets({

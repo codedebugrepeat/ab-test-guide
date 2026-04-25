@@ -79,6 +79,12 @@ describe("binomialPMF", () => {
     expect(binomialPMF(100, 0.3, 100)).toHaveLength(101);
   });
 
+  it("n=0: all mass in bin 0 regardless of p", () => {
+    const pmf = binomialPMF(0, 0.5, 100);
+    expect(pmf[0]).toBe(1);
+    expect(pmf.slice(1).every((v) => v === 0)).toBe(true);
+  });
+
   it("p=0: all mass in bin 0", () => {
     const pmf = binomialPMF(100, 0, 100);
     expect(pmf[0]).toBe(1);
@@ -145,6 +151,12 @@ describe("buildTheoreticalBuckets", () => {
     const peak = buckets.indexOf(Math.max(...buckets));
     expect(peak).toBeGreaterThanOrEqual(37);
     expect(peak).toBeLessThanOrEqual(43);
+  });
+
+  it("n=0: all dots in bin 0 regardless of p", () => {
+    const buckets = buildTheoreticalBuckets({ n: 0, p: 0.5, maxBin: 100, totalDots: 50 });
+    expect(buckets[0]).toBe(50);
+    expect(buckets.slice(1).every((v) => v === 0)).toBe(true);
   });
 
   it("totalDots=0 produces all-zero buckets", () => {

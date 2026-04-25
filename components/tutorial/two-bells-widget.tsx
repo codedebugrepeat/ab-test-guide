@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef, type ChangeEvent } from "react";
+import { useState, useEffect, useRef } from "react";
 import { TwoBellsDistribution } from "./two-bells-distribution";
 import {
   CH2_AXIS_MAX,
@@ -9,6 +9,7 @@ import {
   CH2_LIFT,
   CH2_N,
 } from "./chapter-2-constants";
+import { useBaselineSlider } from "./use-baseline-slider";
 
 // Chapter 3 opens on the case study's 10% baseline, per the narrative copy.
 const CH3_TWO_BELLS_DEFAULT_BASELINE = 0.1;
@@ -22,24 +23,9 @@ function overlapFor(baseline: number): OverlapLevel {
 }
 
 export function TwoBellsWidget() {
-  const [baseline, setBaseline] = useState<number>(CH3_TWO_BELLS_DEFAULT_BASELINE);
+  const { baseline, baselineIndex, handleBaselineChange } = useBaselineSlider(CH3_TWO_BELLS_DEFAULT_BASELINE);
   const [liveText, setLiveText] = useState("");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const baselineIndex = useMemo(() => {
-    const exact = CH2_BASELINE_STEPS.indexOf(baseline as (typeof CH2_BASELINE_STEPS)[number]);
-    if (exact !== -1) return exact;
-    let bestIdx = 0;
-    let bestDist = Infinity;
-    for (let i = 0; i < CH2_BASELINE_STEPS.length; i += 1) {
-      const dist = Math.abs(CH2_BASELINE_STEPS[i] - baseline);
-      if (dist < bestDist) {
-        bestDist = dist;
-        bestIdx = i;
-      }
-    }
-    return bestIdx;
-  }, [baseline]);
 
   const liftedBaseline = Math.min(CH2_AXIS_MAX, baseline * (1 + CH2_LIFT));
 
@@ -56,15 +42,6 @@ export function TwoBellsWidget() {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
   }, [baseline]);
-
-  const handleBaselineChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const idx = Number(e.target.value);
-    const next =
-      CH2_BASELINE_STEPS[
-        Math.min(CH2_BASELINE_STEPS.length - 1, Math.max(0, idx))
-      ];
-    setBaseline(next);
-  };
 
   const maxBin = Math.round(CH2_AXIS_MAX * 100);
   const gapPts = (liftedBaseline - baseline) * 100;

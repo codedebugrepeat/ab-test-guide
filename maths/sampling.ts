@@ -26,6 +26,7 @@ export function sampleMean(counts: number[]): number {
 // may sum to less than 1; callers that need a fixed total must renormalize.
 export function binomialPMF(n: number, p: number, maxBin: number): number[] {
   const raw = new Array<number>(maxBin + 1).fill(0);
+  if (n <= 0) { raw[0] = 1; return raw; }
   if (p <= 0) { raw[0] = 1; return raw; }
   if (p >= 1) { raw[maxBin] = 1; return raw; }
 
