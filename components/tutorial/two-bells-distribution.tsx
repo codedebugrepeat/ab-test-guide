@@ -5,7 +5,6 @@ import { curveMonotoneX } from "@visx/curve";
 import { Group } from "@visx/group";
 import { scaleLinear } from "@visx/scale";
 import { AreaClosed, LinePath } from "@visx/shape";
-import { binomialPMF } from "@/maths/sampling";
 import { CH2_N } from "./chapter-2-constants";
 
 type Props = {
@@ -40,42 +39,32 @@ function buildTickValues(maxBin: number, interval: number) {
 
 type Datum = { x: number; y: number };
 
-function toData(pmf: number[]): Datum[] {
-  return pmf.map((y, x) => ({ x, y }));
-}
-
-// Keep only the range where either distribution has non-negligible mass.
-// Pads two zero-valued points on each side (clamped to array bounds) so the
-// curve ramps to baseline rather than starting/ending at a non-zero value.
-function trimSupport(a: number[], b: number[]): { lo: number; hi: number } {
-  const threshold = 1e-6;
-  const n = a.length;
-  let lo = n - 1;
-  let hi = 0;
-  for (let i = 0; i < n; i++) {
-    if ((a[i] ?? 0) > threshold || (b[i] ?? 0) > threshold) {
-      if (i < lo) lo = i;
-      if (i > hi) hi = i;
-    }
-  }
-  return { lo: Math.max(0, lo - 2), hi: Math.min(n - 1, hi + 2) };
+// Normal approximation to Bin(n, p), normalized to peak=1, sampled at `steps`
+// evenly-spaced points over [xMin, xMax] (in percentage-point units).
+// Using a continuous approximation gives smooth curves at all p values; the
+// binomial PMF at n=100 is too coarse at low p (e.g. p=0.01 → only 5 bins).
+function gaussianData(p: number, n: number, xMin: number, xMax: number, steps = 300): Datum[] {
+  const mean = p * 100;
+  const sd = Math.sqrt(n * p * (1 - p));
+  if (sd < 1e-6) return [{ x: mean, y: 1 }];
+  return Array.from({ length: steps }, (_, i) => {
+    const x = xMin + (i / (steps - 1)) * (xMax - xMin);
+    const z = (x - mean) / sd;
+    return { x, y: Math.exp(-0.5 * z * z) };
+  });
 }
 
 export function TwoBellsDistribution({ pA, pB, maxBin }: Props) {
   const xTicksBase = buildTickValues(maxBin, 10);
 
-  const pmfA = binomialPMF(CH2_N, pA, maxBin);
-  const pmfB = binomialPMF(CH2_N, pB, maxBin);
+  const sdA = Math.sqrt(CH2_N * pA * (1 - pA));
+  const sdB = Math.sqrt(CH2_N * pB * (1 - pB));
+  const xPad = 4 * Math.max(sdA, sdB);
+  const xMin = Math.max(0, Math.min(pA, pB) * 100 - xPad);
+  const xMax = Math.min(maxBin, Math.max(pA, pB) * 100 + xPad);
 
-  const { lo, hi } = trimSupport(pmfA, pmfB);
-
-  // Normalize each curve to peak = 1 so both bells reach the same height.
-  // The goal is purely didactic: the reader should focus on horizontal distance,
-  // not subtle peak-height differences caused by different p values.
-  const peakA = Math.max(1e-6, ...pmfA);
-  const peakB = Math.max(1e-6, ...pmfB);
-  const dataA: Datum[] = toData(pmfA.slice(lo, hi + 1)).map((d, i) => ({ x: lo + i, y: d.y / peakA }));
-  const dataB: Datum[] = toData(pmfB.slice(lo, hi + 1)).map((d, i) => ({ x: lo + i, y: d.y / peakB }));
+  const dataA = gaussianData(pA, CH2_N, xMin, xMax);
+  const dataB = gaussianData(pB, CH2_N, xMin, xMax);
 
   const maxY = 1;
 
@@ -90,8 +79,6 @@ export function TwoBellsDistribution({ pA, pB, maxBin }: Props) {
 
   const baselinePct = pA * 100;
   const liftedPct = pB * 100;
-  const xTicks = xTicksBase;
-
   const gapPts = (liftedPct - baselinePct).toFixed(1);
 
   return (
@@ -124,7 +111,7 @@ export function TwoBellsDistribution({ pA, pB, maxBin }: Props) {
             stroke="currentColor"
             axisLineClassName="[stroke-opacity:0.14]"
             hideTicks
-            tickValues={xTicks}
+            tickValues={xTicksBase}
             tickFormat={(v) => `${v}%`}
             tickLabelProps={() => ({
               fontSize: 11,
