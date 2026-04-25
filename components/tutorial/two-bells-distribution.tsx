@@ -44,8 +44,9 @@ function toData(pmf: number[]): Datum[] {
   return pmf.map((y, x) => ({ x, y }));
 }
 
-// Keep only the range where either distribution has non-negligible mass, plus
-// two zero-padded points on each side so the curve ramps cleanly to baseline.
+// Keep only the range where either distribution has non-negligible mass.
+// Pads two zero-valued points on each side (clamped to array bounds) so the
+// curve ramps to baseline rather than starting/ending at a non-zero value.
 function trimSupport(a: number[], b: number[]): { lo: number; hi: number } {
   const threshold = 1e-6;
   const n = a.length;
