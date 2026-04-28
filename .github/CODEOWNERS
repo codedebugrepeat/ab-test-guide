@@ -1,0 +1,6 @@
+# Code owners for this repository.
+# These owners will be the default owners for everything in the repo
+# and will be requested for review when someone opens a pull request.
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+* @codedebugrepeat
