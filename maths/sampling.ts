@@ -104,6 +104,9 @@ export function normalCdf(z: number): number {
   return 0.5 * (1 + erf(z / Math.SQRT2));
 }
 
+// One-sided inverse normal: returns the z such that normalCdf(z) = p.
+export { probit as normalInv } from "simple-statistics";
+
 export function buildTheoreticalBuckets({
   n,
   p,
