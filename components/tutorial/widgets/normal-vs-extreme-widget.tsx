@@ -24,7 +24,7 @@ const REGION_META: Record<Region, { pct: string; text: string; color: string; ar
     pct: "~95%",
     text: "of samples land within 2 SDs of the mean",
     color: BELL_COLOR,
-    ariaLabel: "Outer ring (−2 SD to −1 SD and +1 SD to +2 SD): ~95% of samples cumulative",
+    ariaLabel: "Outer ring (−2 SD to −1 SD and +1 SD to +2 SD): the bands between 1 and 2 SDs from the mean — highlights the full ±2 SD zone (~95%) when activated",
   },
   tail: {
     pct: "~5%",
@@ -134,6 +134,9 @@ export function NormalVsExtremeWidget() {
         )}
       </div>
 
+      {/* role="figure" (not "img") is intentional: role="img" hides all descendants
+          from AT, which would make the interactive <g role="button"> regions inside
+          unreachable to screen readers even while keyboard-focusable. */}
       <svg
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
         preserveAspectRatio="xMidYMid meet"

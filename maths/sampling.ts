@@ -48,6 +48,7 @@ export type GaussianPoint = { x: number; y: number };
 // y is normalized to peak=1. Use when the axis should show SD distances rather
 // than raw measurement units (e.g. the ruler-teaching widget in chapter 3).
 export function standardNormalCurve(xMin: number, xMax: number, steps = 300): GaussianPoint[] {
+  if (steps <= 1) return [{ x: xMin, y: Math.exp(-0.5 * xMin * xMin) }];
   return Array.from({ length: steps }, (_, i) => {
     const x = xMin + (i / (steps - 1)) * (xMax - xMin);
     return { x, y: Math.exp(-0.5 * x * x) };
@@ -68,6 +69,7 @@ export function gaussianCurve(
   const mean = p * 100;
   const sd = n > 0 ? Math.sqrt(p * (1 - p) / n) * 100 : 0;
   if (sd < 1e-6) return [{ x: mean, y: 1 }];
+  if (steps <= 1) return [{ x: xMin, y: Math.exp(-0.5 * ((xMin - mean) / sd) ** 2) }];
   return Array.from({ length: steps }, (_, i) => {
     const x = xMin + (i / (steps - 1)) * (xMax - xMin);
     const z = (x - mean) / sd;

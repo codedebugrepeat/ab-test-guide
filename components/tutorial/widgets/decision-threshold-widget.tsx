@@ -11,7 +11,7 @@ import { CH2_DEBOUNCE_MS } from "../constants/chapter-2-constants";
 const CONFIDENCE_STEPS = [0.8, 0.9, 0.95, 0.99] as const;
 const DEFAULT_CONFIDENCE_INDEX = 2;
 
-const Z_BY_CONFIDENCE: Record<number, number> = {
+const Z_BY_CONFIDENCE: Record<(typeof CONFIDENCE_STEPS)[number], number> = {
   0.8: 0.8416,
   0.9: 1.2816,
   0.95: 1.6449,

@@ -253,6 +253,14 @@ describe("gaussianCurve", () => {
     expect(data).toHaveLength(1);
     expect(data[0].y).toBe(1);
   });
+
+  it("steps=1 returns a single valid point at xMin with no NaN", () => {
+    const data = gaussianCurve(0.1, 100, 5, 15, 1);
+    expect(data).toHaveLength(1);
+    expect(Number.isNaN(data[0].x)).toBe(false);
+    expect(Number.isNaN(data[0].y)).toBe(false);
+    expect(data[0].x).toBe(5);
+  });
 });
 
 describe("standardNormalCurve", () => {
@@ -303,6 +311,14 @@ describe("standardNormalCurve", () => {
     for (let i = 1; i < data.length; i++) {
       expect(data[i].y).toBeLessThanOrEqual(data[i - 1].y);
     }
+  });
+
+  it("steps=1 returns a single valid point at xMin with no NaN", () => {
+    const data = standardNormalCurve(-1, 1, 1);
+    expect(data).toHaveLength(1);
+    expect(Number.isNaN(data[0].x)).toBe(false);
+    expect(Number.isNaN(data[0].y)).toBe(false);
+    expect(data[0].x).toBe(-1);
   });
 });
 
