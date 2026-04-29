@@ -3,14 +3,20 @@
 import { useState, useRef, useEffect } from "react";
 import { vocabulary } from "@/components/tutorial/constants/vocabulary";
 
+type VocabularyTerm = keyof typeof vocabulary;
+
 interface SideRemarkProps {
-  term: string;
+  term: VocabularyTerm;
 }
 
 export function SideRemark({ term }: SideRemarkProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLSpanElement>(null);
   const description = vocabulary[term];
+  if (process.env.NODE_ENV !== "production" && !description) {
+    throw new Error(`SideRemark: no vocabulary entry for "${term}"`);
+  }
+  const noteId = `side-remark-${term.toLowerCase().replace(/\s+/g, "-")}`;
 
   useEffect(() => {
     if (!open) return;
@@ -32,11 +38,12 @@ export function SideRemark({ term }: SideRemarkProps) {
 
   return (
     <span ref={ref} className="relative inline">
-      {" "}
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
+        aria-controls={noteId}
+        aria-describedby={open ? noteId : undefined}
         aria-label={`Stats aside for "${term}"`}
         className="inline cursor-pointer"
       >
@@ -48,10 +55,11 @@ export function SideRemark({ term }: SideRemarkProps) {
         >
           i
         </span>
-      </button>{" "}
+      </button>
       {open && (
         <span
-          role="tooltip"
+          id={noteId}
+          role="note"
           className="absolute bottom-full left-1/2 z-10 mb-2 block w-64 max-w-[calc(100vw-2rem)] -translate-x-1/2 rounded-md border border-foreground/15 bg-background px-4 py-3 text-sm text-foreground/70 shadow-lg"
         >
           {description}

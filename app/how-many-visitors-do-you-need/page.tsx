@@ -111,8 +111,7 @@ export default function Section2Page() {
       </h2>
 
       <p className="mt-4 text-foreground/70">
-        Two products, both hoping a new signup button lifts conversions by
-        {liftPercent}%. One converts at 2% today; the other at 20%. Same &ldquo;{liftPercent}%
+        Two products, both hoping a new signup button lifts conversions by {liftPercent}%. One converts at 2% today; the other at 20%. Same &ldquo;{liftPercent}%
         better&rdquo; on paper. On the distribution, they are not the same
         story.
       </p>
@@ -201,8 +200,8 @@ export default function Section2Page() {
         of discrete counts. From here on we&apos;ll draw it as a smooth
         silhouette: same distribution, just without the individual dots. The
         semantics don&apos;t change. Sample something and you get variance;
-        values cluster around the
-        <SideRemark term="mean" />
+        values cluster around the{" "}
+        <SideRemark term="mean" />{" "}
         and form a bell.
       </p>
 
