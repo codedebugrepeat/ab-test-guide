@@ -6,7 +6,7 @@ import { curveMonotoneX } from "@visx/curve";
 import { Group } from "@visx/group";
 import { scaleLinear } from "@visx/scale";
 import { AreaClosed, LinePath } from "@visx/shape";
-import { normalCdf, Z_BY_CONFIDENCE, type ConfidenceLevel, type GaussianPoint } from "@/maths/sampling";
+import { gaussianCurve, normalCdf, Z_BY_CONFIDENCE, type ConfidenceLevel, type GaussianPoint } from "@/maths/sampling";
 
 type Props = {
   pA: number;
@@ -28,13 +28,6 @@ const MISSED_COLOR = "#6b7280";
 const FILL_OPACITY = 0.22;
 const SHADE_OPACITY = 0.5;
 
-function bellCurve(meanPct: number, sdPct: number, xMin: number, xMax: number, steps = 240): GaussianPoint[] {
-  return Array.from({ length: steps }, (_, i) => {
-    const x = xMin + (i / (steps - 1)) * (xMax - xMin);
-    const z = (x - meanPct) / sdPct;
-    return { x, y: Math.exp(-0.5 * z * z) };
-  });
-}
 
 function splitCurve(data: GaussianPoint[], cx: number, side: "right" | "left"): GaussianPoint[] {
   const out: GaussianPoint[] = [];
@@ -85,8 +78,8 @@ export function BellsThresholdChart({ pA, pB, n, confidence }: Props) {
   const xMin = Math.max(0, rawMin);
   const xMax = Math.min(100, rawMax);
 
-  const dataA = useMemo(() => bellCurve(meanA, sdA, xMin, xMax), [meanA, sdA, xMin, xMax]);
-  const dataB = useMemo(() => bellCurve(meanB, sdB, xMin, xMax), [meanB, sdB, xMin, xMax]);
+  const dataA = useMemo(() => gaussianCurve(pA, n, xMin, xMax), [pA, n, xMin, xMax]);
+  const dataB = useMemo(() => gaussianCurve(pB, n, xMin, xMax), [pB, n, xMin, xMax]);
   const dataAFalse = useMemo(() => splitCurve(dataA, threshold, "right"), [dataA, threshold]);
   const dataBMissed = useMemo(() => splitCurve(dataB, threshold, "left"), [dataB, threshold]);
 
