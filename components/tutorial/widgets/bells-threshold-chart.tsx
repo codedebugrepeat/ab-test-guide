@@ -25,6 +25,7 @@ const A_COLOR = "#16a34a";
 const B_COLOR = "#f59e0b";
 const FALSE_POS_COLOR = "#dc2626";
 const MISSED_COLOR = "#6b7280";
+const POWER_COLOR = "#2563eb";
 const FILL_OPACITY = 0.22;
 const SHADE_OPACITY = 0.5;
 
@@ -82,22 +83,21 @@ export function BellsThresholdChart({ pA, pB, n, confidence }: Props) {
   const dataB = useMemo(() => gaussianCurve(pB, n, xMin, xMax), [pB, n, xMin, xMax]);
   const dataAFalse = useMemo(() => splitCurve(dataA, threshold, "right"), [dataA, threshold]);
   const dataBMissed = useMemo(() => splitCurve(dataB, threshold, "left"), [dataB, threshold]);
+  const dataBPower = useMemo(() => splitCurve(dataB, threshold, "right"), [dataB, threshold]);
 
   const xScale = scaleLinear<number>({ domain: [xMin, xMax], range: [0, PLOT_W] });
   const yScale = scaleLinear<number>({ domain: [0, 1.12], range: [PLOT_H, 0] });
 
-  const fpLabelX = Math.min(xMax - 0.01 * (xMax - xMin), threshold + 1.0 * sdA);
-  const fnLabelX = Math.max(xMin + 0.01 * (xMax - xMin), threshold - 1.0 * sdA);
-
-  const ariaLabel = `Two sampling distributions in conversion-rate units. Control mean ${meanA.toFixed(2)}%, variant mean ${meanB.toFixed(2)}%, n=${n} per variant. Decision threshold at ${threshold.toFixed(2)}% from ${(confidence * 100).toFixed(0)}% one-sided confidence. Red region is A's right tail past the threshold; gray region is B's left tail short of it.`;
+  const ariaLabel = `Two sampling distributions in conversion-rate units. Control mean ${meanA.toFixed(2)}%, variant mean ${meanB.toFixed(2)}%, n=${n} per variant. Decision threshold at ${threshold.toFixed(2)}% from ${(confidence * 100).toFixed(0)}% one-sided confidence. Red region is A's right tail past the threshold (false positives); gray region is B's left tail short of the threshold (false negatives); blue region is B's right tail past the threshold (power).`;
 
   return (
+    <div className="flex w-full max-w-[560px] flex-col items-center">
     <svg
       viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
       preserveAspectRatio="xMidYMid meet"
       role="img"
       aria-label={ariaLabel}
-      className="block h-auto w-full max-w-[560px]"
+      className="block h-auto w-full"
     >
       <Group left={MARGIN.left} top={MARGIN.top}>
         <AreaClosed data={dataA} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={A_COLOR} fillOpacity={FILL_OPACITY} />
@@ -106,11 +106,14 @@ export function BellsThresholdChart({ pA, pB, n, confidence }: Props) {
         <AreaClosed data={dataB} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={B_COLOR} fillOpacity={FILL_OPACITY} />
         <LinePath data={dataB} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} curve={curveMonotoneX} stroke={B_COLOR} strokeWidth={1.5} />
 
-        {dataAFalse.length > 1 && (
-          <AreaClosed data={dataAFalse} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={FALSE_POS_COLOR} fillOpacity={SHADE_OPACITY} />
-        )}
         {dataBMissed.length > 1 && (
           <AreaClosed data={dataBMissed} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={MISSED_COLOR} fillOpacity={SHADE_OPACITY} />
+        )}
+        {dataBPower.length > 1 && (
+          <AreaClosed data={dataBPower} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={POWER_COLOR} fillOpacity={SHADE_OPACITY} />
+        )}
+        {dataAFalse.length > 1 && (
+          <AreaClosed data={dataAFalse} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={FALSE_POS_COLOR} fillOpacity={SHADE_OPACITY} />
         )}
 
         {/* Mean markers */}
@@ -127,13 +130,6 @@ export function BellsThresholdChart({ pA, pB, n, confidence }: Props) {
         <line x1={xScale(threshold)} y1={-66} x2={xScale(threshold)} y2={PLOT_H} stroke="currentColor" strokeOpacity={0.8} strokeWidth={2} />
         <text x={xScale(threshold)} y={-71} textAnchor="middle" fontSize="10" fontWeight="600" fill="currentColor" fillOpacity={0.55}>
           threshold ({(confidence * 100).toFixed(0)}%)
-        </text>
-
-        <text x={xScale(fpLabelX)} y={-18} textAnchor="middle" fontSize="10" fontWeight="700" fill={FALSE_POS_COLOR} fillOpacity={0.9}>
-          false positives
-        </text>
-        <text x={xScale(fnLabelX)} y={-18} textAnchor="middle" fontSize="10" fontWeight="700" fill={MISSED_COLOR} fillOpacity={0.9}>
-          false negatives
         </text>
 
         <AxisBottom
@@ -158,5 +154,32 @@ export function BellsThresholdChart({ pA, pB, n, confidence }: Props) {
         </text>
       </Group>
     </svg>
+    <ul className="mt-3 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-foreground/65">
+      <li className="flex items-center gap-2">
+        <span
+          aria-hidden
+          className="inline-block h-2.5 w-2.5 rounded-sm"
+          style={{ backgroundColor: FALSE_POS_COLOR, opacity: SHADE_OPACITY }}
+        />
+        <span><strong className="text-foreground/85">False positive</strong> — you declare B a winner even if no real difference exists</span>
+      </li>
+      <li className="flex items-center gap-2">
+        <span
+          aria-hidden
+          className="inline-block h-2.5 w-2.5 rounded-sm"
+          style={{ backgroundColor: MISSED_COLOR, opacity: SHADE_OPACITY }}
+        />
+        <span><strong className="text-foreground/85">False negative</strong> — you declare A your winner, even if B is better</span>
+      </li>
+      <li className="flex items-center gap-2">
+        <span
+          aria-hidden
+          className="inline-block h-2.5 w-2.5 rounded-sm"
+          style={{ backgroundColor: POWER_COLOR, opacity: SHADE_OPACITY }}
+        />
+        <span><strong className="text-foreground/85">Power</strong> — B beats A and you spot it</span>
+      </li>
+    </ul>
+    </div>
   );
 }
