@@ -8,6 +8,13 @@ import { WidgetFrame } from "@/components/tutorial/widgets/widget-frame";
 import { JarIllustration } from "@/components/tutorial/illustrations/jar-illustration";
 import { getChapter, totalChapters } from "@/components/tutorial/chapters";
 import { siteConfig } from "@/lib/site-config";
+import {
+  CASE_STUDY_VISITORS,
+  CASE_STUDY_A_SIGNUPS,
+  CASE_STUDY_B_SIGNUPS,
+  CASE_STUDY_A_RATE,
+  CASE_STUDY_B_RATE,
+} from "@/components/tutorial/constants/case-study-constants";
 
 const chapter = getChapter(1);
 
@@ -17,6 +24,9 @@ export const metadata: Metadata = {
 };
 
 export default function Section1Page() {
+  const aPercent = Math.round(CASE_STUDY_A_RATE * 100);
+  const bPercent = Math.round(CASE_STUDY_B_RATE * 100);
+
   return (
     <TutorialLayout>
       <p className="text-xs font-semibold uppercase tracking-widest text-foreground/40">
@@ -50,7 +60,7 @@ export default function Section1Page() {
       <p className="mt-8 text-foreground/70">
         Imagine every potential visitor is a marble in a jar. Green means they
         signed up; grey means they didn&apos;t. The jar below has a true
-        conversion rate of 10%: 1 in every 10, on average. Draw a sample of 10
+        conversion rate of {aPercent}%: 1 in every {Math.round(1 / CASE_STUDY_A_RATE)}, on average. Draw a sample of 10
         and count the green ones. What do you notice about the average as you
         draw more and more samples?
       </p>
@@ -80,8 +90,8 @@ export default function Section1Page() {
         <p>
           At 10 marbles per draw, the count bounces around. Getting 0 when
           you&apos;d expect 1 is common. Getting 2 is common too. Now scale
-          that up: our A/B test had 100 visitors per group, not 10. The same
-          principle applies. A gap of 10 vs. 11 signups is exactly the kind of
+          that up: our A/B test had {CASE_STUDY_VISITORS} visitors per group, not 10. The same
+          principle applies. A gap of {CASE_STUDY_A_SIGNUPS} vs. {CASE_STUDY_B_SIGNUPS} signups is exactly the kind of
           result sampling error produces routinely, even when both variants are
           identical.
         </p>
@@ -96,31 +106,31 @@ export default function Section1Page() {
       </h2>
       <div className="mt-4 space-y-4 text-foreground/70">
         <p>
-          Group B converted at 11%. Group A converted at 10%. B is ahead —
+          Group B converted at {bPercent}%. Group A converted at {aPercent}%. B is ahead —
           but is it ahead enough to trust?
         </p>
         <p>
-          But at 100 visitors per group, the numbers are fragile. One signup
+          But at {CASE_STUDY_VISITORS} visitors per group, the numbers are fragile. One signup
           either way moves the conversion rate by a full percentage point. The
-          difference between &ldquo;10%&rdquo; and &ldquo;11%&rdquo; is a
+          difference between &ldquo;{aPercent}%&rdquo; and &ldquo;{bPercent}%&rdquo; is a
           single person.
         </p>
         <p>
           Even two <em>identical</em> versions of your button, the exact same
           copy shown to equivalent audiences, would routinely produce a gap
-          like 10 vs. 11 by pure chance at this sample size. Random variation
+          like {CASE_STUDY_A_SIGNUPS} vs. {CASE_STUDY_B_SIGNUPS} by pure chance at this sample size. Random variation
           at small scales is that large.
         </p>
       </div>
 
       <Quote>
-        At 100 visitors per group, even two <em>identical</em> versions would
+        At {CASE_STUDY_VISITORS} visitors per group, even two <em>identical</em> versions would
         routinely show a gap like this by pure chance.
       </Quote>
 
       <div className="space-y-4 text-foreground/70">
         <p>
-          That means you cannot tell, from 100 visitors per group, whether B
+          That means you cannot tell, from {CASE_STUDY_VISITORS} visitors per group, whether B
           is genuinely better or you got lucky. Shipping on this evidence is a
           coin flip in a trenchcoat.
         </p>
@@ -128,7 +138,7 @@ export default function Section1Page() {
 
       <SectionFooter
         summary={[
-          "Small samples produce noisy results. A 10 vs. 11 gap is common by chance alone.",
+          `Small samples produce noisy results. A ${CASE_STUDY_A_SIGNUPS} vs. ${CASE_STUDY_B_SIGNUPS} gap is common by chance alone.`,
           "You can't tell signal from noise without knowing how much data you actually need.",
           "That's what the rest of this guide covers.",
         ]}
