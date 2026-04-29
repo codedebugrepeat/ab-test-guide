@@ -5,18 +5,11 @@ import { curveMonotoneX } from "@visx/curve";
 import { Group } from "@visx/group";
 import { scaleLinear } from "@visx/scale";
 import { AreaClosed, LinePath } from "@visx/shape";
-import type { GaussianPoint } from "@/maths/sampling";
+import { normalCdf, Z_BY_CONFIDENCE, type ConfidenceLevel, type GaussianPoint } from "@/maths/sampling";
 import { CH2_DEBOUNCE_MS } from "../constants/chapter-2-constants";
 
-const CONFIDENCE_STEPS = [0.8, 0.9, 0.95, 0.99] as const;
+const CONFIDENCE_STEPS: ConfidenceLevel[] = [0.8, 0.9, 0.95, 0.99];
 const DEFAULT_CONFIDENCE_INDEX = 2;
-
-const Z_BY_CONFIDENCE: Record<(typeof CONFIDENCE_STEPS)[number], number> = {
-  0.8: 0.8416,
-  0.9: 1.2816,
-  0.95: 1.6449,
-  0.99: 2.3263,
-};
 
 // Abstract normalized units — no real percentages, pure shape.
 // 2.5 SD separation gives clear visual gap while keeping meaningful missed-win region.
@@ -39,22 +32,6 @@ const MISSED_COLOR = "#6b7280";
 const FILL_OPACITY = 0.22;
 const SHADE_OPACITY = 0.52;
 
-function erf(x: number): number {
-  const sign = x < 0 ? -1 : 1;
-  const ax = Math.abs(x);
-  const t = 1 / (1 + 0.3275911 * ax);
-  const y =
-    1 -
-    (((((1.061405429 * t - 1.453152027) * t + 1.421413741) * t - 0.284496736) * t +
-      0.254829592) *
-      t *
-      Math.exp(-ax * ax));
-  return sign * y;
-}
-
-function normalCdf(z: number): number {
-  return 0.5 * (1 + erf(z / Math.SQRT2));
-}
 
 function bellCurve(mean: number, sd: number, steps = 300): GaussianPoint[] {
   return Array.from({ length: steps }, (_, i) => {

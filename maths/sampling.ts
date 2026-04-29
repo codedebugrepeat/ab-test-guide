@@ -77,8 +77,10 @@ export function gaussianCurve(
   });
 }
 
+export type ConfidenceLevel = 0.8 | 0.9 | 0.95 | 0.99;
+
 // One-sided z-score lookup for the confidence levels the guide uses.
-export const Z_BY_CONFIDENCE: Record<number, number> = {
+export const Z_BY_CONFIDENCE: Record<ConfidenceLevel, number> = {
   0.8: 0.8416,
   0.9: 1.2816,
   0.95: 1.6449,

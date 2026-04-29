@@ -62,7 +62,7 @@ export default function Section4Page() {
         Here is the same chart you ended chapter 3 on, with the same threshold
         line at 95% confidence. The lever this time is the lift. Drag it down
         and B&apos;s bell slides toward A&apos;s. Drag it up and the bells pull
-        apart on their own. Watch the gray region — that&apos;s the part of B
+        apart on their own. Watch the gray region: that&apos;s the part of B
         that lands short of the line. It&apos;s the share of real wins your
         test would miss.
       </p>
@@ -88,7 +88,7 @@ export default function Section4Page() {
         <p>
           The case study&apos;s 10% lift sits in the awkward middle. Plenty of
           gray, plenty of overlap, B&apos;s mean nudging the line. That&apos;s
-          why the case study has been a hard test all along — not because the
+          why the case study has been a hard test all along. Not because the
           stats are mean, but because the lift you&apos;re hunting is small.
         </p>
       </div>
@@ -106,8 +106,8 @@ export default function Section4Page() {
         Every lever in the guide is now on the table. Baseline is given to you
         by the product. Confidence is a policy you set. Lift is the smallest
         win you care about. Sample size is the price you pay to see one. Three
-        of those are inputs. The fourth — sample size — is what falls out when
-        you turn the other three.
+        of those are inputs. Sample size is what falls out when you turn the
+        other three.
       </p>
 
       <p className="mt-4 text-foreground/70">

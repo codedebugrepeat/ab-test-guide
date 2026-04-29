@@ -6,13 +6,13 @@ import { curveMonotoneX } from "@visx/curve";
 import { Group } from "@visx/group";
 import { scaleLinear } from "@visx/scale";
 import { AreaClosed, LinePath } from "@visx/shape";
-import { normalCdf, Z_BY_CONFIDENCE, type GaussianPoint } from "@/maths/sampling";
+import { normalCdf, Z_BY_CONFIDENCE, type ConfidenceLevel, type GaussianPoint } from "@/maths/sampling";
 
 type Props = {
   pA: number;
   pB: number;
   n: number;
-  confidence: number;
+  confidence: ConfidenceLevel;
 };
 
 const WIDTH = 560;
@@ -67,7 +67,7 @@ export function computeBellsReadout({ pA, pB, n, confidence }: Props): BellsThre
   const meanB = pB * 100;
   const sdA = Math.sqrt((pA * (1 - pA)) / n) * 100;
   const sdB = Math.sqrt((pB * (1 - pB)) / n) * 100;
-  const z = Z_BY_CONFIDENCE[confidence] ?? 1.6449;
+  const z = Z_BY_CONFIDENCE[confidence];
   const threshold = meanA + z * sdA;
   const falsePositiveShare = 1 - confidence;
   const falseNegativeShare = sdB > 0 ? normalCdf((threshold - meanB) / sdB) : 0;
