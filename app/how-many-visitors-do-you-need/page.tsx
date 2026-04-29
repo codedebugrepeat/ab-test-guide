@@ -3,7 +3,6 @@ import { TutorialLayout } from "@/components/tutorial/tutorial-layout";
 import { Quote } from "@/components/tutorial/quote";
 import { SectionFooter } from "@/components/tutorial/section-footer";
 import { WidgetFrame } from "@/components/tutorial/widgets/widget-frame";
-import { SamplingDistributionBuilder } from "@/components/tutorial/widgets/sampling-distribution-builder";
 import { BaselineDistributionWidget } from "@/components/tutorial/widgets/baseline-distribution-widget";
 import { TwoBellsWidget } from "@/components/tutorial/widgets/two-bells-widget";
 import { getChapter, totalChapters } from "@/components/tutorial/chapters";
@@ -37,49 +36,16 @@ export default function Section2Page() {
       </h1>
 
       <p className="mt-6 text-foreground/70">
-        Small samples are noisy. You saw that in chapter 1. What wasn&apos;t
-        obvious yet is that noise has a shape, and the shape depends on a
-        single number: how often your visitors currently convert. Once that
-        shape is on the page, &ldquo;how many visitors do I need&rdquo; stops
-        being a vibe and starts being something you can answer.
+        Chapter 1 ended with a shape: stack enough draws from the jar and a
+        bell fills in. That bell isn&apos;t fixed. Its width depends on a
+        single number: how often your visitors currently convert. That number
+        is your baseline, and it shapes how much data you need more than almost
+        anything else.
       </p>
 
       <hr className="my-10 border-foreground/10" />
 
       <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-        The shape of noise
-      </h2>
-
-      <p className="mt-4 text-foreground/70">
-        Back to the marble jar from page 1. Same {aPercent}% true rate, same 10-marble
-        draw. This time, forget the single sample. Keep drawing and stack
-        every count onto the chart below. You&apos;re building up a tally of
-        which outcomes show up, and how often.
-      </p>
-
-      <div className="mt-6">
-        <WidgetFrame>
-          <SamplingDistributionBuilder />
-        </WidgetFrame>
-      </div>
-
-      <div className="mt-8 space-y-4 text-foreground/70">
-        <p>
-          What you just stacked has a name: a{" "}
-          <strong>sampling distribution</strong>. Each column is a possible
-          outcome of one draw, and the height is how often that outcome has
-          turned up so far. The shape is jagged because 10 marbles is a tiny
-          sample and a few dozen draws is a small pile. Scale both up, to 100
-          visitors per sample and many thousands of draws, and the histogram
-          smooths into a bell.
-        </p>
-        <p>
-          That bell isn&apos;t fixed, though. Its width moves with your
-          baseline.
-        </p>
-      </div>
-
-      <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
         What&apos;s a baseline?
       </h2>
 
@@ -229,7 +195,7 @@ export default function Section2Page() {
 
       <SectionFooter
         summary={[
-          "Noise has a shape. Keep drawing samples and that shape fills in: a sampling distribution.",
+          "Your baseline is your current conversion rate — and it's the biggest driver of how much data you need.",
           "Baseline controls the shape. The lower the baseline, the more the spread swamps small differences.",
           "Run an A/B test and both groups have their own bell. Whether the test calls a winner depends on how far apart those bells sit.",
         ]}
