@@ -7,6 +7,7 @@ import { SamplingDistributionBuilder } from "@/components/tutorial/widgets/sampl
 import { BaselineDistributionWidget } from "@/components/tutorial/widgets/baseline-distribution-widget";
 import { TwoBellsWidget } from "@/components/tutorial/widgets/two-bells-widget";
 import { getChapter, totalChapters } from "@/components/tutorial/chapters";
+import { SideRemark } from "@/components/tutorial/side-remark";
 import { siteConfig } from "@/lib/site-config";
 import {
   CASE_STUDY_VISITORS,
@@ -200,7 +201,9 @@ export default function Section2Page() {
         of discrete counts. From here on we&apos;ll draw it as a smooth
         silhouette: same distribution, just without the individual dots. The
         semantics don&apos;t change. Sample something and you get variance;
-        values cluster around the mean and form a bell.
+        values cluster around the
+        <SideRemark term="mean" />
+        and form a bell.
       </p>
 
       <p className="mt-4 text-foreground/70">

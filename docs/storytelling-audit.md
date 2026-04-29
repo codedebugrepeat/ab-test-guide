@@ -261,23 +261,20 @@ Phases are ordered so each unlocks the next. Land each phase as its own PR (or s
 
 **Verification:** grep for `15`, `20%`, `50% better`, `5p` and reconcile each hit.
 
-### Phase 2 — Side-remark mechanism (decision F)
+### Phase 2 — Side-remark mechanism (decision F) ✓
 **Goal:** ship a single reusable affordance for "for the curious" asides before any chapter rewrite needs it.
 
-- Add a new component, e.g. `components/tutorial/side-remark.tsx`, that:
-  - Renders a consistent icon inline (a small "i" or asterisk in a circle).
-  - On hover/focus/click, reveals expanded content. For mobile, click-to-toggle; for desktop, hover with focus support for keyboards.
-  - Implementation choice: native `<details>` styled appropriately, or a small headless popover. Native `<details>` is simplest and a11y-friendly; pick that unless the design needs a floating tooltip.
-- API sketch:
-  ```tsx
-  <SideRemark term="lift">
-    Throughout this guide, "lift" means relative lift: a 10% lift on a 5%
-    baseline takes you to 5.5%, not 15%.
-  </SideRemark>
-  ```
-- Use it on a single page first as a smoke test (e.g. wrap the word "mean" in ch 2) before threading through the rewrite.
+**Implemented:**
 
-**Critical files:** new `components/tutorial/side-remark.tsx`; light style additions to `app/globals.css` if needed.
+- `components/tutorial/side-remark.tsx` — native `<details>`-based component, a11y-friendly (keyboard reachable, `role="note"` on the expanded panel, `aria-label` on summary). API:
+  ```tsx
+  <SideRemark term="lift">{vocabulary.lift}</SideRemark>
+  ```
+  The component renders the bold term and the circled-i icon itself; callers never repeat the term in surrounding text. Leading and trailing spaces are baked into the component so no `{" "}` guards are needed at call sites.
+- `components/tutorial/constants/vocabulary.tsx` — centralised `ReactNode` map of all side-remark descriptions, keyed by term. Adding a new term means one entry here; using it anywhere is `{vocabulary.termName}`. Makes it easy to see which terms have definitions and which don't.
+- Smoke-tested on ch 2 with `term="mean"`.
+
+**Critical files:** `components/tutorial/side-remark.tsx`, `components/tutorial/constants/vocabulary.tsx`.
 
 ### Phase 3 — Chapter 1 restructure (decision C, part 1)
 **Goal:** end ch 1 with the discrete bell shape, so ch 2 can open inside the bell metaphor.
