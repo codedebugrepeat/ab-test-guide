@@ -9,6 +9,8 @@ const CONFIDENCE_OPTIONS = [90, 95, 99] as const;
 type ConfidenceOption = (typeof CONFIDENCE_OPTIONS)[number];
 
 type NumberInputProps = {
+  id?: string;
+  label: string;
   value: number;
   min: number;
   max: number;
@@ -18,7 +20,7 @@ type NumberInputProps = {
   onChange: (v: number) => void;
 };
 
-function NumberInput({ value, min, max, step, decimals, suffix, onChange }: NumberInputProps) {
+function NumberInput({ id, label, value, min, max, step, decimals, suffix, onChange }: NumberInputProps) {
   const [raw, setRaw] = useState(value.toFixed(decimals));
   const committed = useRef(value);
 
@@ -56,12 +58,14 @@ function NumberInput({ value, min, max, step, decimals, suffix, onChange }: Numb
         type="button"
         onClick={() => step_(-1)}
         className="flex h-7 w-7 items-center justify-center rounded border border-foreground/15 text-sm text-foreground/60 hover:bg-foreground/5 active:bg-foreground/10"
-        aria-label="Decrease"
+        aria-label={`Decrease ${label}`}
       >
         −
       </button>
       <div className="relative flex items-center">
         <input
+          id={id}
+          aria-label={id ? undefined : label}
           type="number"
           value={raw}
           min={min}
@@ -84,7 +88,7 @@ function NumberInput({ value, min, max, step, decimals, suffix, onChange }: Numb
         type="button"
         onClick={() => step_(1)}
         className="flex h-7 w-7 items-center justify-center rounded border border-foreground/15 text-sm text-foreground/60 hover:bg-foreground/5 active:bg-foreground/10"
-        aria-label="Increase"
+        aria-label={`Increase ${label}`}
       >
         +
       </button>
@@ -123,6 +127,7 @@ function LeverRow({ id, label, value, min, max, step, decimals, suffix, onChange
       />
       <div className="shrink-0">
         <NumberInput
+          label={label}
           value={value}
           min={min}
           max={max}
@@ -161,13 +166,13 @@ export function CalculatorWidget() {
   const conf = confidence / 100;
 
   const requiredN = requiredSampleSize(pA, lift / 100, conf);
+  const feasible = Number.isFinite(requiredN);
+  // Fixed intentionally: constant n keeps bell widths stable so the curves visibly drift apart as sliders move, building intuition.
   const chartN = 1000;
 
   const baselineLabel = (Math.round(baseline * 10) / 10).toString();
   const liftLabel = (Math.round(lift * 10) / 10).toString();
   const confidenceLabel = (Math.round(confidence * 10) / 10).toString();
-
-  const feasible = Number.isFinite(requiredN);
 
   const duration = feasible ? estimateDuration(requiredN, visitorsPerPeriod) : null;
 
@@ -275,9 +280,9 @@ export function CalculatorWidget() {
 
       {/* Chart */}
       <div className="flex justify-center">
-        {baseline === 0 ? (
+        {baseline <= 0 || baseline >= 100 ? (
           <div className="flex h-[320px] w-full items-center justify-center rounded-xl border border-dashed border-foreground/15">
-            <p className="text-sm text-foreground/35">Set a baseline above 0% to see the chart.</p>
+            <p className="text-sm text-foreground/35">Set a baseline between 0% and 100% to see the chart.</p>
           </div>
         ) : (
           <BellsThresholdChart pA={pA} pB={pB} n={chartN} confidence={conf} />
@@ -312,6 +317,8 @@ export function CalculatorWidget() {
             Visitors per {period}
           </label>
           <NumberInput
+            id="calc-visitors-per-period"
+            label={`Visitors per ${period}`}
             value={visitorsPerPeriod}
             min={1}
             max={10_000_000}

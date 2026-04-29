@@ -17,6 +17,38 @@ describe("requiredSampleSize", () => {
     expect(requiredSampleSize(0, 0.1, 0.95)).toBe(Infinity);
   });
 
+  it("returns Infinity when baseline is 1 (100%)", () => {
+    expect(requiredSampleSize(1, 0.1, 0.95)).toBe(Infinity);
+  });
+
+  it("returns Infinity when confidence is NaN", () => {
+    expect(requiredSampleSize(0.1, 0.1, NaN)).toBe(Infinity);
+  });
+
+  it("returns Infinity when confidence is 0", () => {
+    expect(requiredSampleSize(0.1, 0.1, 0)).toBe(Infinity);
+  });
+
+  it("returns Infinity when confidence is exactly 0.5", () => {
+    expect(requiredSampleSize(0.1, 0.1, 0.5)).toBe(Infinity);
+  });
+
+  it("returns Infinity when confidence is 1", () => {
+    expect(requiredSampleSize(0.1, 0.1, 1)).toBe(Infinity);
+  });
+
+  it("returns Infinity when confidence exceeds 1", () => {
+    expect(requiredSampleSize(0.1, 0.1, 1.5)).toBe(Infinity);
+  });
+
+  it("returns Infinity when confidence is negative", () => {
+    expect(requiredSampleSize(0.1, 0.1, -0.95)).toBe(Infinity);
+  });
+
+  it("returns Infinity when confidence is Infinity", () => {
+    expect(requiredSampleSize(0.1, 0.1, Infinity)).toBe(Infinity);
+  });
+
   it("returns Infinity when lift is 0", () => {
     expect(requiredSampleSize(0.1, 0, 0.95)).toBe(Infinity);
   });

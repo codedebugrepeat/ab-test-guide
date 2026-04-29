@@ -46,8 +46,8 @@ Add `normalInv` in `maths/sampling.ts` using Acklam's rational approximation (ac
 └─────────────────────────────────────────────────────────┘
 
 Big primary readout:
-   "Visitors per variant: 30,244"
-   "Each side needs ~30k visitors to detect a 10% lift on a 10%
+   "Visitors per variant: 11,604"
+   "Each side needs ~11,604 visitors to detect a 10% lift on a 10%
     baseline at 95% confidence."
 
 [BellsThresholdChart at pA, pB, n=requiredN, confidence]
@@ -95,6 +95,6 @@ Put the assumptions callout **inside `CalculatorWidget`** at the bottom, below t
 3. Type values into each number input: valid in-range, out-of-range (should clamp on blur), non-numeric (should revert), empty (should revert).
 4. Click `+` / `−` buttons at the slider extremes — should clamp, not wrap.
 5. Set lift = 0 or baseline = 0 → readout shows `—` with caption.
-6. Sanity-check numbers against a known case: baseline 10%, lift 10%, confidence 95%, power 80% → ~30,244 per variant (matches standard A/B sample-size calculators).
+6. Sanity-check numbers against a known case: baseline 10%, lift 10%, confidence 95%, power 80% (one-tailed) → ~11,604 per variant.
 7. Verify the BellsThresholdChart still renders sensibly when `n` jumps to large values.
 8. `npm run lint` and `npm run build` clean.
