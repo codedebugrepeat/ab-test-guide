@@ -106,14 +106,14 @@ export function BellsThresholdChart({ pA, pB, n, confidence }: Props) {
         <AreaClosed data={dataB} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={B_COLOR} fillOpacity={FILL_OPACITY} />
         <LinePath data={dataB} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} curve={curveMonotoneX} stroke={B_COLOR} strokeWidth={1.5} />
 
-        {dataAFalse.length > 1 && (
-          <AreaClosed data={dataAFalse} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={FALSE_POS_COLOR} fillOpacity={SHADE_OPACITY} />
-        )}
         {dataBMissed.length > 1 && (
           <AreaClosed data={dataBMissed} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={MISSED_COLOR} fillOpacity={SHADE_OPACITY} />
         )}
         {dataBPower.length > 1 && (
           <AreaClosed data={dataBPower} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={POWER_COLOR} fillOpacity={SHADE_OPACITY} />
+        )}
+        {dataAFalse.length > 1 && (
+          <AreaClosed data={dataAFalse} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={FALSE_POS_COLOR} fillOpacity={SHADE_OPACITY} />
         )}
 
         {/* Mean markers */}
