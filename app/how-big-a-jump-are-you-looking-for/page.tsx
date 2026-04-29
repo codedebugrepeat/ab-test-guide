@@ -6,6 +6,7 @@ import { WidgetFrame } from "@/components/tutorial/widgets/widget-frame";
 import { LiftEffectWidget } from "@/components/tutorial/widgets/lift-effect-widget";
 import { getChapter, totalChapters } from "@/components/tutorial/chapters";
 import { siteConfig } from "@/lib/site-config";
+import { CH2_LIFT } from "@/components/tutorial/constants/chapter-2-constants";
 
 const chapter = getChapter(4);
 
@@ -15,6 +16,8 @@ export const metadata: Metadata = {
 };
 
 export default function Section4Page() {
+  const liftPercent = Math.round(CH2_LIFT * 100);
+
   return (
     <TutorialLayout>
       <p className="text-xs font-semibold uppercase tracking-widest text-foreground/40">
@@ -30,7 +33,7 @@ export default function Section4Page() {
         moves it further from A&apos;s mean, and a real win has to clear it. One
         lever in that picture has been pinned the whole time without anyone
         making a fuss about it: the lift. Every chart in this guide so far has
-        assumed B&apos;s jar converts 10% better than A&apos;s. That number was
+        assumed B&apos;s jar converts {liftPercent}% better than A&apos;s. That number was
         never given to you by the data. You picked it.
       </p>
 
@@ -86,7 +89,7 @@ export default function Section4Page() {
           barely has to do any work.
         </p>
         <p>
-          The case study&apos;s 10% lift sits in the awkward middle. Plenty of
+          The case study&apos;s {liftPercent}% lift sits in the awkward middle. Plenty of
           gray, plenty of overlap, B&apos;s mean nudging the line. That&apos;s
           why the case study has been a hard test all along. Not because the
           stats are mean, but because the lift you&apos;re hunting is small.

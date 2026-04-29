@@ -8,6 +8,12 @@ import { BaselineDistributionWidget } from "@/components/tutorial/widgets/baseli
 import { TwoBellsWidget } from "@/components/tutorial/widgets/two-bells-widget";
 import { getChapter, totalChapters } from "@/components/tutorial/chapters";
 import { siteConfig } from "@/lib/site-config";
+import {
+  CASE_STUDY_VISITORS,
+  CASE_STUDY_A_SIGNUPS,
+  CASE_STUDY_A_RATE,
+} from "@/components/tutorial/constants/case-study-constants";
+import { CH2_LIFT } from "@/components/tutorial/constants/chapter-2-constants";
 
 const chapter = getChapter(2);
 
@@ -17,6 +23,9 @@ export const metadata: Metadata = {
 };
 
 export default function Section2Page() {
+  const aPercent = Math.round(CASE_STUDY_A_RATE * 100);
+  const liftPercent = Math.round(CH2_LIFT * 100);
+
   return (
     <TutorialLayout>
       <p className="text-xs font-semibold uppercase tracking-widest text-foreground/40">
@@ -41,7 +50,7 @@ export default function Section2Page() {
       </h2>
 
       <p className="mt-4 text-foreground/70">
-        Back to the marble jar from page 1. Same 20% true rate, same 10-marble
+        Back to the marble jar from page 1. Same {aPercent}% true rate, same 10-marble
         draw. This time, forget the single sample. Keep drawing and stack
         every count onto the chart below. You&apos;re building up a tally of
         which outcomes show up, and how often.
@@ -90,8 +99,8 @@ export default function Section2Page() {
       </p>
 
       <p className="mt-4 text-foreground/70">
-        In the case study, version A got 10 signups from 100 visitors, so the
-        baseline is 10%. That&apos;s on the high side. Many real signup flows
+        In the case study, version A got {CASE_STUDY_A_SIGNUPS} signups from {CASE_STUDY_VISITORS} visitors, so the
+        baseline is {aPercent}%. That&apos;s on the high side. Many real signup flows
         sit somewhere between 1% and 5%, and the difference matters a lot.
         Here&apos;s what it looks like on the distribution.
       </p>
@@ -102,16 +111,16 @@ export default function Section2Page() {
 
       <p className="mt-4 text-foreground/70">
         Two products, both hoping a new signup button lifts conversions by
-        10%. One converts at 2% today; the other at 20%. Same &ldquo;10%
+        {liftPercent}%. One converts at 2% today; the other at 20%. Same &ldquo;{liftPercent}%
         better&rdquo; on paper. On the distribution, they are not the same
         story.
       </p>
 
       <p className="mt-4 text-foreground/70">
         The widget below is the smoothed version of what you just drew,
-        scaled to 100 visitors per sample. Slide the baseline to pick a
+        scaled to {CASE_STUDY_VISITORS} visitors per sample. Slide the baseline to pick a
         product. The solid line is that product&apos;s current average. The
-        dashed line is where version B lands if it really does lift by 10%.
+        dashed line is where version B lands if it really does lift by {liftPercent}%.
         The question to sit with: does the lift line poke out of the bell, or
         is it still inside the average&apos;s usual wobble?
       </p>
@@ -125,7 +134,7 @@ export default function Section2Page() {
       <div className="mt-8 space-y-4 text-foreground/70">
         <p>
           At 2%, the lift line sits deep inside the spread. Run the test at
-          100 visitors and you&apos;d see 2 vs. 2 one day, 2 vs. 3 the next, 3
+          {CASE_STUDY_VISITORS} visitors and you&apos;d see 2 vs. 2 one day, 2 vs. 3 the next, 3
           vs. 2 the day after. The real improvement is there; it is buried
           under the sample-to-sample bouncing.
         </p>
@@ -133,7 +142,7 @@ export default function Section2Page() {
           Slide the baseline up to 20% and the lift line separates from the
           average. Single samples still vary, but the gap is wide enough that
           &ldquo;B is better&rdquo; starts to hold up from one run to the
-          next. Same 10% improvement, very different picture.
+          next. Same {liftPercent}% improvement, very different picture.
         </p>
       </div>
 
@@ -149,8 +158,8 @@ export default function Section2Page() {
           enough to detect a real difference.
         </p>
         <p>
-          At 2% baseline, 100 visitors gives you roughly 2 conversions to work
-          with. At 20%, the same 100 visitors gives you 20. Ten times the
+          At 2% baseline, {CASE_STUDY_VISITORS} visitors gives you roughly 2 conversions to work
+          with. At 20%, the same {CASE_STUDY_VISITORS} visitors gives you 20. Ten times the
           signal, same traffic.
         </p>
       </div>
@@ -173,7 +182,7 @@ export default function Section2Page() {
           visitors do I need?&rdquo; You start with your own baseline.
         </p>
         <p>
-          We&apos;ve been using 100 visitors throughout because the numbers
+          We&apos;ve been using {CASE_STUDY_VISITORS} visitors throughout because the numbers
           are easy to follow. Real A/B tests rarely run at that scale. By the
           time you finish this guide, you&apos;ll see that depending on your
           baseline, a well-designed experiment might need thousands of
