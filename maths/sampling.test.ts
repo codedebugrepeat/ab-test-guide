@@ -9,6 +9,8 @@ import {
   buildTheoreticalBuckets,
   gaussianCurve,
   standardNormalCurve,
+  normalCdf,
+  Z_BY_CONFIDENCE,
 } from "./sampling";
 
 describe("drawSample", () => {
@@ -319,6 +321,42 @@ describe("standardNormalCurve", () => {
     expect(Number.isNaN(data[0].x)).toBe(false);
     expect(Number.isNaN(data[0].y)).toBe(false);
     expect(data[0].x).toBe(-1);
+  });
+});
+
+describe("normalCdf", () => {
+  it("returns 0.5 at z=0", () => {
+    expect(normalCdf(0)).toBeCloseTo(0.5, 4);
+  });
+
+  it("matches known standard normal probabilities", () => {
+    expect(normalCdf(1)).toBeCloseTo(0.8413, 4);
+    expect(normalCdf(-1)).toBeCloseTo(0.1587, 4);
+    expect(normalCdf(1.96)).toBeCloseTo(0.975, 3);
+  });
+
+  it("is symmetric around zero", () => {
+    expect(normalCdf(-1.6449)).toBeCloseTo(1 - normalCdf(1.6449), 6);
+  });
+
+  it("approaches 0 and 1 at the tails", () => {
+    expect(normalCdf(-6)).toBeCloseTo(0, 6);
+    expect(normalCdf(6)).toBeCloseTo(1, 6);
+  });
+});
+
+describe("Z_BY_CONFIDENCE", () => {
+  it("contains the expected one-sided z-scores", () => {
+    expect(Z_BY_CONFIDENCE[0.8]).toBeCloseTo(0.8416, 4);
+    expect(Z_BY_CONFIDENCE[0.9]).toBeCloseTo(1.2816, 4);
+    expect(Z_BY_CONFIDENCE[0.95]).toBeCloseTo(1.6449, 4);
+    expect(Z_BY_CONFIDENCE[0.99]).toBeCloseTo(2.3263, 4);
+  });
+
+  it("each z-score produces a one-sided tail matching its confidence level", () => {
+    for (const [c, z] of Object.entries(Z_BY_CONFIDENCE) as [string, number][]) {
+      expect(normalCdf(z)).toBeCloseTo(Number(c), 3);
+    }
   });
 });
 

@@ -77,6 +77,33 @@ export function gaussianCurve(
   });
 }
 
+export type ConfidenceLevel = 0.8 | 0.9 | 0.95 | 0.99;
+
+// One-sided z-score lookup for the confidence levels the guide uses.
+export const Z_BY_CONFIDENCE: Record<ConfidenceLevel, number> = {
+  0.8: 0.8416,
+  0.9: 1.2816,
+  0.95: 1.6449,
+  0.99: 2.3263,
+};
+
+function erf(x: number): number {
+  const sign = x < 0 ? -1 : 1;
+  const ax = Math.abs(x);
+  const t = 1 / (1 + 0.3275911 * ax);
+  const y =
+    1 -
+    (((((1.061405429 * t - 1.453152027) * t + 1.421413741) * t - 0.284496736) * t +
+      0.254829592) *
+      t *
+      Math.exp(-ax * ax));
+  return sign * y;
+}
+
+export function normalCdf(z: number): number {
+  return 0.5 * (1 + erf(z / Math.SQRT2));
+}
+
 export function buildTheoreticalBuckets({
   n,
   p,
