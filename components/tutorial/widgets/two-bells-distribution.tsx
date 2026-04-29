@@ -43,8 +43,8 @@ type Datum = GaussianPoint;
 export function TwoBellsDistribution({ pA, pB, maxBin }: Props) {
   const xTicksBase = buildTickValues(maxBin, 10);
 
-  const sdA = Math.sqrt(CH2_N * pA * (1 - pA));
-  const sdB = Math.sqrt(CH2_N * pB * (1 - pB));
+  const sdA = Math.sqrt(pA * (1 - pA) / CH2_N) * 100;
+  const sdB = Math.sqrt(pB * (1 - pB) / CH2_N) * 100;
   const xPad = 4 * Math.max(sdA, sdB);
   const xMin = Math.max(0, Math.min(pA, pB) * 100 - xPad);
   const xMax = Math.min(maxBin, Math.max(pA, pB) * 100 + xPad);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { AxisBottom } from "@visx/axis";
 import { curveMonotoneX } from "@visx/curve";
 import { Group } from "@visx/group";
@@ -13,21 +13,24 @@ type Region = "inner" | "outer" | "tail";
 const BELL_COLOR = "#16a34a";
 const TAIL_COLOR = "#f59e0b";
 
-const REGION_META: Record<Region, { pct: string; text: string; color: string }> = {
+const REGION_META: Record<Region, { pct: string; text: string; color: string; ariaLabel: string }> = {
   inner: {
     pct: "~68%",
     text: "of samples land within 1 SD of the mean — routine noise",
     color: BELL_COLOR,
+    ariaLabel: "Inner band (−1 SD to +1 SD): ~68% of samples",
   },
   outer: {
     pct: "~95%",
     text: "of samples land within 2 SDs of the mean",
     color: BELL_COLOR,
+    ariaLabel: "Outer ring (−2 SD to −1 SD and +1 SD to +2 SD): ~95% of samples cumulative",
   },
   tail: {
     pct: "~5%",
     text: "of samples end up in the tails — rare outcomes",
     color: TAIL_COLOR,
+    ariaLabel: "Tails beyond ±2 SDs: ~5% of samples",
   },
 };
 
@@ -68,14 +71,33 @@ export function NormalVsExtremeWidget() {
 
   const data = standardNormalCurve(X_MIN, X_MAX);
 
-  const x1sd = xScale(-1);
-  const x2sd = xScale(-2);
-  const xNeg1sd = xScale(1);
-  const xNeg2sd = xScale(2);
+  const xMinus1Sd = xScale(-1);
+  const xMinus2Sd = xScale(-2);
+  const xPlus1Sd = xScale(1);
+  const xPlus2Sd = xScale(2);
 
   function enter(r: Region) { setHovered(r); }
   function leave() { setHovered(null); }
   function click(r: Region) { setLocked((prev) => (prev === r ? null : r)); }
+
+  function regionProps(r: Region) {
+    return {
+      role: "button" as const,
+      tabIndex: 0,
+      "aria-label": REGION_META[r].ariaLabel,
+      "aria-pressed": locked === r,
+      style: { cursor: "pointer" },
+      onMouseDown: (e: React.MouseEvent) => e.preventDefault(),
+      onMouseEnter: () => enter(r),
+      onMouseLeave: leave,
+      onClick: () => click(r),
+      onKeyDown: (e: React.KeyboardEvent) => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); click(r); }
+      },
+      onFocus: () => enter(r),
+      onBlur: leave,
+    };
+  }
 
   const ariaLabel =
     "Sampling distribution in standard deviation units. The inner band from −1 SD to +1 SD contains about 68% of samples. The band from −2 SD to +2 SD contains about 95%. The tails beyond ±2 SD hold about 5%.";
@@ -115,77 +137,68 @@ export function NormalVsExtremeWidget() {
       <svg
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
         preserveAspectRatio="xMidYMid meet"
-        role="img"
+        role="figure"
         aria-label={ariaLabel}
         className="block h-auto w-full"
         style={{ cursor: "default" }}
       >
         <Group left={MARGIN.left} top={MARGIN.top}>
           {/* Tail bands */}
-          <rect
-            x={0}
-            y={0}
-            width={Math.max(0, x2sd)}
-            height={PLOT_H}
-            fill={TAIL_COLOR}
-            fillOpacity={opacities.tail}
-            style={{ cursor: "pointer", transition: "fill-opacity 0.15s" }}
-            onMouseEnter={() => enter("tail")}
-            onMouseLeave={leave}
-            onClick={() => click("tail")}
-          />
-          <rect
-            x={xNeg2sd}
-            y={0}
-            width={Math.max(0, PLOT_W - xNeg2sd)}
-            height={PLOT_H}
-            fill={TAIL_COLOR}
-            fillOpacity={opacities.tail}
-            style={{ cursor: "pointer", transition: "fill-opacity 0.15s" }}
-            onMouseEnter={() => enter("tail")}
-            onMouseLeave={leave}
-            onClick={() => click("tail")}
-          />
+          <g {...regionProps("tail")}>
+            <rect
+              x={0}
+              y={0}
+              width={Math.max(0, xMinus2Sd)}
+              height={PLOT_H}
+              fill={TAIL_COLOR}
+              fillOpacity={opacities.tail}
+              style={{ transition: "fill-opacity 0.15s" }}
+            />
+            <rect
+              x={xPlus2Sd}
+              y={0}
+              width={Math.max(0, PLOT_W - xPlus2Sd)}
+              height={PLOT_H}
+              fill={TAIL_COLOR}
+              fillOpacity={opacities.tail}
+              style={{ transition: "fill-opacity 0.15s" }}
+            />
+          </g>
 
           {/* Outer ring bands (±1 to ±2 SD) */}
-          <rect
-            x={x2sd}
-            y={0}
-            width={Math.max(0, x1sd - x2sd)}
-            height={PLOT_H}
-            fill={BELL_COLOR}
-            fillOpacity={opacities.outerRing}
-            style={{ cursor: "pointer", transition: "fill-opacity 0.15s" }}
-            onMouseEnter={() => enter("outer")}
-            onMouseLeave={leave}
-            onClick={() => click("outer")}
-          />
-          <rect
-            x={xNeg1sd}
-            y={0}
-            width={Math.max(0, xNeg2sd - xNeg1sd)}
-            height={PLOT_H}
-            fill={BELL_COLOR}
-            fillOpacity={opacities.outerRing}
-            style={{ cursor: "pointer", transition: "fill-opacity 0.15s" }}
-            onMouseEnter={() => enter("outer")}
-            onMouseLeave={leave}
-            onClick={() => click("outer")}
-          />
+          <g {...regionProps("outer")}>
+            <rect
+              x={xMinus2Sd}
+              y={0}
+              width={Math.max(0, xMinus1Sd - xMinus2Sd)}
+              height={PLOT_H}
+              fill={BELL_COLOR}
+              fillOpacity={opacities.outerRing}
+              style={{ transition: "fill-opacity 0.15s" }}
+            />
+            <rect
+              x={xPlus1Sd}
+              y={0}
+              width={Math.max(0, xPlus2Sd - xPlus1Sd)}
+              height={PLOT_H}
+              fill={BELL_COLOR}
+              fillOpacity={opacities.outerRing}
+              style={{ transition: "fill-opacity 0.15s" }}
+            />
+          </g>
 
           {/* Inner band (±1 SD) */}
-          <rect
-            x={x1sd}
-            y={0}
-            width={Math.max(0, xNeg1sd - x1sd)}
-            height={PLOT_H}
-            fill={BELL_COLOR}
-            fillOpacity={opacities.inner}
-            style={{ cursor: "pointer", transition: "fill-opacity 0.15s" }}
-            onMouseEnter={() => enter("inner")}
-            onMouseLeave={leave}
-            onClick={() => click("inner")}
-          />
+          <g {...regionProps("inner")}>
+            <rect
+              x={xMinus1Sd}
+              y={0}
+              width={Math.max(0, xPlus1Sd - xMinus1Sd)}
+              height={PLOT_H}
+              fill={BELL_COLOR}
+              fillOpacity={opacities.inner}
+              style={{ transition: "fill-opacity 0.15s" }}
+            />
+          </g>
 
           {/* Bell silhouette (on top of bands, pointer-events-none so bands get events) */}
           <AreaClosed<Datum>

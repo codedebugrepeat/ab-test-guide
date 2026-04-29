@@ -66,7 +66,7 @@ export function gaussianCurve(
   steps = 300,
 ): GaussianPoint[] {
   const mean = p * 100;
-  const sd = Math.sqrt(n * p * (1 - p));
+  const sd = n > 0 ? Math.sqrt(p * (1 - p) / n) * 100 : 0;
   if (sd < 1e-6) return [{ x: mean, y: 1 }];
   return Array.from({ length: steps }, (_, i) => {
     const x = xMin + (i / (steps - 1)) * (xMax - xMin);

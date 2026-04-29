@@ -194,7 +194,7 @@ describe("gaussianCurve", () => {
   });
 
   it("is symmetric around the mean", () => {
-    const sd = Math.sqrt(100 * 0.1 * 0.9);
+    const sd = Math.sqrt(0.1 * 0.9 / 100) * 100;
     const mean = 10;
     const data = gaussianCurve(0.1, 100, mean - 2 * sd, mean + 2 * sd, 11);
     for (let i = 0; i < data.length; i += 1) {
@@ -203,13 +203,34 @@ describe("gaussianCurve", () => {
   });
 
   it("matches the gaussian formula y = exp(-z^2/2) at ±1 SD and ±2 SD", () => {
-    const sd = Math.sqrt(100 * 0.1 * 0.9);
+    const sd = Math.sqrt(0.1 * 0.9 / 100) * 100;
     const mean = 10;
     // Sample exactly two points: one at mean+sd, one at mean+2sd.
     const [oneSd] = gaussianCurve(0.1, 100, mean + sd, mean + sd + 1, 2);
     const [twoSd] = gaussianCurve(0.1, 100, mean + 2 * sd, mean + 2 * sd + 1, 2);
     expect(oneSd.y).toBeCloseTo(Math.exp(-0.5), 6);
     expect(twoSd.y).toBeCloseTo(Math.exp(-2), 6);
+  });
+
+  it("matches the gaussian formula at ±1 SD and ±2 SD for n=400", () => {
+    // n=400 sd = sqrt(0.1*0.9/400)*100 = 1.5 pp — verifies formula with n≠100
+    const sd = Math.sqrt(0.1 * 0.9 / 400) * 100;
+    const mean = 10;
+    const [oneSd] = gaussianCurve(0.1, 400, mean + sd, mean + sd + 1, 2);
+    const [twoSd] = gaussianCurve(0.1, 400, mean + 2 * sd, mean + 2 * sd + 1, 2);
+    expect(oneSd.y).toBeCloseTo(Math.exp(-0.5), 6);
+    expect(twoSd.y).toBeCloseTo(Math.exp(-2), 6);
+  });
+
+  it("curve width scales with 1/√n: n=400 is half as wide as n=100", () => {
+    // At +1 SD for n=100 (x = mean+3pp), an n=400 curve (sd=1.5pp) is at z=2,
+    // so its y should be exp(-2) rather than exp(-0.5).
+    const mean = 10;
+    const sd100 = Math.sqrt(0.1 * 0.9 / 100) * 100; // 3 pp
+    const [pt100] = gaussianCurve(0.1, 100, mean + sd100, mean + sd100 + 1, 2);
+    const [pt400] = gaussianCurve(0.1, 400, mean + sd100, mean + sd100 + 1, 2);
+    expect(pt100.y).toBeCloseTo(Math.exp(-0.5), 6);
+    expect(pt400.y).toBeCloseTo(Math.exp(-2), 6);
   });
 
   it("y values are non-negative and bounded by 1", () => {
