@@ -3,7 +3,6 @@ import { TutorialLayout } from "@/components/tutorial/tutorial-layout";
 import { Quote } from "@/components/tutorial/quote";
 import { SectionFooter } from "@/components/tutorial/section-footer";
 import { WidgetFrame } from "@/components/tutorial/widgets/widget-frame";
-import { TwoBellsWidget } from "@/components/tutorial/widgets/two-bells-widget";
 import { DecisionThresholdWidget } from "@/components/tutorial/widgets/decision-threshold-widget";
 import { NormalVsExtremeWidget } from "@/components/tutorial/widgets/normal-vs-extreme-widget";
 import { getChapter, totalChapters } from "@/components/tutorial/chapters";
@@ -27,78 +26,15 @@ export default function Section3Page() {
       </h1>
 
       <p className="mt-6 text-foreground/70">
-        Chapter 2 left one bell on the chart: the control, drawn from a jar
-        that converts at your baseline rate. Version B was there too, but only
-        as a dashed line where its average would land. A line is not a
-        distribution. B has its own spread, and until you draw it, you
-        can&apos;t see the thing that actually decides whether a test calls a
-        winner.
+        Chapter 2 ended with two bells: the control at the baseline and B
+        shifted by the lift, their overlap changing as you moved the slider.
+        Looking at that picture doesn&apos;t yet tell you what to <em>do</em>{" "}
+        with a single experiment&apos;s result. That&apos;s this chapter.
       </p>
 
       <hr className="my-10 border-foreground/10" />
 
       <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-        Version B has its own bell
-      </h2>
-
-      <p className="mt-4 text-foreground/70">
-        B is drawn from its own jar. If the new button really does lift signups
-        by 10%, B&apos;s jar converts at 11% instead of 10%. Same sampling
-        process, same sample size, same shape of noise. The bell sits in the
-        same place on the chart, just shifted a little to the right.
-      </p>
-
-      <p className="mt-4 text-foreground/70">
-        Here are both bells, side by side, at the case study&apos;s 10%
-        baseline and 100 visitors per variant.
-      </p>
-
-      <div className="mt-6">
-        <WidgetFrame>
-          <TwoBellsWidget />
-        </WidgetFrame>
-      </div>
-      <p className="mt-4 text-sm text-foreground/55">
-        We&apos;re drawing the bells as smooth silhouettes from here on. Each
-        bell is still the same distribution you saw in chapter 2, just without
-        the individual dots.
-      </p>
-
-      <div className="mt-8 space-y-4 text-foreground/70">
-        <p>
-          The means pull apart by one percentage point. The bells, on the other
-          hand, sprawl over something like five points each. A single run of
-          the experiment gives you one dot from A&apos;s bell and one dot from
-          B&apos;s bell. Depending on which way each lands, A can look better
-          than B on any given day, even though B&apos;s jar really is the
-          better one.
-        </p>
-        <p>
-          That shaded sliver where the two bells sit on top of each other is
-          the problem. Anywhere inside it, a sample from A and a sample from B
-          are indistinguishable.
-        </p>
-      </div>
-
-      <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
-        Slide the baseline and watch the overlap move
-      </h2>
-
-      <p className="mt-4 text-foreground/70">
-        Take the baseline down to 2%. The lift is still 10% in relative terms,
-        but the absolute gap between the two means is now a fifth of what it
-        was. The bells almost sit on top of each other. Push the baseline up
-        to 20% and the gap doubles, the bells separate, and the overlap
-        shrinks to a thin band in the middle.
-      </p>
-
-      <p className="mt-4 text-foreground/70">
-        Same relative improvement. Very different pictures. This is the same
-        thread from chapter 2, now with both distributions on the chart
-        instead of one bell and a line.
-      </p>
-
-      <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
         Middle is normal, tails are rare
       </h2>
 
@@ -238,7 +174,6 @@ export default function Section3Page() {
 
       <SectionFooter
         summary={[
-          "Version B has its own sampling distribution, same shape as the control, shifted by the lift.",
           "Middle of a bell is routine noise. Tails are rare. Roughly 95% of samples land within two standard deviations of the mean.",
           "Calling a winner is drawing a critical value past A's usual range. The share of A's bell left of it is the confidence level; the sliver right of it is the significance level.",
           "Stricter confidence pushes the line further out, which needs more data to clear.",
