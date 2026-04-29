@@ -11,8 +11,8 @@ import {
 } from "../constants/chapter-2-constants";
 import { useBaselineSlider } from "./use-baseline-slider";
 
-// Chapter 3 opens on the case study's 10% baseline, per the narrative copy.
-const CH3_TWO_BELLS_DEFAULT_BASELINE = 0.1;
+// Chapter 3 opens on the case study's 20% baseline, per the narrative copy.
+const CH3_TWO_BELLS_DEFAULT_BASELINE = 0.2;
 
 type OverlapLevel = "heavy" | "moderate" | "light";
 

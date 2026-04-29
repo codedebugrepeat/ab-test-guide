@@ -22,7 +22,7 @@ export function CaseStudyCallout() {
       </p>
       <ExperimentIllustration />
       <p className="mb-4 text-sm text-foreground/60">
-        We ran {CASE_STUDY_VISITORS} visitors through each. Here&apos;s what we got:
+        We ran {CASE_STUDY_VISITORS}{" "} visitors through each. Here&apos;s what we got:
       </p>
       <dl className="grid grid-cols-2 gap-4 text-sm sm:grid-cols-2">
         <div className="rounded-md border border-foreground/10 bg-foreground/[0.03] px-4 py-3">

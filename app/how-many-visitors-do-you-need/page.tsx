@@ -176,7 +176,7 @@ export default function Section2Page() {
         process, each has its own bell, each centered on its own mean. The
         control sits at the baseline rate; B sits at the baseline plus the
         lift as a percentage of that baseline. Here are both, at the case
-        study&apos;s 10% baseline and 100 visitors per variant.
+        study&apos;s 20% baseline and 100 visitors per variant.
       </p>
 
       <div className="mt-6">
@@ -187,7 +187,7 @@ export default function Section2Page() {
 
       <p className="mt-4 text-foreground/70">
         Use the slider to move the baseline. At 2%, the absolute gap between the
-        two means shrinks to a fifth of what it was at 10%, and the bells almost
+        two means shrinks to a tenth of what it was at 20%, and the bells almost
         sit on top of each other. Push to 20% and they pull apart. Same relative
         lift, very different picture — the same thread from earlier in this
         chapter, now with both distributions in view.
