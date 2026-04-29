@@ -16,7 +16,7 @@ export function requiredSampleSize(baseline: number, lift: number, confidence: n
 }
 
 export function estimateDuration(requiredN: number, visitorsPerPeriod: number): number {
-  if (!Number.isFinite(requiredN) || visitorsPerPeriod <= 0) return Infinity;
+  if (!Number.isFinite(requiredN) || !Number.isFinite(visitorsPerPeriod) || visitorsPerPeriod <= 0) return Infinity;
   return Math.ceil((requiredN * 2) / visitorsPerPeriod);
 }
 

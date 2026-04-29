@@ -25,6 +25,7 @@ const A_COLOR = "#16a34a";
 const B_COLOR = "#f59e0b";
 const FALSE_POS_COLOR = "#dc2626";
 const MISSED_COLOR = "#6b7280";
+const POWER_COLOR = "#2563eb";
 const FILL_OPACITY = 0.22;
 const SHADE_OPACITY = 0.5;
 
@@ -82,11 +83,12 @@ export function BellsThresholdChart({ pA, pB, n, confidence }: Props) {
   const dataB = useMemo(() => gaussianCurve(pB, n, xMin, xMax), [pB, n, xMin, xMax]);
   const dataAFalse = useMemo(() => splitCurve(dataA, threshold, "right"), [dataA, threshold]);
   const dataBMissed = useMemo(() => splitCurve(dataB, threshold, "left"), [dataB, threshold]);
+  const dataBPower = useMemo(() => splitCurve(dataB, threshold, "right"), [dataB, threshold]);
 
   const xScale = scaleLinear<number>({ domain: [xMin, xMax], range: [0, PLOT_W] });
   const yScale = scaleLinear<number>({ domain: [0, 1.12], range: [PLOT_H, 0] });
 
-  const ariaLabel = `Two sampling distributions in conversion-rate units. Control mean ${meanA.toFixed(2)}%, variant mean ${meanB.toFixed(2)}%, n=${n} per variant. Decision threshold at ${threshold.toFixed(2)}% from ${(confidence * 100).toFixed(0)}% one-sided confidence. Red region is A's right tail past the threshold; gray region is B's left tail short of it.`;
+  const ariaLabel = `Two sampling distributions in conversion-rate units. Control mean ${meanA.toFixed(2)}%, variant mean ${meanB.toFixed(2)}%, n=${n} per variant. Decision threshold at ${threshold.toFixed(2)}% from ${(confidence * 100).toFixed(0)}% one-sided confidence. Red region is A's right tail past the threshold (false positives); gray region is B's left tail short of the threshold (false negatives); blue region is B's right tail past the threshold (power).`;
 
   return (
     <div className="flex w-full max-w-[560px] flex-col items-center">
@@ -109,6 +111,9 @@ export function BellsThresholdChart({ pA, pB, n, confidence }: Props) {
         )}
         {dataBMissed.length > 1 && (
           <AreaClosed data={dataBMissed} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={MISSED_COLOR} fillOpacity={SHADE_OPACITY} />
+        )}
+        {dataBPower.length > 1 && (
+          <AreaClosed data={dataBPower} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={POWER_COLOR} fillOpacity={SHADE_OPACITY} />
         )}
 
         {/* Mean markers */}
@@ -170,7 +175,7 @@ export function BellsThresholdChart({ pA, pB, n, confidence }: Props) {
         <span
           aria-hidden
           className="inline-block h-2.5 w-2.5 rounded-sm"
-          style={{ backgroundColor: B_COLOR, opacity: FILL_OPACITY }}
+          style={{ backgroundColor: POWER_COLOR, opacity: SHADE_OPACITY }}
         />
         <span><strong className="text-foreground/85">Power</strong> — B beats A and you spot it</span>
       </li>

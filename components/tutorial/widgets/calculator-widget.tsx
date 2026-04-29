@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { BellsThresholdChart } from "./bells-threshold-chart";
 import { CH4_DEBOUNCE_MS } from "../constants/chapter-4-constants";
 import { requiredSampleSize, estimateDuration, formatDuration, type Period } from "@/maths/calculator";
+import { type ConfidenceLevel } from "@/maths/sampling";
 
-const CONFIDENCE_OPTIONS = [90, 95, 99] as const;
-type ConfidenceOption = (typeof CONFIDENCE_OPTIONS)[number];
+const CONFIDENCE_OPTIONS = [0.9, 0.95, 0.99] as const satisfies readonly ConfidenceLevel[];
 
 type NumberInputProps = {
   id?: string;
@@ -141,13 +141,12 @@ function LeverRow({ id, label, value, min, max, step, decimals, suffix, onChange
   );
 }
 
-const DEFAULTS = { baseline: 10, lift: 10, confidence: 95 as ConfidenceOption };
-
+const DEFAULTS = { baseline: 10, lift: 10, confidence: 0.95 as ConfidenceLevel };
 
 export function CalculatorWidget() {
   const [baseline, setBaseline] = useState(DEFAULTS.baseline);
   const [lift, setLift] = useState(DEFAULTS.lift);
-  const [confidence, setConfidence] = useState<ConfidenceOption>(DEFAULTS.confidence);
+  const [confidence, setConfidence] = useState<ConfidenceLevel>(DEFAULTS.confidence);
   const [visitorsPerPeriod, setVisitorsPerPeriod] = useState<number>(1000);
   const [period, setPeriod] = useState<Period>("day");
   const [liveText, setLiveText] = useState("");
@@ -163,16 +162,15 @@ export function CalculatorWidget() {
 
   const pA = baseline / 100;
   const pB = Math.min(0.999, pA * (1 + lift / 100));
-  const conf = confidence / 100;
 
-  const requiredN = requiredSampleSize(pA, lift / 100, conf);
+  const requiredN = requiredSampleSize(pA, lift / 100, confidence);
   const feasible = Number.isFinite(requiredN);
   // Fixed intentionally: constant n keeps bell widths stable so the curves visibly drift apart as sliders move, building intuition.
   const chartN = 1000;
 
   const baselineLabel = (Math.round(baseline * 10) / 10).toString();
   const liftLabel = (Math.round(lift * 10) / 10).toString();
-  const confidenceLabel = (Math.round(confidence * 10) / 10).toString();
+  const confidenceLabel = (confidence * 100).toString();
 
   const duration = feasible ? estimateDuration(requiredN, visitorsPerPeriod) : null;
 
@@ -233,11 +231,13 @@ export function CalculatorWidget() {
           <span className="w-28 shrink-0 text-sm font-medium text-foreground/70">
             Confidence
           </span>
-          <div className="flex gap-2">
+          <div role="radiogroup" aria-label="Confidence level" className="flex gap-2">
             {CONFIDENCE_OPTIONS.map((opt) => (
               <button
                 key={opt}
                 type="button"
+                role="radio"
+                aria-checked={confidence === opt}
                 onClick={() => setConfidence(opt)}
                 className={`rounded-lg border px-4 py-1.5 text-sm font-semibold transition-colors ${
                   confidence === opt
@@ -245,7 +245,7 @@ export function CalculatorWidget() {
                     : "border-foreground/15 text-foreground/50 hover:border-foreground/25 hover:text-foreground/75"
                 }`}
               >
-                {opt}%
+                {opt * 100}%
               </button>
             ))}
           </div>
@@ -285,7 +285,7 @@ export function CalculatorWidget() {
             <p className="text-sm text-foreground/35">Set a baseline between 0% and 100% to see the chart.</p>
           </div>
         ) : (
-          <BellsThresholdChart pA={pA} pB={pB} n={chartN} confidence={conf} />
+          <BellsThresholdChart pA={pA} pB={pB} n={chartN} confidence={confidence} />
         )}
       </div>
 
@@ -295,11 +295,13 @@ export function CalculatorWidget() {
           <p className="text-xs font-semibold uppercase tracking-widest text-foreground/40">
             How long will it take?
           </p>
-          <div className="flex gap-1">
+          <div role="radiogroup" aria-label="Period" className="flex gap-1">
             {(["day", "week", "month"] as Period[]).map((p) => (
               <button
                 key={p}
                 type="button"
+                role="radio"
+                aria-checked={period === p}
                 onClick={() => setPeriod(p)}
                 className={`rounded-md border px-3 py-1 text-xs font-semibold transition-colors ${
                   period === p

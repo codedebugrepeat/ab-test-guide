@@ -114,6 +114,18 @@ describe("estimateDuration", () => {
     expect(estimateDuration(500, 0)).toBe(Infinity);
   });
 
+  it("returns Infinity when visitorsPerPeriod is NaN", () => {
+    expect(estimateDuration(500, NaN)).toBe(Infinity);
+  });
+
+  it("returns Infinity when visitorsPerPeriod is Infinity", () => {
+    expect(estimateDuration(500, Infinity)).toBe(Infinity);
+  });
+
+  it("returns Infinity when visitorsPerPeriod is negative", () => {
+    expect(estimateDuration(500, -1)).toBe(Infinity);
+  });
+
   it("500 per group, 100 per week → 10 weeks (2×500/100)", () => {
     expect(estimateDuration(500, 100)).toBe(10);
   });
