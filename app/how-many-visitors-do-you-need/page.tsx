@@ -198,8 +198,8 @@ export default function Section2Page() {
         Run an A/B test and you have two groups. Each is its own sampling
         process, each has its own bell, each centered on its own mean. The
         control sits at the baseline rate; B sits at the baseline plus the
-        lift. Here are both, at the case study&apos;s 10% baseline and 100
-        visitors per variant.
+        lift as a percentage of that baseline. Here are both, at the case
+        study&apos;s 10% baseline and 100 visitors per variant.
       </p>
 
       <div className="mt-6">
