@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { TutorialLayout } from "@/components/tutorial/tutorial-layout";
 import { CaseStudyCallout } from "@/components/tutorial/case-study-callout";
 import { MarbleSamplingWidget } from "@/components/tutorial/widgets/marble-sampling-widget";
+import { SamplingDistributionBuilder } from "@/components/tutorial/widgets/sampling-distribution-builder";
 import { Quote } from "@/components/tutorial/quote";
 import { SectionFooter } from "@/components/tutorial/section-footer";
 import { WidgetFrame } from "@/components/tutorial/widgets/widget-frame";
@@ -136,14 +137,49 @@ export default function Section1Page() {
         </p>
       </div>
 
+      <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
+        Stack the draws: a shape appears
+      </h2>
+
+      <p className="mt-4 text-foreground/70">
+        One draw bounces around. That&apos;s sampling error. But draw again.
+        And again. Keep going and tally every result. Something happens: the
+        chaos settles into a pattern.
+      </p>
+
+      <p className="mt-4 text-foreground/70">
+        Below is the same marble jar. This time, instead of watching a single
+        draw, you&apos;re building up a record of many draws. Each time you
+        sample, the count gets stacked onto the chart. Keep adding draws and a
+        shape fills in.
+      </p>
+
+      <div className="mt-6">
+        <WidgetFrame>
+          <SamplingDistributionBuilder />
+        </WidgetFrame>
+      </div>
+
+      <div className="mt-8 space-y-4 text-foreground/70">
+        <p>
+          That shape has a name: a <strong>sampling distribution</strong>. The
+          middle is where most outcomes land; the edges are rare. At 10 marbles
+          per draw the histogram is jagged, but the tendency is already there —
+          results cluster around the true rate and thin out toward the extremes.
+        </p>
+        <p>
+          That shape isn&apos;t fixed. Its width depends on your baseline.
+        </p>
+      </div>
+
       <SectionFooter
         summary={[
           `Small samples produce noisy results. A ${CASE_STUDY_A_SIGNUPS} vs. ${CASE_STUDY_B_SIGNUPS} gap is common by chance alone.`,
           "You can't tell signal from noise without knowing how much data you actually need.",
-          "That's what the rest of this guide covers.",
+          "Stack enough draws and the noise settles into a shape: a sampling distribution that clusters around the true rate.",
         ]}
-        teaserText="Next: where does the number of visitors you need actually come from?"
-        nextLabel="Next: Sample size →"
+        teaserText="Next: that shape isn't fixed. Its width depends on your baseline — and baseline is what drives how much data you need."
+        nextLabel="Next: Your baseline matters →"
         nextHref="/how-many-visitors-do-you-need"
       />
     </TutorialLayout>
