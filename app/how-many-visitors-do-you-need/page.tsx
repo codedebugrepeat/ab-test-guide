@@ -5,6 +5,7 @@ import { SectionFooter } from "@/components/tutorial/section-footer";
 import { WidgetFrame } from "@/components/tutorial/widgets/widget-frame";
 import { SamplingDistributionBuilder } from "@/components/tutorial/widgets/sampling-distribution-builder";
 import { BaselineDistributionWidget } from "@/components/tutorial/widgets/baseline-distribution-widget";
+import { TwoBellsWidget } from "@/components/tutorial/widgets/two-bells-widget";
 import { getChapter, totalChapters } from "@/components/tutorial/chapters";
 import { siteConfig } from "@/lib/site-config";
 
@@ -182,24 +183,46 @@ export default function Section2Page() {
       </div>
 
       <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
-        What&apos;s still missing
+        Two bells
       </h2>
 
       <p className="mt-4 text-foreground/70">
-        We drew one bell: the control&apos;s. Version B has its own bell,
-        centered on a slightly different average. When the two bells overlap
-        a lot, you can&apos;t tell them apart from a single experiment. When
-        they pull apart, you can. That&apos;s the whole game, and it&apos;s
-        where we go next.
+        So far we&apos;ve drawn the control&apos;s distribution as a histogram
+        of discrete counts. From here on we&apos;ll draw it as a smooth
+        silhouette: same distribution, just without the individual dots. The
+        semantics don&apos;t change. Sample something and you get variance;
+        values cluster around the mean and form a bell.
+      </p>
+
+      <p className="mt-4 text-foreground/70">
+        Run an A/B test and you have two groups. Each is its own sampling
+        process, each has its own bell, each centered on its own mean. The
+        control sits at the baseline rate; B sits at the baseline plus the
+        lift as a percentage of that baseline. Here are both, at the case
+        study&apos;s 10% baseline and 100 visitors per variant.
+      </p>
+
+      <div className="mt-6">
+        <WidgetFrame>
+          <TwoBellsWidget />
+        </WidgetFrame>
+      </div>
+
+      <p className="mt-4 text-foreground/70">
+        Use the slider to move the baseline. At 2%, the absolute gap between the
+        two means shrinks to a fifth of what it was at 10%, and the bells almost
+        sit on top of each other. Push to 20% and they pull apart. Same relative
+        lift, very different picture — the same thread from earlier in this
+        chapter, now with both distributions in view.
       </p>
 
       <SectionFooter
         summary={[
           "Noise has a shape. Keep drawing samples and that shape fills in: a sampling distribution.",
           "Baseline controls the shape. The lower the baseline, the more the spread swamps small differences.",
-          "Whether a lift is visible depends on whether it separates from the spread. At 2%, a 10% lift hides. At 20%, it shows.",
+          "Run an A/B test and both groups have their own bell. Whether the test calls a winner depends on how far apart those bells sit.",
         ]}
-        teaserText="Next: draw version B's bell alongside the control and watch when the two actually pull apart."
+        teaserText="Next: two bells, one decision. How far apart do they need to sit before you call a winner?"
         nextLabel="Next: Confidence →"
         nextHref="/how-sure-do-you-need-to-be"
       />
