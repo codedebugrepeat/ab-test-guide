@@ -50,7 +50,7 @@ export default function Section1Page() {
       <p className="mt-8 text-foreground/70">
         Imagine every potential visitor is a marble in a jar. Green means they
         signed up; grey means they didn&apos;t. The jar below has a true
-        conversion rate of 20%: 2 in every 10, on average. Draw a sample of 10
+        conversion rate of 10%: 1 in every 10, on average. Draw a sample of 10
         and count the green ones. What do you notice about the average as you
         draw more and more samples?
       </p>
@@ -78,10 +78,10 @@ export default function Section1Page() {
 
       <div className="space-y-4 text-foreground/70">
         <p>
-          At 10 marbles per draw, the count bounces around. Getting 1 when
-          you&apos;d expect 2 is common. Getting 3 is common too. Now scale
+          At 10 marbles per draw, the count bounces around. Getting 0 when
+          you&apos;d expect 1 is common. Getting 2 is common too. Now scale
           that up: our A/B test had 100 visitors per group, not 10. The same
-          principle applies. A gap of 10 vs. 15 signups is exactly the kind of
+          principle applies. A gap of 10 vs. 11 signups is exactly the kind of
           result sampling error produces routinely, even when both variants are
           identical.
         </p>
@@ -96,9 +96,8 @@ export default function Section1Page() {
       </h2>
       <div className="mt-4 space-y-4 text-foreground/70">
         <p>
-          Group B converted at 15%. Group A converted at 10%. That&apos;s a
-          five-point gap, 50% better in relative terms. The data is right
-          there. Of course you ship the winner.
+          Group B converted at 11%. Group A converted at 10%. B is ahead —
+          but is it ahead enough to trust?
         </p>
         <p>
           But at 100 visitors per group, the numbers are fragile. One signup
@@ -109,7 +108,7 @@ export default function Section1Page() {
         <p>
           Even two <em>identical</em> versions of your button, the exact same
           copy shown to equivalent audiences, would routinely produce a gap
-          like 10 vs. 15 by pure chance at this sample size. Random variation
+          like 10 vs. 11 by pure chance at this sample size. Random variation
           at small scales is that large.
         </p>
       </div>
@@ -129,7 +128,7 @@ export default function Section1Page() {
 
       <SectionFooter
         summary={[
-          "Small samples produce noisy results. A 10 vs. 15 gap is common by chance alone.",
+          "Small samples produce noisy results. A 10 vs. 11 gap is common by chance alone.",
           "You can't tell signal from noise without knowing how much data you actually need.",
           "That's what the rest of this guide covers.",
         ]}

@@ -31,10 +31,10 @@ export function CaseStudyCallout() {
             Version B
           </dt>
           <dd className="mt-2 text-2xl font-semibold tabular-nums">
-            15 signups
+            11 signups
           </dd>
           <dd className="mt-1 text-xs text-foreground/50">
-            out of 100 visitors (15%)
+            out of 100 visitors (11%)
           </dd>
         </div>
       </dl>

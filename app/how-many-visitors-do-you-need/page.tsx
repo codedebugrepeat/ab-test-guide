@@ -41,7 +41,7 @@ export default function Section2Page() {
       </h2>
 
       <p className="mt-4 text-foreground/70">
-        Back to the marble jar from page 1. Same 20% true rate, same 10-marble
+        Back to the marble jar from page 1. Same 10% true rate, same 10-marble
         draw. This time, forget the single sample. Keep drawing and stack
         every count onto the chart below. You&apos;re building up a tally of
         which outcomes show up, and how often.
