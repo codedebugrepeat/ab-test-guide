@@ -180,7 +180,7 @@ export default function Section1Page() {
         ]}
         teaserText="Next: that shape isn't fixed. Its width depends on your baseline — and baseline is what drives how much data you need."
         nextLabel="Next: Your baseline matters →"
-        nextHref="/how-many-visitors-do-you-need"
+        nextHref="/your-baseline-matters"
       />
     </TutorialLayout>
   );

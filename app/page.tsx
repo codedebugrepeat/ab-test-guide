@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function Home() {
-  redirect("/why-you-cant-trust-your-experiment");
+  redirect("/why-small-samples-lie");
 }

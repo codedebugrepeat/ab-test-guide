@@ -1,6 +1,6 @@
 export const chapters = [
   {
-    href: "/why-you-cant-trust-your-experiment",
+    href: "/why-small-samples-lie",
     number: 1,
     title: "Why small samples lie",
     shortTitle: "Small samples",
@@ -9,7 +9,7 @@ export const chapters = [
       "A hands-on guide to A/B testing with interactive visualizations. Start here: why small samples produce results you can't trust, and what sampling error really looks like.",
   },
   {
-    href: "/how-many-visitors-do-you-need",
+    href: "/your-baseline-matters",
     number: 2,
     title: "Your baseline matters",
     shortTitle: "Baseline",
@@ -17,7 +17,6 @@ export const chapters = [
     description:
       "Before you can know how many visitors you need, you need to know your baseline. This chapter explains why baseline rate is the starting point for every sample size calculation.",
   },
-  // TODO: re-slug routes to match titles once the rewrite lands (see storytelling-audit.md Phase 0)
   {
     href: "/how-big-a-jump-are-you-looking-for",
     number: 3,
