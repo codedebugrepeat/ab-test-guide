@@ -63,7 +63,7 @@ export default function Section4Page() {
       </p>
 
       <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
-        Drawing the threshold
+        Drawing the line: how far out is too rare to happen by chance?
       </h2>
 
       <p className="mt-4 text-foreground/70">
@@ -96,7 +96,7 @@ export default function Section4Page() {
       </div>
 
       <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
-        Naming the sliver
+        If A and B were the same, I accept to be wrong 5% of the time
       </h2>
 
       <p className="mt-4 text-foreground/70">

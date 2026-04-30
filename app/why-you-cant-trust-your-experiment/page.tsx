@@ -7,6 +7,7 @@ import { Quote } from "@/components/tutorial/quote";
 import { SectionFooter } from "@/components/tutorial/section-footer";
 import { WidgetFrame } from "@/components/tutorial/widgets/widget-frame";
 import { JarIllustration } from "@/components/tutorial/illustrations/jar-illustration";
+import { SideRemark } from "@/components/tutorial/side-remark";
 import { getChapter, totalChapters } from "@/components/tutorial/chapters";
 import { siteConfig } from "@/lib/site-config";
 import {
@@ -163,7 +164,8 @@ export default function Section1Page() {
           That shape has a name: a <strong>sampling distribution</strong>. The
           middle is where most outcomes land; the edges are rare. At 10 marbles
           per draw the histogram is jagged, but the tendency is already there —
-          results cluster around the true rate and thin out toward the extremes.
+          results cluster around the jar&apos;s{" "}
+          <SideRemark term="true rate" /> and thin out toward the extremes.
         </p>
         <p>
           That shape isn&apos;t fixed. Its width depends on your baseline.

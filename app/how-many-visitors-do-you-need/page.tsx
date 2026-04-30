@@ -67,10 +67,10 @@ export default function Section2Page() {
 
       <p className="mt-4 text-foreground/70">
         In the case study, version A got {CASE_STUDY_A_SIGNUPS} signups from {CASE_STUDY_VISITORS} visitors, so the
-        baseline is {aPercent}% — your best estimate of the page&apos;s{" "}
-        <SideRemark term="true rate" />. That&apos;s on the high side. Many real signup
-        flows sit somewhere between 1% and 5%, and the difference matters a lot.
-        Here&apos;s what it looks like on the distribution.
+        baseline is {aPercent}% — your best estimate of the page&apos;s true rate.
+        That&apos;s on the high side. Many real signup flows sit somewhere between
+        1% and 5%, and the difference matters a lot. Here&apos;s what it looks like
+        on the distribution.
       </p>
 
       <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">

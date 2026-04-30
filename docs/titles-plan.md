@@ -1,5 +1,10 @@
 # Title & Heading Consistency Plan
 
+> **Status: historical.** This plan describes a prior version of the tutorial.
+> The storytelling rewrite (see `storytelling-audit.md`) reordered chapters and
+> changed several titles. Use `components/tutorial/chapters.ts` as the current
+> source of truth for chapter titles, slugs, and order.
+
 ## Problem
 
 Right now the user hits five different names for the same thing on page 1:

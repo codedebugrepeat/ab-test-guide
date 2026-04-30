@@ -1,5 +1,13 @@
 # Tutorial sections
 
+> **Status: historical.** This document describes the original chapter plan
+> (baseline → confidence → lift) and a single shared two-bell visualization. The
+> storytelling rewrite (see `storytelling-audit.md`) reordered to baseline → lift
+> → confidence, retitled chapters, and split the visuals across multiple widgets.
+> Use `components/tutorial/chapters.ts` as the current source of truth for
+> chapter titles, slugs, and order, and the chapter pages under `app/` for the
+> current narrative.
+
 ## Running example (used in every section)
 
 > You have a sign-up button on your website and want to increase sign-ups. You're testing whether changing the button copy will make a difference.
