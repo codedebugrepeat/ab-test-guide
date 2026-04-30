@@ -34,7 +34,7 @@ export const chapters = [
     shortTitle: "Confidence",
     browserTitle: "How sure do you need to be?",
     description:
-      "Version B has its own bell. Put it next to the control and the question becomes visual: when do the two distributions pull apart enough to call a winner?",
+      "Baseline and lift set the picture. The last lever is confidence: how strict do you want to be about calling a winner? Draw the threshold, name the sliver, and see what it costs.",
   },
 ] as const;
 

@@ -5,17 +5,18 @@ import { SectionFooter } from "@/components/tutorial/section-footer";
 import { WidgetFrame } from "@/components/tutorial/widgets/widget-frame";
 import { DecisionThresholdWidget } from "@/components/tutorial/widgets/decision-threshold-widget";
 import { NormalVsExtremeWidget } from "@/components/tutorial/widgets/normal-vs-extreme-widget";
+import { SideRemark } from "@/components/tutorial/side-remark";
 import { getChapter, totalChapters } from "@/components/tutorial/chapters";
 import { siteConfig } from "@/lib/site-config";
 
-const chapter = getChapter(3);
+const chapter = getChapter(4);
 
 export const metadata: Metadata = {
   title: chapter.browserTitle,
   description: chapter.description,
 };
 
-export default function Section3Page() {
+export default function Section4Page() {
   return (
     <TutorialLayout>
       <p className="text-xs font-semibold uppercase tracking-widest text-foreground/40">
@@ -26,10 +27,10 @@ export default function Section3Page() {
       </h1>
 
       <p className="mt-6 text-foreground/70">
-        Chapter 2 ended with two bells: the control at the baseline and B
-        shifted by the lift, their overlap changing as you moved the slider.
-        Looking at that picture doesn&apos;t yet tell you what to <em>do</em>{" "}
-        with a single experiment&apos;s result. That&apos;s this chapter.
+        Chapter 3 ended with two bells — A centered on the baseline, B shifted
+        right by the lift you&apos;re hunting. The picture shows whether those
+        bells pull apart. What it doesn&apos;t tell you is when a result is
+        definitive enough to act on. That&apos;s this chapter.
       </p>
 
       <hr className="my-10 border-foreground/10" />
@@ -39,22 +40,13 @@ export default function Section3Page() {
       </h2>
 
       <p className="mt-4 text-foreground/70">
-        Before we pick a line, look at where samples actually land. Every bell
-        you&apos;ve drawn has the same shape for a reason. Most samples cluster
-        near the true rate. Some land a bit off. Very few land far off.
-        That&apos;s not a quirk of the signup case study; it&apos;s what
-        happens any time you average a pile of yes/no outcomes.
-      </p>
-
-      <p className="mt-4 text-foreground/70">
-        There&apos;s a tidy way to talk about &ldquo;near&rdquo; and
-        &ldquo;far.&rdquo; A bell has a typical width, and statisticians call
-        one unit of that width a <strong>standard deviation</strong>.
-        It&apos;s a ruler you can lay across the chart. As a shape rule,
-        roughly 68% of samples land within one standard deviation of the
-        mean on either side, and roughly 95% within two. The remaining
-        handful of percent live out in the tails, split between the two
-        sides.
+        Every bell you&apos;ve seen has the same property: most samples cluster
+        near the true rate, some land a bit off, very few land far off.
+        That&apos;s not a quirk of the signup case study — it&apos;s what
+        happens any time you average a pile of yes/no outcomes. The spread of
+        the bell — what statisticians call a{" "}
+        <SideRemark term="standard deviation" /> — tells you how tight that
+        clustering is.
       </p>
 
       <div className="mt-6">
@@ -64,38 +56,37 @@ export default function Section3Page() {
       </div>
 
       <p className="mt-4 text-foreground/70">
-        Hold onto the rule of thumb. Middle of the bell means routine noise,
-        the kind of result A produces all the time. Tails of the bell mean
-        rare. A result out there is the sort of thing A only manages by
-        accident once in a while. That difference is the whole basis for
-        calling a winner.
-      </p>
-
-      <p className="mt-4 text-foreground/70">
-        One thing to set aside before we keep going: the 68/95 numbers above
-        describe the shape of a bell, looking at both tails together.
-        They&apos;re a feel for the distribution, not the line we&apos;re
-        about to draw. The decision line slices off only the right-hand
-        tail, and the percentage attached to it is a different cut of the
-        same bell. Don&apos;t conflate the two.
+        The key takeaway: samples deep in the tails are rare. If A and B were
+        identical and you ran the experiment a hundred times, most results would
+        sit comfortably near A&apos;s mean. Only a handful would land out in the
+        right tail. That rarity is what lets you call a winner.
       </p>
 
       <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
-        Where do you draw the line?
+        Drawing the threshold
       </h2>
 
       <p className="mt-4 text-foreground/70">
         Calling a winner means picking a point out past A&apos;s usual range
-        and saying: anything further out, and I&apos;ll believe B really is
-        better. Anything short of it, and I&apos;ll stay with A.
+        and saying: anything that lands further out, and I&apos;ll believe B
+        really is better. Anything short of it, and I&apos;ll stay with A.
+      </p>
+
+      <p className="mt-4 text-foreground/70">
+        The formal version of that logic: the threshold{" "}
+        <SideRemark term="critical value" /> marks the point where a sample mean
+        from B would be so extreme that, if A and B were truly identical —
+        the{" "}
+        <SideRemark term="null hypothesis" /> — you wouldn&apos;t expect to see
+        it.
       </p>
 
       <p className="mt-4 text-foreground/70">
         The line has a cost either way you move it. Pull it toward A and you
-        catch more real wins, but you also catch some noise: runs where A got
-        lucky and looked better than it is. Push it toward B and you filter
-        the noise out, at the price of missing some genuine improvements
-        because their samples landed on the wrong side of the line.
+        catch more real wins, but A&apos;s routine noise slips through more
+        often. Push it toward B and you filter the noise out, at the price of
+        missing some genuine improvements because their samples landed on the
+        wrong side of the line.
       </p>
 
       <div className="mt-6">
@@ -105,48 +96,36 @@ export default function Section3Page() {
       </div>
 
       <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
-        Three names for the same line
+        Naming the sliver
       </h2>
 
       <p className="mt-4 text-foreground/70">
-        The line you just moved around has names, and it&apos;s worth getting
-        them straight before they show up everywhere else in the guide.
+        The thin piece of A&apos;s bell that sticks out to the right of the
+        threshold is the <SideRemark term="significance level" /> — the
+        probability that A alone, by pure chance, would wander past the line and
+        fool you into calling a winner that wasn&apos;t there.
       </p>
 
       <p className="mt-4 text-foreground/70">
-        Where the line sits on the x-axis is the <strong>critical value</strong>.
-        The share of A&apos;s bell that stays to the left of it is your{" "}
-        <strong>confidence level</strong>. The thin sliver of A&apos;s bell
-        that pokes out to the right is the <strong>significance level</strong>.
-        Confidence and significance always add to 100%, so picking one picks
-        the other.
+        The rest of A&apos;s bell — everything to the left of the threshold —
+        is the confidence level. Significance and confidence always add to 100%,
+        so picking one picks the other.
       </p>
 
       <p className="mt-4 text-foreground/70">
-        A 95% confidence level is the standard default. Draw the line so 95%
-        of A&apos;s bell sits to the left of it, and only a 5% sliver pokes
-        out to the right. You&apos;ve said: I&apos;m willing to be fooled
-        about 1 time in 20. If A and B were really the same and you ran this
-        experiment over and over, A alone would wander past the line roughly
-        5% of the time and look like a winner that wasn&apos;t there. That 5%
-        is the significance level, spelled out.
+        A 95% confidence level is the standard default. You&apos;re saying:
+        I&apos;ll accept being fooled about 1 time in 20. The threshold is
+        drawn so that only a 5% sliver of A&apos;s bell pokes past it. If A
+        and B were really identical and you ran this experiment over and over,
+        A alone would wander past the line roughly 5% of the time and look like
+        a winner that wasn&apos;t there.
       </p>
 
       <p className="mt-4 text-foreground/70">
-        Note the line sits in A&apos;s right tail, not on both sides. We&apos;re
-        hunting a lift: B is either enough better than A to clear the line, or
-        it isn&apos;t. A suspiciously low sample from B isn&apos;t what this
-        guide treats as a winner, so the left tail of A&apos;s bell stays out
-        of the decision.
-      </p>
-
-      <p className="mt-4 text-foreground/70">
-        Flip the framing and it&apos;s the same idea. If B really isn&apos;t
-        any better than A, about 95 runs in 100 your test will sit tight and
-        you&apos;ll be right to do so. The other 5, noise alone would push
-        A&apos;s sample past the line and fool you into calling a winner.
-        More confidence, fewer false alarms. Fewer false alarms, more data
-        to get there.
+        The threshold sits in A&apos;s right tail only. We&apos;re hunting a
+        lift: B is either enough better than A to clear the line, or it
+        isn&apos;t. A suspiciously low result from B doesn&apos;t count as a
+        win, so the left tail stays out of the decision.
       </p>
 
       <Quote>
@@ -159,28 +138,33 @@ export default function Section3Page() {
 
       <div className="mt-4 space-y-4 text-foreground/70">
         <p>
-          Stricter confidence pushes the critical value further away from
-          A&apos;s mean. Fewer false wins sneak through, which is the whole
-          point. The catch is that the line now sits further from B&apos;s
-          mean too, so a real lift has to be that much larger before it clears.
+          Stricter confidence pushes the threshold further from A&apos;s mean.
+          Fewer false wins sneak through — which is the point. The catch: the
+          threshold now sits further from B&apos;s mean too, so a real lift has
+          to be that much larger before it clears.
         </p>
         <p>
-          At a fixed baseline and a fixed lift, more separation comes from
-          one place: more visitors. More data tightens both bells, shrinks
-          their spread, and lets a smaller real gap poke clear of a stricter
-          line.
+          At a fixed baseline and a fixed lift, more separation comes from one
+          place: more visitors. More data tightens both bells — less spread —
+          so a smaller real gap can still poke clear of a strict threshold.
+        </p>
+        <p>
+          That&apos;s the last lever. Baseline is given by your product.
+          Lift is the smallest improvement worth chasing. Confidence is how
+          strict you want to be about calling it. Put all three in and sample
+          size is what falls out.
         </p>
       </div>
 
       <SectionFooter
         summary={[
-          "Middle of a bell is routine noise. Tails are rare. Roughly 95% of samples land within two standard deviations of the mean.",
-          "Calling a winner is drawing a critical value past A's usual range. The share of A's bell left of it is the confidence level; the sliver right of it is the significance level.",
-          "Stricter confidence pushes the line further out, which needs more data to clear.",
+          "Tails of A's bell are rare. A result there is the kind of thing A only produces by accident — that's the basis for calling a winner.",
+          "The threshold is the line: anything past it, and you declare B the winner. The sliver of A's bell to the right is the significance level; everything to the left is the confidence level.",
+          "Stricter confidence filters more noise but needs more data to clear.",
         ]}
-        teaserText="Next: the last lever. You've seen baseline and confidence shape the picture. The size of the jump you're hunting for shapes it too."
-        nextLabel="Next: Effect size →"
-        nextHref="/how-big-a-jump-are-you-looking-for"
+        teaserText="You now have all four levers. See how they combine into a single sample-size number."
+        nextLabel="Next: Calculator →"
+        nextHref="/calculator"
       />
     </TutorialLayout>
   );
