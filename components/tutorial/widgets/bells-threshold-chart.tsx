@@ -13,6 +13,7 @@ type Props = {
   pB: number;
   n: number;
   confidence: ConfidenceLevel;
+  showThreshold?: boolean;
 };
 
 const WIDTH = 560;
@@ -68,14 +69,15 @@ export function computeBellsReadout({ pA, pB, n, confidence }: Props): BellsThre
   return { meanA, meanB, sdA, sdB, threshold, falsePositiveShare, falseNegativeShare };
 }
 
-export function BellsThresholdChart({ pA, pB, n, confidence }: Props) {
+export function BellsThresholdChart({ pA, pB, n, confidence, showThreshold = true }: Props) {
   const readout = useMemo(() => computeBellsReadout({ pA, pB, n, confidence }), [pA, pB, n, confidence]);
   const { meanA, meanB, sdA, sdB, threshold } = readout;
 
-  // Axis padding: enough to show both tails comfortably even when lift is big.
   const pad = 4 * Math.max(sdA, sdB);
   const rawMin = Math.min(meanA, meanB) - pad;
-  const rawMax = Math.max(meanA, meanB, threshold) + pad;
+  const rawMax = showThreshold
+    ? Math.max(meanA, meanB, threshold) + pad
+    : Math.max(meanA, meanB) + pad;
   const xMin = Math.max(0, rawMin);
   const xMax = Math.min(100, rawMax);
 
@@ -88,7 +90,9 @@ export function BellsThresholdChart({ pA, pB, n, confidence }: Props) {
   const xScale = scaleLinear<number>({ domain: [xMin, xMax], range: [0, PLOT_W] });
   const yScale = scaleLinear<number>({ domain: [0, 1.12], range: [PLOT_H, 0] });
 
-  const ariaLabel = `Two sampling distributions in conversion-rate units. Control mean ${meanA.toFixed(2)}%, variant mean ${meanB.toFixed(2)}%, n=${n} per variant. Decision threshold at ${threshold.toFixed(2)}% from ${(confidence * 100).toFixed(0)}% one-sided confidence. Red region is A's right tail past the threshold (false positives); gray region is B's left tail short of the threshold (false negatives); blue region is B's right tail past the threshold (power).`;
+  const ariaLabel = showThreshold
+    ? `Two sampling distributions in conversion-rate units. Control mean ${meanA.toFixed(2)}%, variant mean ${meanB.toFixed(2)}%, n=${n} per variant. Decision threshold at ${threshold.toFixed(2)}% from ${(confidence * 100).toFixed(0)}% one-sided confidence. Red region is A's right tail past the threshold (false positives); gray region is B's left tail short of the threshold (false negatives); blue region is B's right tail past the threshold (power).`
+    : `Two sampling distributions in conversion-rate units. Control mean ${meanA.toFixed(2)}%, variant mean ${meanB.toFixed(2)}%, n=${n} per variant.`;
 
   return (
     <div className="flex w-full max-w-[560px] flex-col items-center">
@@ -106,13 +110,13 @@ export function BellsThresholdChart({ pA, pB, n, confidence }: Props) {
         <AreaClosed data={dataB} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={B_COLOR} fillOpacity={FILL_OPACITY} />
         <LinePath data={dataB} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} curve={curveMonotoneX} stroke={B_COLOR} strokeWidth={1.5} />
 
-        {dataBMissed.length > 1 && (
+        {showThreshold && dataBMissed.length > 1 && (
           <AreaClosed data={dataBMissed} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={MISSED_COLOR} fillOpacity={SHADE_OPACITY} />
         )}
-        {dataBPower.length > 1 && (
+        {showThreshold && dataBPower.length > 1 && (
           <AreaClosed data={dataBPower} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={POWER_COLOR} fillOpacity={SHADE_OPACITY} />
         )}
-        {dataAFalse.length > 1 && (
+        {showThreshold && dataAFalse.length > 1 && (
           <AreaClosed data={dataAFalse} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={FALSE_POS_COLOR} fillOpacity={SHADE_OPACITY} />
         )}
 
@@ -127,10 +131,14 @@ export function BellsThresholdChart({ pA, pB, n, confidence }: Props) {
         </text>
 
         {/* Threshold line */}
-        <line x1={xScale(threshold)} y1={-66} x2={xScale(threshold)} y2={PLOT_H} stroke="currentColor" strokeOpacity={0.8} strokeWidth={2} />
-        <text x={xScale(threshold)} y={-71} textAnchor="middle" fontSize="10" fontWeight="600" fill="currentColor" fillOpacity={0.55}>
-          threshold ({(confidence * 100).toFixed(0)}%)
-        </text>
+        {showThreshold && (
+          <>
+            <line x1={xScale(threshold)} y1={-66} x2={xScale(threshold)} y2={PLOT_H} stroke="currentColor" strokeOpacity={0.8} strokeWidth={2} />
+            <text x={xScale(threshold)} y={-71} textAnchor="middle" fontSize="10" fontWeight="600" fill="currentColor" fillOpacity={0.55}>
+              threshold ({(confidence * 100).toFixed(0)}%)
+            </text>
+          </>
+        )}
 
         <AxisBottom
           top={PLOT_H}
@@ -154,32 +162,34 @@ export function BellsThresholdChart({ pA, pB, n, confidence }: Props) {
         </text>
       </Group>
     </svg>
-    <ul className="mt-3 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-foreground/65">
-      <li className="flex items-center gap-2">
-        <span
-          aria-hidden
-          className="inline-block h-2.5 w-2.5 rounded-sm"
-          style={{ backgroundColor: FALSE_POS_COLOR, opacity: SHADE_OPACITY }}
-        />
-        <span><strong className="text-foreground/85">False positive</strong> — you declare B a winner even if no real difference exists</span>
-      </li>
-      <li className="flex items-center gap-2">
-        <span
-          aria-hidden
-          className="inline-block h-2.5 w-2.5 rounded-sm"
-          style={{ backgroundColor: MISSED_COLOR, opacity: SHADE_OPACITY }}
-        />
-        <span><strong className="text-foreground/85">False negative</strong> — you declare A your winner, even if B is better</span>
-      </li>
-      <li className="flex items-center gap-2">
-        <span
-          aria-hidden
-          className="inline-block h-2.5 w-2.5 rounded-sm"
-          style={{ backgroundColor: POWER_COLOR, opacity: SHADE_OPACITY }}
-        />
-        <span><strong className="text-foreground/85">Power</strong> — B beats A and you spot it</span>
-      </li>
-    </ul>
+    {showThreshold && (
+      <ul className="mt-3 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-foreground/65">
+        <li className="flex items-center gap-2">
+          <span
+            aria-hidden
+            className="inline-block h-2.5 w-2.5 rounded-sm"
+            style={{ backgroundColor: FALSE_POS_COLOR, opacity: SHADE_OPACITY }}
+          />
+          <span><strong className="text-foreground/85">False positive</strong> — you declare B a winner even if no real difference exists</span>
+        </li>
+        <li className="flex items-center gap-2">
+          <span
+            aria-hidden
+            className="inline-block h-2.5 w-2.5 rounded-sm"
+            style={{ backgroundColor: MISSED_COLOR, opacity: SHADE_OPACITY }}
+          />
+          <span><strong className="text-foreground/85">False negative</strong> — you declare A your winner, even if B is better</span>
+        </li>
+        <li className="flex items-center gap-2">
+          <span
+            aria-hidden
+            className="inline-block h-2.5 w-2.5 rounded-sm"
+            style={{ backgroundColor: POWER_COLOR, opacity: SHADE_OPACITY }}
+          />
+          <span><strong className="text-foreground/85">Power</strong> — B beats A and you spot it</span>
+        </li>
+      </ul>
+    )}
     </div>
   );
 }
