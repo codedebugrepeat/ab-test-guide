@@ -186,7 +186,7 @@ export function CalculatorWidget() {
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [baseline, lift, confidence, requiredN, feasible]);
+  }, [baseline, lift, confidence, requiredN, feasible, baselineLabel, liftLabel, confidenceLabel]);
 
   return (
     <div className="flex flex-col gap-6">
