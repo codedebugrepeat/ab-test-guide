@@ -349,7 +349,7 @@ export function MarbleSamplingWidget({
             <div className="w-full">
               {/* Column header */}
               <div className="mb-1 flex justify-center border-b border-foreground/[0.08] pb-1.5">
-                <div className="grid items-center gap-x-[8px] sm:gap-x-[10px] grid-cols-[max-content_auto_max-content]">
+                <div className="grid items-center gap-x-[8px] sm:gap-x-[10px] grid-cols-[minmax(4ch,auto)_auto_minmax(4ch,auto)]">
                   <span className="text-right text-[10px] font-semibold text-foreground/25 sm:text-[11px]" />
                   <div className="flex justify-center gap-[2px] sm:gap-[3px]">
                     {Array.from({ length: N }, (_, i) => (

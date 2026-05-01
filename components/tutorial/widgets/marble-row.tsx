@@ -18,10 +18,10 @@ export function MarbleRow({
   return (
     <div className="flex justify-center py-1">
       <div
-        className={`grid items-center gap-x-[8px] sm:gap-x-[10px] grid-cols-[max-content_auto_max-content] ${isFading ? "animate-slide-out-down" : ""} ${isNew ? "animate-slide-down" : ""}`}
+        className={`grid items-center gap-x-[8px] sm:gap-x-[10px] grid-cols-[minmax(4ch,auto)_auto_minmax(4ch,auto)] ${isFading ? "animate-slide-out-down" : ""} ${isNew ? "animate-slide-down" : ""}`}
       >
         {/* Label */}
-        <span className="whitespace-nowrap text-right text-[10px] text-foreground/40 tabular-nums sm:text-[11px]">
+        <span className="whitespace-nowrap text-right text-[10px] text-foreground/40 tabular-nums font-mono sm:text-[11px]">
           #{sampleNumber}
         </span>
 
@@ -50,7 +50,7 @@ export function MarbleRow({
 
         {/* Hit count */}
         <span
-          className={`text-left text-[12px] font-semibold tabular-nums sm:text-[13px] ${count > 0 ? "text-green-600" : "text-foreground/35"
+          className={`text-left text-[12px] font-semibold tabular-nums font-mono sm:text-[13px] ${count > 0 ? "text-green-600" : "text-foreground/35"
             }`}
         >
           {count}/{marbles.length}
