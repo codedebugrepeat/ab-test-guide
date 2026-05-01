@@ -16,13 +16,14 @@ export function TutorialLayout({ children }: { children: ReactNode }) {
   }, [isNavOpen]);
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-6 pb-12 pt-6 sm:pt-10">
+    <div className="mx-auto w-full max-w-5xl px-6 pb-12 pt-6">
       <div className="mb-6 border-b border-foreground/10 pb-4 lg:hidden">
         <button
           type="button"
           onClick={() => setIsNavOpen(true)}
           className="inline-flex items-center gap-2 rounded-full border border-foreground/15 px-4 py-2 text-sm font-medium text-foreground/70 transition hover:border-foreground/30 hover:text-foreground"
           aria-haspopup="dialog"
+          aria-controls="tutorial-chapters-dialog"
           aria-expanded={isNavOpen}
         >
           <span className="text-base leading-none" aria-hidden="true">
@@ -39,13 +40,14 @@ export function TutorialLayout({ children }: { children: ReactNode }) {
             onClick={() => setIsNavOpen(false)}
           />
           <div
+            id="tutorial-chapters-dialog"
             role="dialog"
-            aria-label="Chapters"
+            aria-labelledby="tutorial-chapters-title"
             aria-modal="true"
             className="fixed left-0 top-0 z-50 h-full w-full max-w-xs border-r border-foreground/10 bg-background p-6 shadow-xl lg:hidden"
           >
             <div className="flex items-center justify-between">
-              <p className="text-xs font-semibold uppercase tracking-widest text-foreground/40">
+              <p id="tutorial-chapters-title" className="text-xs font-semibold uppercase tracking-widest text-foreground/40">
                 Chapters
               </p>
               <button
