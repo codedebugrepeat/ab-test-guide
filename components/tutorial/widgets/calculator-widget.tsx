@@ -363,7 +363,7 @@ export function CalculatorWidget() {
           </li>
           <li>
             <strong className="text-foreground/75">Power fixed at 80%.</strong>{" "}
-            Power is the chance of catching a real win if one exists. We lock it at 80% here and leave that lever for a later versions of the calculator.
+            Power is the chance of catching a real win if one exists. We lock it at 80% here and leave that lever for a later version of the calculator.
           </li>
         </ul>
       </div>
