@@ -41,25 +41,27 @@ export default function CalculatorPage() {
             >
               Chapter 2
             </Link>{" "}
-            — your baseline conversion rate matters.
-          </li>
-          <li>
-            <Link
-              href="/how-sure-do-you-need-to-be"
-              className="underline underline-offset-4 hover:text-foreground"
-            >
-              Chapter 3
-            </Link>{" "}
-            — your confidence level matters.
+            — your baseline matters. The lower it is, the more data you need.
           </li>
           <li>
             <Link
               href="/how-big-a-jump-are-you-looking-for"
               className="underline underline-offset-4 hover:text-foreground"
             >
+              Chapter 3
+            </Link>{" "}
+            — lift matters. Aim for a smaller win and the required sample size
+            explodes.
+          </li>
+          <li>
+            <Link
+              href="/how-sure-do-you-need-to-be"
+              className="underline underline-offset-4 hover:text-foreground"
+            >
               Chapter 4
             </Link>{" "}
-            — your expected lift matters.
+            — confidence matters. A stricter threshold means you need more
+            visitors to clear it.
           </li>
         </ul>
         <p>
