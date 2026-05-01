@@ -1,7 +1,7 @@
 
 "use client";
 
-// Wide horizontal jar with 4 rows of marbles and 3 sample ovals circled inside.
+// Jar with 6 rows of marbles and all rows circled as samples inside.
 
 import { P } from "../constants/sampling-constants";
 
@@ -119,7 +119,7 @@ export function JarIllustration() {
               })}
             </g>
 
-            {/* 3 sample ovals on rows 0, 1, 2 */}
+            {/* 6 sample ovals on rows 0 through 5 */}
             {[0, 1, 2, 3, 4, 5].map((ri) => {
               const cy = WROW_YS[ri];
               return (
