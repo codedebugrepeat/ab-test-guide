@@ -5,6 +5,7 @@ import { BellsThresholdChart } from "./bells-threshold-chart";
 import { CH4_DEBOUNCE_MS } from "../constants/chapter-4-constants";
 import { requiredSampleSize, estimateDuration, formatDuration, type Period } from "@/maths/calculator";
 import { type ConfidenceLevel } from "@/maths/sampling";
+import { WidgetFrame } from "./widget-frame";
 
 const CONFIDENCE_OPTIONS = [0.9, 0.95, 0.99] as const satisfies readonly ConfidenceLevel[];
 
@@ -110,8 +111,8 @@ type LeverRowProps = {
 
 function LeverRow({ id, label, value, min, max, step, decimals, suffix, onChange }: LeverRowProps) {
   return (
-    <div className="flex items-center gap-3">
-      <label htmlFor={id} className="w-28 shrink-0 text-sm font-medium text-foreground/70">
+    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+      <label htmlFor={id} className="w-full text-sm font-medium text-foreground/70 sm:w-28 sm:shrink-0">
         {label}
       </label>
       <input
@@ -123,9 +124,9 @@ function LeverRow({ id, label, value, min, max, step, decimals, suffix, onChange
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
         aria-valuetext={`${value.toFixed(decimals)}${suffix ?? ""}`}
-        className="flex-1"
+        className="w-full sm:flex-1"
       />
-      <div className="shrink-0">
+      <div className="flex w-full justify-end sm:w-auto sm:shrink-0">
         <NumberInput
           label={label}
           value={value}
@@ -227,11 +228,11 @@ export function CalculatorWidget() {
           suffix="%"
           onChange={setLift}
         />
-        <div className="flex items-center gap-3">
-          <span className="w-28 shrink-0 text-sm font-medium text-foreground/70">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+          <span className="w-full text-sm font-medium text-foreground/70 sm:w-28 sm:shrink-0">
             Confidence
           </span>
-          <div role="radiogroup" aria-label="Confidence level" className="flex gap-2">
+          <div role="radiogroup" aria-label="Confidence level" className="flex w-full flex-wrap gap-2 sm:w-auto sm:flex-nowrap">
             {CONFIDENCE_OPTIONS.map((opt) => (
               <button
                 key={opt}
@@ -239,11 +240,10 @@ export function CalculatorWidget() {
                 role="radio"
                 aria-checked={confidence === opt}
                 onClick={() => setConfidence(opt)}
-                className={`rounded-lg border px-4 py-1.5 text-sm font-semibold transition-colors ${
-                  confidence === opt
-                    ? "border-foreground/40 bg-foreground/10 text-foreground"
-                    : "border-foreground/15 text-foreground/50 hover:border-foreground/25 hover:text-foreground/75"
-                }`}
+                className={`rounded-lg border px-3 py-1.5 text-sm font-semibold transition-colors sm:px-4 ${confidence === opt
+                  ? "border-foreground/40 bg-foreground/10 text-foreground"
+                  : "border-foreground/15 text-foreground/50 hover:border-foreground/25 hover:text-foreground/75"
+                  }`}
               >
                 {opt * 100}%
               </button>
@@ -279,15 +279,17 @@ export function CalculatorWidget() {
       </div>
 
       {/* Chart */}
-      <div className="flex justify-center">
-        {baseline <= 0 || baseline >= 100 ? (
-          <div className="flex h-[320px] w-full items-center justify-center rounded-xl border border-dashed border-foreground/15">
-            <p className="text-sm text-foreground/35">Set a baseline between 0% and 100% to see the chart.</p>
-          </div>
-        ) : (
-          <BellsThresholdChart pA={pA} pB={pB} n={chartN} confidence={confidence} />
-        )}
-      </div>
+      <WidgetFrame>
+        <div className="flex w-full justify-center">
+          {baseline <= 0 || baseline >= 100 ? (
+            <div className="flex h-[320px] w-full items-center justify-center rounded-xl border border-dashed border-foreground/15">
+              <p className="text-sm text-foreground/35">Set a baseline between 0% and 100% to see the chart.</p>
+            </div>
+          ) : (
+            <BellsThresholdChart pA={pA} pB={pB} n={chartN} confidence={confidence} />
+          )}
+        </div>
+      </WidgetFrame>
 
       {/* Duration estimator */}
       <div className="rounded-xl border border-foreground/10 bg-foreground/[0.02] p-5">
@@ -303,31 +305,32 @@ export function CalculatorWidget() {
                 role="radio"
                 aria-checked={period === p}
                 onClick={() => setPeriod(p)}
-                className={`rounded-md border px-3 py-1 text-xs font-semibold transition-colors ${
-                  period === p
-                    ? "border-foreground/40 bg-foreground/10 text-foreground"
-                    : "border-foreground/15 text-foreground/50 hover:border-foreground/25 hover:text-foreground/75"
-                }`}
+                className={`rounded-md border px-3 py-1 text-xs font-semibold transition-colors ${period === p
+                  ? "border-foreground/40 bg-foreground/10 text-foreground"
+                  : "border-foreground/15 text-foreground/50 hover:border-foreground/25 hover:text-foreground/75"
+                  }`}
               >
                 {p}
               </button>
             ))}
           </div>
         </div>
-        <div className="mt-4 flex items-center gap-3">
-          <label htmlFor="calc-visitors-per-period" className="shrink-0 text-sm text-foreground/70">
+        <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+          <label htmlFor="calc-visitors-per-period" className="w-full text-sm text-foreground/70 sm:w-40 sm:shrink-0">
             Visitors per {period}
           </label>
-          <NumberInput
-            id="calc-visitors-per-period"
-            label={`Visitors per ${period}`}
-            value={visitorsPerPeriod}
-            min={1}
-            max={10_000_000}
-            step={1}
-            decimals={0}
-            onChange={setVisitorsPerPeriod}
-          />
+          <div className="flex w-full justify-end sm:flex-1 sm:justify-end">
+            <NumberInput
+              id="calc-visitors-per-period"
+              label={`Visitors per ${period}`}
+              value={visitorsPerPeriod}
+              min={1}
+              max={10_000_000}
+              step={1}
+              decimals={0}
+              onChange={setVisitorsPerPeriod}
+            />
+          </div>
         </div>
         <p className="mt-4 text-2xl font-semibold tabular-nums">
           {duration !== null ? formatDuration(duration, period) : "—"}
