@@ -25,7 +25,7 @@ export const chapters = [
     shortTitle: "Effect size",
     browserTitle: "How big a jump are you looking for?",
     description:
-      "The minimum lift you want to detect is a lever, just like baseline and confidence. Aim small and you need a lot more data. Aim big and the picture separates on its own.",
+      "The minimum lift you want to detect is a lever, just like your baseline. Aim small and you need a lot more data. Aim big and the picture separates on its own.",
   },
   {
     href: "/how-sure-do-you-need-to-be",
@@ -34,7 +34,7 @@ export const chapters = [
     shortTitle: "Confidence",
     browserTitle: "How sure do you need to be?",
     description:
-      "Baseline and lift set the picture. The last lever is confidence: how strict do you want to be about calling a winner? Draw the threshold, name the sliver, and see what it costs.",
+      "Baseline and lift set the picture. The last lever is confidence: how strict do you want to be about calling a winner?",
   },
 ] as const;
 

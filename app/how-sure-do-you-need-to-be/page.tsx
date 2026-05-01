@@ -162,7 +162,7 @@ export default function Section4Page() {
           "The threshold is the line: anything past it, and you declare B the winner. The sliver of A's bell to the right is the significance level; everything to the left is the confidence level.",
           "Stricter confidence filters more noise but needs more data to clear.",
         ]}
-        teaserText="You now have all four levers. See how they combine into a single sample-size number."
+        teaserText="You now have all three levers. See how they combine into a single sample-size number."
         nextLabel="Next: Calculator →"
         nextHref="/calculator"
       />
