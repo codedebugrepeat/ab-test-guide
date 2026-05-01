@@ -62,13 +62,15 @@ export default function Section1Page() {
       <p className="mt-8 text-foreground/70">
         Imagine every potential visitor is a marble in a jar. Green means they
         signed up; grey means they didn&apos;t. The jar below has a true
-        conversion rate of {aPercent}%: 1 in every {Math.round(1 / CASE_STUDY_A_RATE)}, on average. Draw a sample of 10
-        and count the green ones. What do you notice about the average as you
-        draw more and more samples?
+        conversion rate of {aPercent}%: 1 in every {Math.round(1 / CASE_STUDY_A_RATE)}, on average.
       </p>
 
       <div className="mt-6 flex flex-col items-center gap-4">
         <JarIllustration />
+        <p className="text-foreground/70">
+          Draw a sample of 10 and count the green ones. What do you notice about the average as you
+          draw more and more samples?
+        </p>
         <WidgetFrame>
           <MarbleSamplingWidget />
         </WidgetFrame>

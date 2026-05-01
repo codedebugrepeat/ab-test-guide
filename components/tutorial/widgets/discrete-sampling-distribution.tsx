@@ -4,12 +4,11 @@ import { AxisBottom, AxisLeft } from "@visx/axis";
 import { Group } from "@visx/group";
 import { scaleBand, scaleLinear } from "@visx/scale";
 import { N, P } from "../constants/sampling-constants";
-import { WJAR_W } from "../illustrations/jar-illustration";
 import { binomialMean } from "@/maths/sampling";
 
 type Props = { counts: number[] };
 
-const WIDTH = WJAR_W;
+const WIDTH = 670;
 const HEIGHT = 320;
 const MARGIN = { top: 40, right: 18, bottom: 46, left: 42 };
 const PLOT_W = WIDTH - MARGIN.left - MARGIN.right;
@@ -57,7 +56,7 @@ export function DiscreteSamplingDistribution({ counts }: Props) {
   );
 
   return (
-    <div className="flex w-full max-w-[420px] flex-col items-center gap-2">
+    <div className={`flex w-full max-w-[${WIDTH}px] flex-col items-center gap-2`}>
       <svg
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
         preserveAspectRatio="xMidYMid meet"

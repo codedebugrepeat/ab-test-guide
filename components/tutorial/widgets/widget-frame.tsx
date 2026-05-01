@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 export function WidgetFrame({ children }: { children: ReactNode }) {
   return (
-    <div className="rounded-xl border border-foreground/10 bg-foreground/[0.02] p-6">
+    <div className="w-full rounded-xl border border-foreground/10 bg-foreground/[0.02] p-4 sm:p-6">
       <div className="mb-4 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-foreground/30">
         <svg
           xmlns="http://www.w3.org/2000/svg"
