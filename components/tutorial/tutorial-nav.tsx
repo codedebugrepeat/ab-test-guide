@@ -10,15 +10,15 @@ export function TutorialNav({ horizontal = false }: { horizontal?: boolean }) {
   if (horizontal) {
     return (
       <nav aria-label="Chapters">
-        <ol className="flex gap-2 overflow-x-auto pb-1">
+        <ol className="grid grid-cols-2 gap-2 pb-1 sm:flex sm:gap-2 sm:overflow-x-auto">
           {chapters.map((ch) => {
             const active = pathname === ch.href;
             return (
-              <li key={ch.href} className="shrink-0">
+              <li key={ch.href} className="sm:shrink-0">
                 <Link
                   href={ch.href}
                   aria-current={active ? "page" : undefined}
-                  className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-sm transition-colors ${
+                  className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-[13px] transition-colors sm:text-sm ${
                     active
                       ? "bg-foreground/[0.08] font-medium text-foreground"
                       : "text-foreground/40 hover:bg-foreground/[0.04] hover:text-foreground/70"
@@ -27,7 +27,7 @@ export function TutorialNav({ horizontal = false }: { horizontal?: boolean }) {
                   <span className="tabular-nums text-foreground/30">
                     {ch.number}
                   </span>
-                  <span>{ch.shortTitle}</span>
+                  <span className="truncate">{ch.shortTitle}</span>
                 </Link>
               </li>
             );
