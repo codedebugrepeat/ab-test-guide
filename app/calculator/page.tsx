@@ -66,7 +66,7 @@ export default function CalculatorPage() {
         </ul>
         <p>
           Those four levers come together here. Plug them in as inputs and the
-          calculator gives you the sample size you need per variant.
+          calculator gives you the minimum sample size you need per variant.
         </p>
         <p>
           This is a <strong>pre-experiment</strong> calculator. It helps you
@@ -81,7 +81,7 @@ export default function CalculatorPage() {
 
       <div className="mt-10 space-y-4 text-foreground/70">
         <p>
-          Set your baseline conversion, the smallest lift worth detecting, and
+          Set your baseline conversion, the smallest effect worth detecting, and
           your confidence level. The visitors-per-variant number tells you how
           many people each side of your test needs before the math can reliably
           tell A from B.

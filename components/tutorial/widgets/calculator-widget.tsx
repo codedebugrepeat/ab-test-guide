@@ -219,7 +219,7 @@ export function CalculatorWidget() {
         />
         <LeverRow
           id="calc-lift"
-          label="Min. detectable lift"
+          label="Min. detectable effect"
           value={lift}
           min={0}
           max={100}
@@ -358,8 +358,12 @@ export function CalculatorWidget() {
             This calculator only checks whether B beats A — not whether A beats B. One tail, one direction.
           </li>
           <li>
+            <strong className="text-foreground/75">Relative effect.</strong>{" "}
+            The minimum detectable effect (lift) input is a relative change (e.g. 10% lift means B is 10% better than A) rather than an absolute change (which would mean B is 10 percentage points better than A).
+          </li>
+          <li>
             <strong className="text-foreground/75">Power fixed at 80%.</strong>{" "}
-            Power is the chance of catching a real win if one exists. We lock it at 80% here and leave that lever for a later chapter.
+            Power is the chance of catching a real win if one exists. We lock it at 80% here and leave that lever for a later versions of the calculator.
           </li>
         </ul>
       </div>
