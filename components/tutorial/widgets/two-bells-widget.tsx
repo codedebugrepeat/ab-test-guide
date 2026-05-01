@@ -9,10 +9,8 @@ import {
   CH2_LIFT,
   CH2_N,
 } from "../constants/chapter-2-constants";
+import { CASE_STUDY_A_RATE } from "../constants/case-study-constants";
 import { useBaselineSlider } from "./use-baseline-slider";
-
-// Chapter 3 opens on the case study's 20% baseline, per the narrative copy.
-const CH3_TWO_BELLS_DEFAULT_BASELINE = 0.2;
 
 type OverlapLevel = "heavy" | "moderate" | "light";
 
@@ -23,7 +21,7 @@ function overlapFor(baseline: number): OverlapLevel {
 }
 
 export function TwoBellsWidget() {
-  const { baseline, baselineIndex, handleBaselineChange } = useBaselineSlider(CH3_TWO_BELLS_DEFAULT_BASELINE);
+  const { baseline, baselineIndex, handleBaselineChange } = useBaselineSlider(CASE_STUDY_A_RATE);
   const [liveText, setLiveText] = useState("");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 

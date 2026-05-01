@@ -27,7 +27,7 @@ export default function CalculatorPage() {
         <ul className="list-disc space-y-2 pl-6">
           <li>
             <Link
-              href="/why-you-cant-trust-your-experiment"
+              href="/why-small-samples-lie"
               className="underline underline-offset-4 hover:text-foreground"
             >
               Chapter 1
@@ -36,7 +36,7 @@ export default function CalculatorPage() {
           </li>
           <li>
             <Link
-              href="/how-many-visitors-do-you-need"
+              href="/your-baseline-matters"
               className="underline underline-offset-4 hover:text-foreground"
             >
               Chapter 2
