@@ -251,10 +251,10 @@ export function MarbleSamplingWidget({
     totalDraws === 0 ? "Draw a sample" : "Draw another sample";
 
   return (
-    <div className="flex flex-col items-center gap-5">
+    <div className="flex w-full flex-col items-center gap-5">
 
       {/* ── Widget card ── */}
-      <div className="w-full max-w-[420px] rounded-2xl border border-foreground/10 bg-background px-6 py-5 shadow-sm">
+      <div className="mx-auto w-full max-w-[420px] rounded-2xl border border-foreground/10 bg-background px-4 py-5 shadow-sm sm:px-6">
         {/* Stats: latest | avg | true */}
         <div className="mb-4 flex items-stretch justify-center gap-1.5 border-b border-foreground/[0.08] pb-4">
           <StatCard
@@ -283,7 +283,7 @@ export function MarbleSamplingWidget({
             onClick={handleDraw}
             disabled={isAnimating}
             aria-label={`${buttonLabel}. ${totalDraws} sample${totalDraws !== 1 ? "s" : ""} drawn so far.`}
-            className="w-full rounded-[10px] bg-foreground py-3 text-sm font-semibold text-background transition-opacity hover:opacity-80 active:opacity-65 disabled:opacity-40"
+            className="w-full whitespace-nowrap rounded-[10px] bg-foreground py-3 text-sm font-semibold text-background transition-opacity hover:opacity-80 active:opacity-65 disabled:opacity-40"
           >
             {buttonLabel}
           </button>
@@ -346,18 +346,20 @@ export function MarbleSamplingWidget({
               ))}
             </div>
           ) : (
-            <div className="w-full max-w-[371px]">
+            <div className="w-full">
               {/* Column header */}
-              <div className="mb-1 flex items-center gap-[8px] border-b border-foreground/[0.08] pb-1.5 sm:gap-[10px]">
-                <span className="w-[56px] shrink-0 sm:w-[68px]" />
-                <div className="flex shrink-0 gap-[2px] sm:gap-[3px]">
-                  {Array.from({ length: N }, (_, i) => (
-                    <div key={i} className="w-[18px] text-center text-[8px] font-semibold text-foreground/25 sm:w-[22px] sm:text-[9px]">
-                      {i + 1}
-                    </div>
-                  ))}
+              <div className="mb-1 flex justify-center border-b border-foreground/[0.08] pb-1.5">
+                <div className="grid items-center gap-x-[8px] sm:gap-x-[10px] grid-cols-[max-content_auto_max-content]">
+                  <span className="text-right text-[10px] font-semibold text-foreground/25 sm:text-[11px]" />
+                  <div className="flex justify-center gap-[2px] sm:gap-[3px]">
+                    {Array.from({ length: N }, (_, i) => (
+                      <div key={i} className="w-[18px] text-center text-[8px] font-semibold text-foreground/25 sm:w-[22px] sm:text-[9px]">
+                        {i + 1}
+                      </div>
+                    ))}
+                  </div>
+                  <span className="text-left text-[9px] font-semibold text-foreground/25 sm:text-[10px]">hits</span>
                 </div>
-                <span className="w-8 pl-0.5 text-[9px] font-semibold text-foreground/25 sm:w-9 sm:text-[10px]">hits</span>
               </div>
 
               {/* overflow-hidden clips the fading-out row so it never adds height */}
