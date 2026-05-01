@@ -5,17 +5,16 @@
 
 import { P } from "../constants/sampling-constants";
 
-export const WJAR_W = 260;
+const WJAR_W = 260;
 const WJAR_H = 250;
 const WJAR_RIM = 25;
 const WMR = 9;
 const WMGAP = 4;
 const WMSTEP = WMR * 2 + WMGAP;
 const WCOLS = 10;
-const WROWS = 4;
+const WROWS = 6;
 const WSTART_X = (WJAR_W - (WCOLS * WMSTEP - WMGAP)) / 2 + 10;
-const WROW_YS = [122, 158, 194, 230];
-//const WROW_YS = [42, 78, 114, 150];
+const WROW_YS = [50, 86, 122, 158, 194, 230];
 
 // Oval circles cols 0–9 of each row
 const WOVAL_COLS = 10;
@@ -45,7 +44,7 @@ const WIDE_MARBLES = generateWideMarbles();
 
 export function JarIllustration() {
   return (
-    <div className="w-full rounded-xl border border-foreground/10 px-3 py-4">
+    <div className="w-full rounded-xl px-3 py-4">
       <div className="mx-auto w-4/5">
         <div className="relative w-full" style={{ height: "clamp(220px, 45vw, 320px)" }}>
           <svg
@@ -121,7 +120,7 @@ export function JarIllustration() {
             </g>
 
             {/* 3 sample ovals on rows 0, 1, 2 */}
-            {[0, 1, 2].map((ri) => {
+            {[0, 1, 2, 3, 4, 5].map((ri) => {
               const cy = WROW_YS[ri];
               return (
                 <g key={ri}>
