@@ -39,11 +39,19 @@ export default function Section1Page() {
       </h1>
 
       <p className="mt-6 text-foreground/70">
-        You ran an A/B test, the new version looked better, and you
-        weren&apos;t sure whether to trust it. This guide explains why — and
-        how to know for certain. Every concept has an interactive visualization
-        you can play with, so you build intuition step by step. No stats
-        background required.
+        Imagine you changed the text on a button, showed the old version to 100 people and the new one to another 100. Verion A got 20 signups and version B got 22. It looks like a win, but at this scale, you might just have gotten lucky by chance.
+      </p>
+
+      <p className="mt-6 text-foreground/70">
+        You probably intuitively know that you likely need more than 100 visitors to make a decision you can trust. But how many more? And what does it depend on?
+      </p>
+
+      <p className="mt-6 text-foreground/70">
+        If you tried answering that question with some A/B testing calculators, you were probably hit with a wall of intimidating jargon and left more confused than when you started.
+        Most A/B tools are built for statisticians, not builders. I built this guide as an interactive sandbox where you can learn these concepts intuitively. </p>
+      <p className="mt-6 text-foreground/70">
+        I'll walk you through the concepts step-by-step. By the end, you'll master the three levers that matter: baseline, lift, and confidence. You will leave knowing exactly how many visitors you need to run a test you can trust.
+        And dare I say you might even have fun along the way.
       </p>
 
       <hr className="my-10 border-foreground/10" />
@@ -51,25 +59,34 @@ export default function Section1Page() {
       <CaseStudyCallout />
 
       <h2 className="mt-8 text-2xl font-semibold tracking-tight sm:text-3xl">
-        Ship version B, right?
+        B seems to be better — but is it really?
       </h2>
 
       <p className="mt-4 text-foreground/70">
-        It&apos;s the obvious call. But it&apos;s a trap, and the next few
-        minutes will show you exactly why.
+        Obviously, group B seems to be better. So make the change and ship it?
       </p>
 
-      <p className="mt-8 text-foreground/70">
-        Imagine every potential visitor is a marble in a jar. Green means they
-        signed up; grey means they didn&apos;t. The jar below has a true
+      <p className="mt-4 text-foreground/70">
+        This is a common instinct. But it&apos;s a trap, and in this guide, I'll show you exactly why.
+      </p>
+
+      <p className="mt-4 text-foreground/70">
+        <strong>Imagine every potential visitor is a marble in a jar.</strong>{" "}
+
+        Green means they signed up; grey means they didn&apos;t. The jar below has a true
         conversion rate of {aPercent}%: 1 in every {Math.round(1 / CASE_STUDY_A_RATE)}, on average.
+
+        Now, in reality we wouldn't know what the true rate is. But bear with me here for a second.
       </p>
 
       <div className="mt-6 flex flex-col items-center gap-4">
         <JarIllustration />
         <p className="text-foreground/70">
-          Draw a sample of 10 and count the green ones. What do you notice about the average as you
-          draw more and more samples?
+          Click "Draw a sample". Every draw takes 10 marbles out of the jar. We know that the true rate is {aPercent}%, but what does a single sample look like?
+          And what happens to the average if you draw again and again?
+        </p>
+
+        <p className="text-foreground/70">
         </p>
         <WidgetFrame>
           <MarbleSamplingWidget />

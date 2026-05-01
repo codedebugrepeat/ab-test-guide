@@ -1,7 +1,7 @@
 export const siteConfig = {
   name: "A/B Test Guide",
   description:
-    "An interactive guide to A/B testing that assumes no prior knowledge — and at the end, you can run a real test and trust the result.",
+    "A visual, interactive guide to A/B testing that assumes no prior knowledge — and at the end, you can run a real test and trust the result.",
   url: "https://ab-test-guide.example.com",
   githubUrl: "https://github.com/codedebugrepeat/ab-test-guide",
   navLinks: [

@@ -17,34 +17,30 @@ export function CaseStudyCallout() {
         Case study
       </p>
       <p className="mb-4 text-sm text-foreground/80">
-        You have a sign-up button on your website and want to increase sign-ups.
-        You A/B tested the button copy.
+        Imagine you've been running this A/B test for a few days. You wanted to see if a simple copy change can boost your sign-ups, so you showed each version to 100 visitors. Here is what you see in your dashboard:
       </p>
       <ExperimentIllustration />
-      <p className="mb-4 text-sm text-foreground/60">
-        We ran {CASE_STUDY_VISITORS}{" "} visitors through each. Here&apos;s what we got:
-      </p>
       <dl className="grid grid-cols-2 gap-4 text-sm sm:grid-cols-2">
         <div className="rounded-md border border-foreground/10 bg-foreground/[0.03] px-4 py-3">
           <dt className="text-xs font-semibold uppercase tracking-widest text-foreground/40">
-            Version A
+            Sign-ups in Group A
           </dt>
           <dd className="mt-2 text-2xl font-semibold tabular-nums">
-            {CASE_STUDY_A_SIGNUPS} signups
+            {CASE_STUDY_A_SIGNUPS}
           </dd>
           <dd className="mt-1 text-xs text-foreground/50">
-            out of {CASE_STUDY_VISITORS} visitors ({aPercent}%)
+            {aPercent}% conversion rate
           </dd>
         </div>
         <div className="rounded-md border border-foreground/10 bg-foreground/[0.03] px-4 py-3">
           <dt className="text-xs font-semibold uppercase tracking-widest text-foreground/40">
-            Version B
+            Sign-ups in Group B
           </dt>
           <dd className="mt-2 text-2xl font-semibold tabular-nums">
-            {CASE_STUDY_B_SIGNUPS} signups
+            {CASE_STUDY_B_SIGNUPS}
           </dd>
           <dd className="mt-1 text-xs text-foreground/50">
-            out of {CASE_STUDY_VISITORS} visitors ({bPercent}%)
+            {bPercent}% conversion rate
           </dd>
         </div>
       </dl>
