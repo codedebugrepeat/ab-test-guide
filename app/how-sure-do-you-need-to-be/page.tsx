@@ -96,7 +96,7 @@ export default function Section4Page() {
       </div>
 
       <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
-        If A and B were the same, I accept to be wrong 5% of the time
+        If A and B were the same, I accept being wrong 5% of the time
       </h2>
 
       <p className="mt-4 text-foreground/70">
