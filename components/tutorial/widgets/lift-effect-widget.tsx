@@ -53,14 +53,18 @@ export function LiftEffectWidget({ showThreshold = true }: { showThreshold?: boo
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
-      setLiveText(
-        `Lift ${(lift * 100).toFixed(0)}%. Variant mean ${readout.meanB.toFixed(2)}%. False negatives ${(readout.falseNegativeShare * 100).toFixed(0)}% of variant.`,
-      );
+      if (showThreshold) {
+        setLiveText(
+          `Lift ${(lift * 100).toFixed(0)}%. Variant mean ${readout.meanB.toFixed(2)}%. False negatives ${(readout.falseNegativeShare * 100).toFixed(0)}% of variant.`,
+        );
+      } else {
+        setLiveText(`Lift ${(lift * 100).toFixed(0)}%. Variant mean ${readout.meanB.toFixed(2)}%.`);
+      }
     }, CH4_DEBOUNCE_MS);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [lift, readout.meanB, readout.falseNegativeShare]);
+  }, [lift, readout.meanB, readout.falseNegativeShare, showThreshold]);
 
   return (
     <div className="flex flex-col items-center gap-6">

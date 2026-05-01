@@ -6,6 +6,7 @@ import { WidgetFrame } from "@/components/tutorial/widgets/widget-frame";
 import { LiftEffectWidget } from "@/components/tutorial/widgets/lift-effect-widget";
 import { getChapter, totalChapters } from "@/components/tutorial/chapters";
 import { siteConfig } from "@/lib/site-config";
+import { CH2_LIFT } from "@/components/tutorial/constants/chapter-2-constants";
 
 const chapter = getChapter(3);
 
@@ -81,7 +82,7 @@ export default function Section3Page() {
           The lift is doing the work before the statistics have to.
         </p>
         <p>
-          The case study&apos;s 10% lift sits in the awkward middle — plenty of
+          The case study&apos;s {CH2_LIFT * 100}% lift sits in the awkward middle — plenty of
           overlap, B&apos;s mean nudging out of A&apos;s range but not by much.
           That&apos;s why the case study has been a hard test all along: not
           because the stats are mean, but because the lift you&apos;re hunting

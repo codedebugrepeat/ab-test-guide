@@ -83,9 +83,18 @@ export function BellsThresholdChart({ pA, pB, n, confidence, showThreshold = tru
 
   const dataA = useMemo(() => gaussianCurve(pA, n, xMin, xMax), [pA, n, xMin, xMax]);
   const dataB = useMemo(() => gaussianCurve(pB, n, xMin, xMax), [pB, n, xMin, xMax]);
-  const dataAFalse = useMemo(() => splitCurve(dataA, threshold, "right"), [dataA, threshold]);
-  const dataBMissed = useMemo(() => splitCurve(dataB, threshold, "left"), [dataB, threshold]);
-  const dataBPower = useMemo(() => splitCurve(dataB, threshold, "right"), [dataB, threshold]);
+  const dataAFalse = useMemo(
+    () => (showThreshold ? splitCurve(dataA, threshold, "right") : []),
+    [dataA, threshold, showThreshold]
+  );
+  const dataBMissed = useMemo(
+    () => (showThreshold ? splitCurve(dataB, threshold, "left") : []),
+    [dataB, threshold, showThreshold]
+  );
+  const dataBPower = useMemo(
+    () => (showThreshold ? splitCurve(dataB, threshold, "right") : []),
+    [dataB, threshold, showThreshold]
+  );
 
   const xScale = scaleLinear<number>({ domain: [xMin, xMax], range: [0, PLOT_W] });
   const yScale = scaleLinear<number>({ domain: [0, 1.12], range: [PLOT_H, 0] });
@@ -96,100 +105,100 @@ export function BellsThresholdChart({ pA, pB, n, confidence, showThreshold = tru
 
   return (
     <div className="flex w-full max-w-[560px] flex-col items-center">
-    <svg
-      viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-      preserveAspectRatio="xMidYMid meet"
-      role="img"
-      aria-label={ariaLabel}
-      className="block h-auto w-full"
-    >
-      <Group left={MARGIN.left} top={MARGIN.top}>
-        <AreaClosed data={dataA} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={A_COLOR} fillOpacity={FILL_OPACITY} />
-        <LinePath data={dataA} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} curve={curveMonotoneX} stroke={A_COLOR} strokeWidth={1.5} />
+      <svg
+        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+        preserveAspectRatio="xMidYMid meet"
+        role="img"
+        aria-label={ariaLabel}
+        className="block h-auto w-full"
+      >
+        <Group left={MARGIN.left} top={MARGIN.top}>
+          <AreaClosed data={dataA} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={A_COLOR} fillOpacity={FILL_OPACITY} />
+          <LinePath data={dataA} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} curve={curveMonotoneX} stroke={A_COLOR} strokeWidth={1.5} />
 
-        <AreaClosed data={dataB} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={B_COLOR} fillOpacity={FILL_OPACITY} />
-        <LinePath data={dataB} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} curve={curveMonotoneX} stroke={B_COLOR} strokeWidth={1.5} />
+          <AreaClosed data={dataB} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={B_COLOR} fillOpacity={FILL_OPACITY} />
+          <LinePath data={dataB} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} curve={curveMonotoneX} stroke={B_COLOR} strokeWidth={1.5} />
 
-        {showThreshold && dataBMissed.length > 1 && (
-          <AreaClosed data={dataBMissed} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={MISSED_COLOR} fillOpacity={SHADE_OPACITY} />
-        )}
-        {showThreshold && dataBPower.length > 1 && (
-          <AreaClosed data={dataBPower} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={POWER_COLOR} fillOpacity={SHADE_OPACITY} />
-        )}
-        {showThreshold && dataAFalse.length > 1 && (
-          <AreaClosed data={dataAFalse} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={FALSE_POS_COLOR} fillOpacity={SHADE_OPACITY} />
-        )}
+          {showThreshold && dataBMissed.length > 1 && (
+            <AreaClosed data={dataBMissed} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={MISSED_COLOR} fillOpacity={SHADE_OPACITY} />
+          )}
+          {showThreshold && dataBPower.length > 1 && (
+            <AreaClosed data={dataBPower} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={POWER_COLOR} fillOpacity={SHADE_OPACITY} />
+          )}
+          {showThreshold && dataAFalse.length > 1 && (
+            <AreaClosed data={dataAFalse} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={FALSE_POS_COLOR} fillOpacity={SHADE_OPACITY} />
+          )}
 
-        {/* Mean markers */}
-        <line x1={xScale(meanA)} y1={-6} x2={xScale(meanA)} y2={PLOT_H} stroke={A_COLOR} strokeOpacity={0.85} strokeWidth={1.5} />
-        <text x={xScale(meanA)} y={-44} textAnchor="middle" fontSize="10" fontWeight="600" fill={A_COLOR} fillOpacity={0.9}>
-          A: {meanA.toFixed(meanA < 10 ? 2 : 1)}%
-        </text>
-        <line x1={xScale(meanB)} y1={-6} x2={xScale(meanB)} y2={PLOT_H} stroke={B_COLOR} strokeOpacity={0.9} strokeDasharray="6 2" strokeWidth={1.5} />
-        <text x={xScale(meanB)} y={-32} textAnchor="middle" fontSize="10" fontWeight="600" fill={B_COLOR} fillOpacity={0.95}>
-          B: {meanB.toFixed(meanB < 10 ? 2 : 1)}%
-        </text>
+          {/* Mean markers */}
+          <line x1={xScale(meanA)} y1={-6} x2={xScale(meanA)} y2={PLOT_H} stroke={A_COLOR} strokeOpacity={0.85} strokeWidth={1.5} />
+          <text x={xScale(meanA)} y={-44} textAnchor="middle" fontSize="10" fontWeight="600" fill={A_COLOR} fillOpacity={0.9}>
+            A: {meanA.toFixed(meanA < 10 ? 2 : 1)}%
+          </text>
+          <line x1={xScale(meanB)} y1={-6} x2={xScale(meanB)} y2={PLOT_H} stroke={B_COLOR} strokeOpacity={0.9} strokeDasharray="6 2" strokeWidth={1.5} />
+          <text x={xScale(meanB)} y={-32} textAnchor="middle" fontSize="10" fontWeight="600" fill={B_COLOR} fillOpacity={0.95}>
+            B: {meanB.toFixed(meanB < 10 ? 2 : 1)}%
+          </text>
 
-        {/* Threshold line */}
-        {showThreshold && (
-          <>
-            <line x1={xScale(threshold)} y1={-66} x2={xScale(threshold)} y2={PLOT_H} stroke="currentColor" strokeOpacity={0.8} strokeWidth={2} />
-            <text x={xScale(threshold)} y={-71} textAnchor="middle" fontSize="10" fontWeight="600" fill="currentColor" fillOpacity={0.55}>
-              threshold ({(confidence * 100).toFixed(0)}%)
-            </text>
-          </>
-        )}
+          {/* Threshold line */}
+          {showThreshold && (
+            <>
+              <line x1={xScale(threshold)} y1={-66} x2={xScale(threshold)} y2={PLOT_H} stroke="currentColor" strokeOpacity={0.8} strokeWidth={2} />
+              <text x={xScale(threshold)} y={-71} textAnchor="middle" fontSize="10" fontWeight="600" fill="currentColor" fillOpacity={0.55}>
+                threshold ({(confidence * 100).toFixed(0)}%)
+              </text>
+            </>
+          )}
 
-        <AxisBottom
-          top={PLOT_H}
-          scale={xScale}
-          stroke="currentColor"
-          axisLineClassName="[stroke-opacity:0.14]"
-          hideTicks
-          numTicks={6}
-          tickFormat={(v) => `${Number(v).toFixed(Number(v) < 10 ? 1 : 0)}%`}
-          tickLabelProps={() => ({
-            fontSize: 11,
-            fontWeight: 500,
-            fill: "currentColor",
-            fillOpacity: 0.4,
-            textAnchor: "middle",
-            dy: "0.9em",
-          })}
-        />
-        <text x={PLOT_W / 2} y={PLOT_H + 45} textAnchor="middle" fontSize="10" fontWeight={500} fill="currentColor" fillOpacity={0.4}>
-          Conversion rate per {n.toLocaleString()}-visitor sample
-        </text>
-      </Group>
-    </svg>
-    {showThreshold && (
-      <ul className="mt-3 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-foreground/65">
-        <li className="flex items-center gap-2">
-          <span
-            aria-hidden
-            className="inline-block h-2.5 w-2.5 rounded-sm"
-            style={{ backgroundColor: FALSE_POS_COLOR, opacity: SHADE_OPACITY }}
+          <AxisBottom
+            top={PLOT_H}
+            scale={xScale}
+            stroke="currentColor"
+            axisLineClassName="[stroke-opacity:0.14]"
+            hideTicks
+            numTicks={6}
+            tickFormat={(v) => `${Number(v).toFixed(Number(v) < 10 ? 1 : 0)}%`}
+            tickLabelProps={() => ({
+              fontSize: 11,
+              fontWeight: 500,
+              fill: "currentColor",
+              fillOpacity: 0.4,
+              textAnchor: "middle",
+              dy: "0.9em",
+            })}
           />
-          <span><strong className="text-foreground/85">False positive</strong> — you declare B a winner even if no real difference exists</span>
-        </li>
-        <li className="flex items-center gap-2">
-          <span
-            aria-hidden
-            className="inline-block h-2.5 w-2.5 rounded-sm"
-            style={{ backgroundColor: MISSED_COLOR, opacity: SHADE_OPACITY }}
-          />
-          <span><strong className="text-foreground/85">False negative</strong> — you declare A your winner, even if B is better</span>
-        </li>
-        <li className="flex items-center gap-2">
-          <span
-            aria-hidden
-            className="inline-block h-2.5 w-2.5 rounded-sm"
-            style={{ backgroundColor: POWER_COLOR, opacity: SHADE_OPACITY }}
-          />
-          <span><strong className="text-foreground/85">Power</strong> — B beats A and you spot it</span>
-        </li>
-      </ul>
-    )}
+          <text x={PLOT_W / 2} y={PLOT_H + 45} textAnchor="middle" fontSize="10" fontWeight={500} fill="currentColor" fillOpacity={0.4}>
+            Conversion rate per {n.toLocaleString()}-visitor sample
+          </text>
+        </Group>
+      </svg>
+      {showThreshold && (
+        <ul className="mt-3 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-foreground/65">
+          <li className="flex items-center gap-2">
+            <span
+              aria-hidden
+              className="inline-block h-2.5 w-2.5 rounded-sm"
+              style={{ backgroundColor: FALSE_POS_COLOR, opacity: SHADE_OPACITY }}
+            />
+            <span><strong className="text-foreground/85">False positive</strong> — you declare B a winner even if no real difference exists</span>
+          </li>
+          <li className="flex items-center gap-2">
+            <span
+              aria-hidden
+              className="inline-block h-2.5 w-2.5 rounded-sm"
+              style={{ backgroundColor: MISSED_COLOR, opacity: SHADE_OPACITY }}
+            />
+            <span><strong className="text-foreground/85">False negative</strong> — you declare A your winner, even if B is better</span>
+          </li>
+          <li className="flex items-center gap-2">
+            <span
+              aria-hidden
+              className="inline-block h-2.5 w-2.5 rounded-sm"
+              style={{ backgroundColor: POWER_COLOR, opacity: SHADE_OPACITY }}
+            />
+            <span><strong className="text-foreground/85">Power</strong> — B beats A and you spot it</span>
+          </li>
+        </ul>
+      )}
     </div>
   );
 }
