@@ -1,12 +1,130 @@
-import type { ReactNode } from "react";
+"use client";
+
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { TutorialNav } from "./tutorial-nav";
 
 export function TutorialLayout({ children }: { children: ReactNode }) {
+  const [isNavOpen, setIsNavOpen] = useState(false);
+
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+  const lastActiveElementRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (isNavOpen) {
+      // save the element that had focus so we can restore it on close
+      lastActiveElementRef.current = document.activeElement as HTMLElement | null;
+
+      // focus the close button (or dialog) on next tick
+      setTimeout(() => {
+        if (closeButtonRef.current) {
+          closeButtonRef.current.focus();
+        } else if (dialogRef.current) {
+          dialogRef.current.focus();
+        }
+      }, 0);
+
+      const onKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          e.preventDefault();
+          setIsNavOpen(false);
+          return;
+        }
+
+        if (e.key === "Tab") {
+          const dialog = dialogRef.current;
+          if (!dialog) return;
+          const nodes = dialog.querySelectorAll<HTMLElement>(
+            'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex]:not([tabindex="-1"]), [contenteditable]'
+          );
+          const focusable = Array.from(nodes).filter(
+            (n) => n.offsetParent !== null
+          );
+          if (focusable.length === 0) {
+            e.preventDefault();
+            return;
+          }
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+
+          if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        }
+      };
+
+      document.addEventListener("keydown", onKeyDown);
+      return () => document.removeEventListener("keydown", onKeyDown);
+    }
+
+    // restore focus when the dialog closes
+    if (lastActiveElementRef.current) {
+      lastActiveElementRef.current.focus();
+    }
+    return;
+  }, [isNavOpen]);
+
   return (
-    <div className="mx-auto w-full max-w-5xl px-6 py-12">
+    <div className="mx-auto w-full max-w-5xl px-6 pb-12 pt-6">
       <div className="mb-6 border-b border-foreground/10 pb-4 lg:hidden">
-        <TutorialNav horizontal />
+        <button
+          type="button"
+          ref={triggerRef}
+          onClick={() => setIsNavOpen(true)}
+          className="inline-flex items-center gap-2 rounded-full border border-foreground/15 px-4 py-2 text-sm font-medium text-foreground/70 transition hover:border-foreground/30 hover:text-foreground"
+          aria-haspopup="dialog"
+          aria-controls="tutorial-chapters-dialog"
+          aria-expanded={isNavOpen}
+        >
+          <span className="text-base leading-none" aria-hidden="true">
+            ≡
+          </span>
+          Chapters
+        </button>
       </div>
+      {isNavOpen && (
+        <>
+          <div
+            className="fixed inset-0 z-40 bg-black/30 lg:hidden"
+            aria-hidden="true"
+            onClick={() => setIsNavOpen(false)}
+          />
+          <div
+            id="tutorial-chapters-dialog"
+            ref={dialogRef}
+            tabIndex={-1}
+            role="dialog"
+            aria-labelledby="tutorial-chapters-title"
+            aria-modal="true"
+            className="fixed left-0 top-0 z-50 h-full w-full max-w-xs border-r border-foreground/10 bg-background p-6 shadow-xl lg:hidden"
+          >
+            <div className="flex items-center justify-between">
+              <p id="tutorial-chapters-title" className="text-xs font-semibold uppercase tracking-widest text-foreground/40">
+                Chapters
+              </p>
+              <button
+                type="button"
+                onClick={() => setIsNavOpen(false)}
+                ref={closeButtonRef}
+                className="rounded-full px-2 py-1 text-sm text-foreground/60 transition hover:text-foreground"
+                aria-label="Close chapters"
+              >
+                Close
+              </button>
+            </div>
+            <div className="mt-4">
+              <TutorialNav compactNav onNavigate={() => setIsNavOpen(false)} />
+            </div>
+          </div>
+        </>
+      )}
       <div className="flex gap-12">
         <div className="min-w-0 flex-1">{children}</div>
         <aside className="hidden w-52 shrink-0 lg:block">
