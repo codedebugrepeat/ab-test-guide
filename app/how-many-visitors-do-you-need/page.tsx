@@ -67,8 +67,9 @@ export default function Section2Page() {
 
       <p className="mt-4 text-foreground/70">
         In the case study, version A got {CASE_STUDY_A_SIGNUPS} signups from {CASE_STUDY_VISITORS} visitors, so the
-        baseline is {aPercent}%. That&apos;s on the high side. Many real signup flows
-        sit somewhere between 1% and 5%, and the difference matters a lot.
+        baseline is {aPercent}% — your best estimate of the page&apos;s{" "}
+        <SideRemark term="true rate" />. That&apos;s on the high side. Many real signup
+        flows sit somewhere between 1% and 5%, and the difference matters a lot.
         Here&apos;s what it looks like on the distribution.
       </p>
 
@@ -77,9 +78,10 @@ export default function Section2Page() {
       </h2>
 
       <p className="mt-4 text-foreground/70">
-        Two products, both hoping a new signup button lifts conversions by {liftPercent}%. One converts at 2% today; the other at 20%. Same &ldquo;{liftPercent}%
-        better&rdquo; on paper. On the distribution, they are not the same
-        story.
+        Two products, both targeting the same {liftPercent}%{" "}
+        <SideRemark term="lift" /> in conversions. One converts at 2% today;
+        the other at 20%. Same improvement on paper. On the distribution, they
+        are not the same story.
       </p>
 
       <p className="mt-4 text-foreground/70">
@@ -176,7 +178,7 @@ export default function Section2Page() {
         process, each has its own bell, each centered on its own mean. The
         control sits at the baseline rate; B sits at the baseline plus the
         lift as a percentage of that baseline. Here are both, at the case
-        study&apos;s 10% baseline and 100 visitors per variant.
+        study&apos;s {aPercent}% baseline and {CASE_STUDY_VISITORS} visitors per variant.
       </p>
 
       <div className="mt-6">
@@ -187,7 +189,7 @@ export default function Section2Page() {
 
       <p className="mt-4 text-foreground/70">
         Use the slider to move the baseline. At 2%, the absolute gap between the
-        two means shrinks to a fifth of what it was at 10%, and the bells almost
+        two means shrinks to a tenth of what it was at 20%, and the bells almost
         sit on top of each other. Push to 20% and they pull apart. Same relative
         lift, very different picture — the same thread from earlier in this
         chapter, now with both distributions in view.
@@ -199,9 +201,9 @@ export default function Section2Page() {
           "Baseline controls the shape. The lower the baseline, the more the spread swamps small differences.",
           "Run an A/B test and both groups have their own bell. Whether the test calls a winner depends on how far apart those bells sit.",
         ]}
-        teaserText="Next: two bells, one decision. How far apart do they need to sit before you call a winner?"
-        nextLabel="Next: Confidence →"
-        nextHref="/how-sure-do-you-need-to-be"
+        teaserText="Next: the bells are set. Now decide what gap is worth chasing — and how small a lift you actually need to detect."
+        nextLabel="Next: Effect size →"
+        nextHref="/how-big-a-jump-are-you-looking-for"
       />
     </TutorialLayout>
   );
