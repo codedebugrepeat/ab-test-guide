@@ -8,7 +8,7 @@ import { binomialMean } from "@/maths/sampling";
 
 type Props = { counts: number[] };
 
-const WIDTH = 670;
+const WIDTH = 560;
 const HEIGHT = 320;
 const MARGIN = { top: 40, right: 18, bottom: 46, left: 42 };
 const PLOT_W = WIDTH - MARGIN.left - MARGIN.right;
