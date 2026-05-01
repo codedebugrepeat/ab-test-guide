@@ -1,18 +1,74 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { TutorialNav } from "./tutorial-nav";
 
 export function TutorialLayout({ children }: { children: ReactNode }) {
   const [isNavOpen, setIsNavOpen] = useState(false);
 
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+  const lastActiveElementRef = useRef<HTMLElement | null>(null);
+
   useEffect(() => {
-    if (!isNavOpen) return;
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsNavOpen(false);
-    };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    if (isNavOpen) {
+      // save the element that had focus so we can restore it on close
+      lastActiveElementRef.current = document.activeElement as HTMLElement | null;
+
+      // focus the close button (or dialog) on next tick
+      setTimeout(() => {
+        if (closeButtonRef.current) {
+          closeButtonRef.current.focus();
+        } else if (dialogRef.current) {
+          dialogRef.current.focus();
+        }
+      }, 0);
+
+      const onKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          e.preventDefault();
+          setIsNavOpen(false);
+          return;
+        }
+
+        if (e.key === "Tab") {
+          const dialog = dialogRef.current;
+          if (!dialog) return;
+          const nodes = dialog.querySelectorAll<HTMLElement>(
+            'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex]:not([tabindex="-1"]), [contenteditable]'
+          );
+          const focusable = Array.from(nodes).filter(
+            (n) => n.offsetParent !== null
+          );
+          if (focusable.length === 0) {
+            e.preventDefault();
+            return;
+          }
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+
+          if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        }
+      };
+
+      document.addEventListener("keydown", onKeyDown);
+      return () => document.removeEventListener("keydown", onKeyDown);
+    }
+
+    // restore focus when the dialog closes
+    if (lastActiveElementRef.current) {
+      lastActiveElementRef.current.focus();
+    }
+    return;
   }, [isNavOpen]);
 
   return (
@@ -20,6 +76,7 @@ export function TutorialLayout({ children }: { children: ReactNode }) {
       <div className="mb-6 border-b border-foreground/10 pb-4 lg:hidden">
         <button
           type="button"
+          ref={triggerRef}
           onClick={() => setIsNavOpen(true)}
           className="inline-flex items-center gap-2 rounded-full border border-foreground/15 px-4 py-2 text-sm font-medium text-foreground/70 transition hover:border-foreground/30 hover:text-foreground"
           aria-haspopup="dialog"
@@ -41,6 +98,8 @@ export function TutorialLayout({ children }: { children: ReactNode }) {
           />
           <div
             id="tutorial-chapters-dialog"
+            ref={dialogRef}
+            tabIndex={-1}
             role="dialog"
             aria-labelledby="tutorial-chapters-title"
             aria-modal="true"
@@ -53,6 +112,7 @@ export function TutorialLayout({ children }: { children: ReactNode }) {
               <button
                 type="button"
                 onClick={() => setIsNavOpen(false)}
+                ref={closeButtonRef}
                 className="rounded-full px-2 py-1 text-sm text-foreground/60 transition hover:text-foreground"
                 aria-label="Close chapters"
               >
