@@ -39,11 +39,11 @@ function StatCard({
       >
         {value}
       </span>
-      <span className={`text-center text-[11px] leading-snug ${dim ? "text-foreground/30" : "text-foreground/45"}`}>
+      <span className={`text-center text-[10px] leading-snug whitespace-nowrap sm:text-[11px] ${dim ? "text-foreground/30" : "text-foreground/45"}`}>
         {label}
       </span>
       {sub && (
-        <span className="mt-0.5 text-[10px] text-foreground/30">{sub}</span>
+        <span className="mt-0.5 text-[9px] text-foreground/30 whitespace-nowrap sm:text-[10px]">{sub}</span>
       )}
     </div>
   );
