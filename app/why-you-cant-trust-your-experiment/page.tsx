@@ -89,8 +89,8 @@ export default function Section1Page() {
 
       <div className="space-y-4 text-foreground/70">
         <p>
-          At 10 marbles per draw, the count bounces around. Getting 0 when
-          you&apos;d expect 1 is common. Getting 2 is common too. Now scale
+          At 10 marbles per draw, the count bounces around. Getting 0 or 1 when
+          you&apos;d expect 2 is common. Getting 3 is common too. Now scale
           that up: our A/B test had {CASE_STUDY_VISITORS} visitors per group, not 10. The same
           principle applies. A gap of {CASE_STUDY_A_SIGNUPS} vs. {CASE_STUDY_B_SIGNUPS} signups is exactly the kind of
           result sampling error produces routinely, even when both variants are
@@ -111,10 +111,8 @@ export default function Section1Page() {
           but is it ahead enough to trust?
         </p>
         <p>
-          But at {CASE_STUDY_VISITORS} visitors per group, the numbers are fragile. One signup
-          either way moves the conversion rate by a full percentage point. The
-          difference between &ldquo;{aPercent}%&rdquo; and &ldquo;{bPercent}%&rdquo; is a
-          single person.
+          But at {CASE_STUDY_VISITORS}{" "} visitors per group, the numbers are fragile. One signup
+          either way moves the conversion rate by a full percentage point.
         </p>
         <p>
           Even two <em>identical</em> versions of your button, the exact same
