@@ -8,16 +8,14 @@ import { getChapter, totalChapters } from "@/components/tutorial/chapters";
 import { siteConfig } from "@/lib/site-config";
 import { CH2_LIFT } from "@/components/tutorial/constants/chapter-2-constants";
 
-const chapter = getChapter(4);
+const chapter = getChapter(3);
 
 export const metadata: Metadata = {
   title: chapter.browserTitle,
   description: chapter.description,
 };
 
-export default function Section4Page() {
-  const liftPercent = Math.round(CH2_LIFT * 100);
-
+export default function Section3Page() {
   return (
     <TutorialLayout>
       <p className="text-xs font-semibold uppercase tracking-widest text-foreground/40">
@@ -28,13 +26,12 @@ export default function Section4Page() {
       </h1>
 
       <p className="mt-6 text-foreground/70">
-        Chapter 3 left you with a chart and a line on it. The line was the
-        decision threshold. Where you put it was a policy call: more confidence
-        moves it further from A&apos;s mean, and a real win has to clear it. One
-        lever in that picture has been pinned the whole time without anyone
-        making a fuss about it: the lift. Every chart in this guide so far has
-        assumed B&apos;s jar converts {liftPercent}% better than A&apos;s. That number was
-        never given to you by the data. You picked it.
+        Chapter 2 ended with two bells side by side — A centered on the
+        baseline, B shifted right by the lift, their overlap changing as you
+        moved the slider. That picture posed a question: do the bells pull far
+        enough apart to see a difference, or do they sit on top of each other
+        and blend? This chapter is about the lever that controls the answer: the
+        size of the lift you&apos;re hunting.
       </p>
 
       <hr className="my-10 border-foreground/10" />
@@ -48,8 +45,8 @@ export default function Section4Page() {
         actually change what you ship. A 0.2% lift on checkout might be worth
         millions. A 0.2% lift on a corner of the app no one uses might not be
         worth the engineering follow-up. The number you settle on is your
-        minimum detectable effect. It&apos;s shorthand for &ldquo;this is the
-        smallest jump I want my test to be able to see.&rdquo;
+        minimum detectable effect — shorthand for &ldquo;this is the smallest
+        jump I want my test to be able to see.&rdquo;
       </p>
 
       <p className="mt-4 text-foreground/70">
@@ -58,77 +55,67 @@ export default function Section4Page() {
       </p>
 
       <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
-        Smaller jumps hide. Bigger ones don&apos;t.
+        Smaller lifts hide. Bigger ones don&apos;t.
       </h2>
 
       <p className="mt-4 text-foreground/70">
-        Here is the same chart you ended chapter 3 on, with the same threshold
-        line at 95% confidence. The lever this time is the lift. Drag it down
-        and B&apos;s bell slides toward A&apos;s. Drag it up and the bells pull
-        apart on their own. Watch the gray region: that&apos;s the part of B
-        that lands short of the line. It&apos;s the share of real wins your
-        test would miss.
+        Here are the two bells from chapter 2. Drag the lift slider down and
+        B&apos;s bell slides toward A&apos;s until the two are almost
+        indistinguishable. Drag it up and the bells pull apart on their own.
       </p>
 
       <div className="mt-6">
         <WidgetFrame>
-          <LiftEffectWidget />
+          <LiftEffectWidget showThreshold={false} />
         </WidgetFrame>
       </div>
 
       <div className="mt-8 space-y-4 text-foreground/70">
         <p>
-          At a 2% lift the bells almost coincide. Most of B sits in the gray.
-          Even with 1,000 visitors per side, B&apos;s mean barely pokes past
-          the line. A test like this clears almost never, no matter how
-          patient you are.
+          At a 2% lift the bells almost coincide. You&apos;d need a very large
+          sample before results from each group could reliably tell you which is
+          ahead. Any single draw is noise.
         </p>
         <p>
-          At a 50% lift the gray is gone. B sits comfortably to the right of
-          the line and a test clears quickly. The lift is so big the data
-          barely has to do any work.
+          At a 50% lift the bells barely touch. The difference is large enough
+          that even a modest sample shows B sitting clearly to the right of A.
+          The lift is doing the work before the statistics have to.
         </p>
         <p>
-          The case study&apos;s {liftPercent}% lift sits in the awkward middle. Plenty of
-          gray, plenty of overlap, B&apos;s mean nudging the line. That&apos;s
-          why the case study has been a hard test all along. Not because the
-          stats are mean, but because the lift you&apos;re hunting is small.
+          The case study&apos;s {CH2_LIFT * 100}% lift sits in the awkward middle — plenty of
+          overlap, B&apos;s mean nudging out of A&apos;s range but not by much.
+          That&apos;s why the case study has been a hard test all along: not
+          because the stats are mean, but because the lift you&apos;re hunting
+          is small.
         </p>
       </div>
 
       <Quote>
-        Aim small and the price is steep. Aim big and you might miss the win
-        that was actually there.
+        Aim small and you need a lot of data. Aim big and you might miss the
+        win that was actually there.
       </Quote>
 
       <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
-        Four levers, one knob
+        Two levers in, one to go
       </h2>
 
       <p className="mt-4 text-foreground/70">
-        Every lever in the guide is now on the table. Baseline is given to you
-        by the product. Confidence is a policy you set. Lift is the smallest
-        win you care about. Sample size is the price you pay to see one. Three
-        of those are inputs. Sample size is what falls out when you turn the
-        other three.
-      </p>
-
-      <p className="mt-4 text-foreground/70">
-        That&apos;s the calculator. The same chart you&apos;ve been pulling at
-        for three chapters, with all four sliders live, and a number underneath
-        that tells you how many visitors a test like this actually costs.
+        You now have two inputs: baseline (given by your product) and lift
+        (the smallest improvement worth chasing). Both shape how far apart the
+        two bells sit. What the picture doesn&apos;t yet tell you is when a
+        result is definitive enough to act on. That&apos;s the final lever —
+        how strict you want to be about calling a winner.
       </p>
 
       <SectionFooter
         summary={[
           "Minimum detectable effect is the smallest lift you want to be able to detect. It's a business call, not a stat.",
-          "Smaller lifts pull B's bell toward A's and feed the false-negative region. Larger lifts pull the bells apart.",
-          "Four levers shape the picture: baseline (given), confidence (policy), lift (business call), sample size (the price).",
-          "Three are inputs. Sample size falls out.",
+          "Small lifts push B's bell close to A's — the difference hides in the overlap. Large lifts pull the bells apart.",
+          "You choose the lift before the test runs. The data can't tell you what's worth finding.",
         ]}
-        teaserText="Next: every lever, on one chart. The calculator."
-        nextLabel="Open the calculator →"
-        nextHref="/calculator"
+        teaserText="Next: the bells are set. Now draw the line that separates a real win from a lucky draw."
+        nextLabel="Next: Confidence →"
+        nextHref="/how-sure-do-you-need-to-be"
       />
     </TutorialLayout>
   );
