@@ -51,12 +51,12 @@ export default function Section1Page() {
           By the end, you&apos;ll master the three levers that matter — baseline, expected lift, and confidence — so you can find exactly how many visitors you need to run a test you can trust.
         </p>
 
-        <p>Let&apos;s start with the problem: small samples lie to you.</p>
+        <p><strong>Let&apos;s start with the problem: small samples lie to you.</strong></p>
 
         <h2>Case Study</h2>
 
         <p>
-          Let's imagine you have a website with a sign-up button and you want to get more sign-ups. So you're testing a copy change on your sign-up button and ran an A/B test. Version A is your original copy (Start your free trial), you showed this one to 100 visitors. Version B is the new version (Get started for free), which you showed to another 100 visitors.
+          Let's imagine you have a website with a sign-up button and you want to get more sign-ups. So you're testing a copy change on your sign-up button and are running an A/B test. Version A is your original copy (&ldquo;Start your free trial&rdquo;), you showed this one to 100 visitors. Version B is the new version (&ldquo;Get started for free&rdquo;), which you showed to another 100 visitors.
         </p>
 
         <p>A couple days later, here is what you see in your dashboard:</p>
@@ -75,7 +75,7 @@ export default function Section1Page() {
           This is a common instinct. But it&apos;s a trap.
         </p>
 
-        <p>The reason why is that in your small sample size (100 users each), the difference you see might be due to random chance.</p>
+        <p>In your small sample size (100 users each), the difference you see might be due to random chance.</p>
 
         <Quote>
           At {CASE_STUDY_VISITORS} visitors per group, even two <em>identical</em> versions would
@@ -91,7 +91,7 @@ export default function Section1Page() {
 
           So the jar&apos;s true rate of green marbles is {aPercent}%.
 
-          We can&apos;t see inside the jar, but we can draw samples from it. We draw a handful of marbles and count how many are green. That gives us an estimate of the true rate in the jar. If we draw enough samples, we can get a good picture of what the jar looks like on the inside.
+          We can&apos;t see inside the jar, but we can draw samples from it. We draw a handful of marbles and count how many are green. That gives us an estimate of the true rate of green marbles in the jar. If we draw enough samples, we can get a good picture of what the jar looks like on the inside.
 
           Now, in reality we wouldn&apos;t know what the exact true rate is, but let's pretend we do.
         </p>
@@ -136,7 +136,7 @@ export default function Section1Page() {
         <p>On average, you&apos;d expect 2 green marbles in each sample of 10. But sometimes you get 0, sometimes 1, and sometimes 3 or more. On average, you get two. The more samples you draw, the closer your average will be to the true rate.</p>
 
         <p>
-          In our A/B test, the same thing happened. We had {CASE_STUDY_VISITORS} visitors per group, not 10 (so 10 times more). Stil, getting {CASE_STUDY_A_SIGNUPS} on one "draw" and {CASE_STUDY_B_SIGNUPS} on another is highly likely. The difference is so small, that it could easily be produced by sampling error alone. Even if there was no real difference in how visitors respond to the two button versions.
+          In our A/B test, the same thing happened. We had {CASE_STUDY_VISITORS} visitors per group, not 10 (so 10 times more). Still, getting {CASE_STUDY_A_SIGNUPS} on one "draw" and {CASE_STUDY_B_SIGNUPS} on another is highly likely. The difference is so small, that it could easily be produced by sampling error alone. Even if there was no real difference in how visitors respond to the two button versions.
         </p>
         <p>
           Small samples are wobbly, large samples are more stable. If you take samples of 10 people and measure their size, a sample that was drawn from a basketball team might show that 9/10 people are extremely tall.
@@ -156,6 +156,8 @@ export default function Section1Page() {
           shape fills in.
         </p>
 
+        <p>What do you think the shape will be? (Draw 10 or 100 samples to see it appear faster)</p>
+
         <div className="not-prose mt-6">
           <WidgetFrame>
             <SamplingDistributionBuilder />
@@ -169,6 +171,10 @@ export default function Section1Page() {
           results cluster around the jar&apos;s{" "}
           <SideRemark term="true rate" /> and thin out toward the extremes.
         </p>
+
+        <p>We can use this knowledge to make better decisions about our A/B tests. Some results will be rather rare, so that we can be confident they're not due to chance.</p>
+
+        <p>The rest of this guide will show you how to apply these principles to real-world A/B testing scenarios. Ready to learn more? →</p>
       </div>
 
       <SectionFooter
