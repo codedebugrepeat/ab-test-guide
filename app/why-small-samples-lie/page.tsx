@@ -39,7 +39,7 @@ export default function Section1Page() {
       </h1>
 
       <p className="mt-6 text-foreground/70">
-        Imagine you changed the text on a button, showed the old version to 100 people and the new one to another 100. Verion A got 20 signups and version B got 22. It looks like a win, but at this scale, you might just have gotten lucky by chance.
+        Imagine you changed the text on a button, showed the old version to 100 people and the new one to another 100. Version A got 20 signups and version B got 22. It looks like a win, but at this scale, you might just have gotten lucky by chance.
       </p>
 
       <p className="mt-6 text-foreground/70">
