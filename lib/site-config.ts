@@ -13,7 +13,7 @@ export const siteConfig = {
     url: "https://www.linkedin.com/in/christoph-krenn/",
     "role": "Product Manager & builder",
     image: "/assets/christoph.jpeg",
-    bio: "I'm a Product Manager and builder with a love for data analytics. Most A/B testing guides assume prior knowledge. So I built this guide & calculator as a beginner-friendly alternative. It's open source and free - I hope you enjoy it."
+    bio: "As a Product Manager and builder, I found that most A/B testing resources are too complex for beginners. I created this interactive guide and calculator to provide a simple, fun alternative. I hope it helps you get started!"
   }
 } as const;
 
