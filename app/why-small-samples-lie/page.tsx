@@ -124,8 +124,7 @@ export default function Section1Page() {
 
         <h2>What you&apos;re really looking at: sampling error</h2>
 
-        <p>
-          What you just saw is <strong>sampling error</strong>: the natural
+        <p>What you just saw is <strong>sampling error</strong>: the natural
           spread in outcomes you get from a small random sample, even when
           nothing about the jar changed.
         </p>
@@ -134,19 +133,16 @@ export default function Section1Page() {
 
         <p>Some samples will have more green marbles than others.</p>
 
-        <p>On average, you&apos;d expect 2 green marbles in each sample of 10. But sometimes you get 0, sometimes 1, and sometimes 3.</p>
+        <p>On average, you&apos;d expect 2 green marbles in each sample of 10. But sometimes you get 0, sometimes 1, and sometimes 3 or more. On average, you get two. The more samples you draw, the closer your average will be to the true rate.</p>
 
         <p>
-          In our A/B test, we had the same issue. We had {CASE_STUDY_VISITORS} visitors per group, not 10. Still, the same
-          principle applies. A gap of {CASE_STUDY_A_SIGNUPS} vs. {CASE_STUDY_B_SIGNUPS} signups is so small, that it could easily be produced by sampling error. Even if there was no real difference in how visitors respond to the two button versions.
+          In our A/B test, the same thing happened. We had {CASE_STUDY_VISITORS} visitors per group, not 10 (so 10 times more). Stil, getting {CASE_STUDY_A_SIGNUPS} on one "draw" and {CASE_STUDY_B_SIGNUPS} on another is highly likely. The difference is so small, that it could easily be produced by sampling error alone. Even if there was no real difference in how visitors respond to the two button versions.
         </p>
         <p>
           Small samples are wobbly, large samples are more stable. If you take samples of 10 people and measure their size, a sample that was drawn from a basketball team might show that 9/10 people are extremely tall.
           Another sample of 10 people drawn from a random street might show that 0/10 people are extremely tall. The variability will be huge. The real answer - the true rate in the population - will be somewhere in between.
           The bigger your sample, the more likely your results will be closer to the true rate.
         </p>
-
-        <p>So bigger samples are better because they have less variability.</p>
 
         <h2>Stack the draws: a shape appears</h2>
 
@@ -156,8 +152,7 @@ export default function Section1Page() {
         </p>
 
         <p>
-          Below is the same marble jar with a true rate of {aPercent}% green marbles. This time, instead of watching a single
-          draw, you&apos;re building up a record of many draws. Each time you sample, the count of green marbles gets stacked onto the chart. Keep adding draws and a
+          Below is the same marble jar with a true rate of {aPercent}% green marbles. This time, instead of seeing each marble in a row, the count of green marbles gets stacked onto the chart. Keep adding draws and a
           shape fills in.
         </p>
 
@@ -178,11 +173,10 @@ export default function Section1Page() {
 
       <SectionFooter
         summary={[
-          `Small samples produce noisy results. A ${CASE_STUDY_A_SIGNUPS} vs. ${CASE_STUDY_B_SIGNUPS} gap is common by chance alone.`,
-          "You can't tell signal from noise without knowing how much data you actually need.",
-          "Stack enough draws and the noise settles into a shape: a sampling distribution that clusters around the true rate.",
+          `Small samples produce noisy results. If you see ${CASE_STUDY_A_SIGNUPS} vs. ${CASE_STUDY_B_SIGNUPS} out of 100 signups, you can't be certain if B is really better — or if you just got lucky with your sample.`,
+          "Draw more samples (or larger samples) and you'll get closer to the true rate in the jar. In A/B testing, that means you can be more confident that your results reflect reality, not just random chance.",
         ]}
-        teaserText="In the next chapters, we'll use this knowledge to find the right sample size for your A/B tests."
+        teaserText="Now we know that small samples lie. So we want bigger samples. But how big? It depends on three things. Ready to find out what they are? →"
         nextLabel="Next: Your baseline matters →"
         nextHref="/your-baseline-matters"
       />
