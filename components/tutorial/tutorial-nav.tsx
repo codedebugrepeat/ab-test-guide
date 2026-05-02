@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { chapters } from "./chapters";
+import { AuthorCalloutSidebar } from "./author-callout";
 
 export function TutorialNav({
   compactNav = false,
@@ -26,8 +27,8 @@ export function TutorialNav({
                   aria-current={active ? "page" : undefined}
                   onClick={onNavigate}
                   className={`flex w-full items-center gap-2 rounded-full px-3 py-1.5 text-[13px] transition-colors sm:text-sm ${active
-                      ? "bg-foreground/[0.08] font-medium text-foreground"
-                      : "text-foreground/40 hover:bg-foreground/[0.04] hover:text-foreground/70"
+                    ? "bg-foreground/[0.08] font-medium text-foreground"
+                    : "text-foreground/40 hover:bg-foreground/[0.04] hover:text-foreground/70"
                     }`}
                 >
                   <span className="tabular-nums text-foreground/30">
@@ -39,6 +40,7 @@ export function TutorialNav({
             );
           })}
         </ol>
+        <AuthorCalloutSidebar />
       </nav>
     );
   }
@@ -71,6 +73,7 @@ export function TutorialNav({
           );
         })}
       </ol>
+      <AuthorCalloutSidebar />
     </nav>
   );
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/container";
 import { CalculatorWidget } from "@/components/tutorial/widgets/calculator-widget";
+import { AuthorCalloutInline } from "@/components/tutorial/author-callout";
 
 export const metadata: Metadata = {
   title: "A/B Test Sample Size Calculator",
@@ -93,6 +94,8 @@ export default function CalculatorPage() {
           reading off the chart now have numbers attached.
         </p>
       </div>
+
+      <AuthorCalloutInline />
     </Container>
   );
 }
