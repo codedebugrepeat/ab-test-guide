@@ -39,19 +39,19 @@ export default function Section1Page() {
       </h1>
 
       <p className="mt-6 text-foreground/70">
-        Imagine you changed the text on a button, showed the old version to 100 people and the new one to another 100. Version A got 20 signups and version B got 22. It looks like a win, but at this scale, you might just have gotten lucky by chance.
+        Imagine you changed your button copy and showed it to 100 people per version. Version A got 20 signups and Version B got 22.
+        B is higher, so ship the variant?
+        Not so fast. What might look like a win, could just be random chance.
       </p>
 
       <p className="mt-6 text-foreground/70">
-        You probably intuitively know that you likely need more than 100 visitors to make a decision you can trust. But how many more? And what does it depend on?
+        You probably intuitively know that you need more than 100 visitors to make a decision you can trust. But how many more? And what does it depend on?
       </p>
 
       <p className="mt-6 text-foreground/70">
-        If you tried answering that question with some A/B testing calculators, you were probably hit with a wall of intimidating jargon and left more confused than when you started.
-        Most A/B tools are built for statisticians, not builders. I built this guide as an interactive sandbox where you can learn these concepts intuitively. </p>
+        Most A/B calculators answer that with a wall of jargon that leaves you more confused than when you started. I built this guide as an interactive sandbox to learn these concepts intuitively </p>
       <p className="mt-6 text-foreground/70">
-        I'll walk you through the concepts step-by-step. By the end, you'll master the three levers that matter: baseline, lift, and confidence. You will leave knowing exactly how many visitors you need to run a test you can trust.
-        And dare I say you might even have fun along the way.
+        By the end, you’ll master the three levers that matter—baseline, lift, and confidence—so you can find exactly how many visitors you need to run a test you can trust. And dare I say you might even have fun along the way.
       </p>
 
       <hr className="my-10 border-foreground/10" />
