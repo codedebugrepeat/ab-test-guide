@@ -40,23 +40,18 @@ export default function Section1Page() {
 
       <div className="prose mt-6">
         <p>
-          Imagine you changed your button copy and showed it to 100 people per version. Version A got 20 signups and Version B got 22.
-          B is higher, so ship the variant?
-          Not so fast. What might look like a win, could just be random chance.
+          A/B testing needs a big enough sample. But how big?
+
+          Most A/B test calculators hit you with a wall of jargon. In this guide, you&apos;ll learn how to think about sample size intuitively, so you can make informed decisions about your tests.
         </p>
 
         <p>
-          You probably intuitively know that you need more than 100 visitors to make a decision you can trust. But how many more? And what does it depend on?
+          This guide has interactive widgets you can play with to build your intuition.
+
+          By the end, you&apos;ll master the three levers that matter — baseline, expected lift, and confidence — so you can find exactly how many visitors you need to run a test you can trust.
         </p>
 
-        <p>
-          Most A/B calculators answer that with a wall of jargon that leaves you more confused than when you started. I built this guide as an interactive sandbox to learn these concepts intuitively.
-        </p>
-        <p>
-          By the end, you&apos;ll master the three levers that matter—baseline, lift, and confidence—so you can find exactly how many visitors you need to run a test you can trust. And dare I say you might even have fun along the way.
-        </p>
-
-        <hr />
+        <p>Let&apos;s start with the problem: small samples lie to you.</p>
 
         <div className="not-prose">
           <CaseStudyCallout />
