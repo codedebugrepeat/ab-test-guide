@@ -124,7 +124,7 @@ export default function Section4Page() {
         </p>
 
         <Quote>
-          A winner is a gap big enough that you wouldn&apos;t see it by chance.
+          A winner is a gap big enough that you would only see very rarely if A and B were really identical.
         </Quote>
 
         <h2>What confidence actually costs</h2>

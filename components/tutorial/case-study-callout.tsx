@@ -15,9 +15,6 @@ export function CaseStudyCallout() {
       <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-foreground/40">
         Case study
       </p>
-      <p className="mb-4 text-sm text-foreground/80">
-        Imagine you&apos;ve been running this A/B test for a few days. You wanted to see if a simple copy change can boost your sign-ups, so you showed each version to 100 visitors. Here is what you see in your dashboard:
-      </p>
       <ExperimentIllustration />
       <dl className="grid grid-cols-2 gap-4 text-sm sm:grid-cols-2">
         <div className="rounded-md border border-foreground/10 bg-foreground/[0.03] px-4 py-3">

@@ -53,6 +53,14 @@ export default function Section1Page() {
 
         <p>Let&apos;s start with the problem: small samples lie to you.</p>
 
+        <h2>Case Study</h2>
+
+        <p>
+          Let's imagine you have a website with a sign-up button and you want to get more sign-ups. So you're testing a copy change on your sign-up button and ran an A/B test. Version A is your original copy (Start your free trial), you showed this one to 100 visitors. Version B is the new version (Get started for free), which you showed to another 100 visitors.
+        </p>
+
+        <p>A couple days later, here is what you see in your dashboard:</p>
+
         <div className="not-prose">
           <CaseStudyCallout />
         </div>
@@ -60,26 +68,55 @@ export default function Section1Page() {
         <h2>B seems to be better — but is it really?</h2>
 
         <p>
-          Obviously, group B seems to be better. So make the change and ship it?
+          Obviously, group B seems to be better. After all, it has more sign-ups. So should you make the change and ship it?
         </p>
 
         <p>
-          This is a common instinct. But it&apos;s a trap, and in this guide, I&apos;ll show you exactly why.
+          This is a common instinct. But it&apos;s a trap.
         </p>
+
+        <p>The reason why is that in your small sample size (100 users each), the difference you see might be due to random chance.</p>
+
+        <Quote>
+          At {CASE_STUDY_VISITORS} visitors per group, even two <em>identical</em> versions would
+          routinely show a gap like this by pure chance.
+        </Quote>
+
+        <p>Let me explain.</p>
 
         <p>
           <strong>Imagine every potential visitor is a marble in a jar.</strong>{" "}
-          Green means they signed up; grey means they didn&apos;t. The jar below has a true
-          conversion rate of {aPercent}%: 1 in every {Math.round(1 / CASE_STUDY_A_RATE)}, on average.
-          Now, in reality we wouldn&apos;t know what the true rate is. But bear with me here for a second.
+          Green means they signed up; gray means they didn&apos;t.
+          In the jar below, 1 in every {Math.round(1 / CASE_STUDY_A_RATE)}{" "} marbles is green.
+
+          So the jar&apos;s true rate of green marbles is {aPercent}%.
+
+          We can&apos;t see inside the jar, but we can draw samples from it. We draw a handful of marbles and count how many are green. That gives us an estimate of the true rate in the jar. If we draw enough samples, we can get a good picture of what the jar looks like on the inside.
+
+          Now, in reality we wouldn&apos;t know what the exact true rate is, but let's pretend we do.
         </p>
 
-        <div className="not-prose mt-6 flex flex-col items-center gap-4">
+        <div className="not-prose mt-6 flex justify-center">
           <JarIllustration />
-          <p className="text-sm text-foreground/70">
-            Click &ldquo;Draw a sample&rdquo;. Every draw takes 10 marbles out of the jar. We know that the true rate is {aPercent}%, but what does a single sample look like?
-            And what happens to the average if you draw again and again?
-          </p>
+        </div>
+
+        <hr />
+
+        <p>Ready for the first interactive demonstration?</p>
+        <p>
+          We will draw samples from the jar. Every draw takes 10 marbles out of the jar.
+        </p>
+
+        <p>We know the true rate in the jar is {aPercent}%. So on average, 2 in every {2 * Math.round(1 / CASE_STUDY_A_RATE)}{" "} marbles will be green.
+        </p>
+
+        <p> But what does a single sample look like?</p>
+
+        <p>And what happens to the average if you draw again and again?</p>
+
+        <p>Click &ldquo;Draw a sample&rdquo; to see for yourself.</p>
+
+        <div className="not-prose">
           <WidgetFrame>
             <MarbleSamplingWidget />
           </WidgetFrame>
@@ -93,61 +130,34 @@ export default function Section1Page() {
           nothing about the jar changed.
         </p>
 
-        <Quote>The jar&apos;s truth didn&apos;t move. Your draws did.</Quote>
+        <Quote>The jar&apos;s truth didn&apos;t move. Your samples did.</Quote>
+
+        <p>Some samples will have more green marbles than others.</p>
+
+        <p>On average, you&apos;d expect 2 green marbles in each sample of 10. But sometimes you get 0, sometimes 1, and sometimes 3.</p>
 
         <p>
-          At 10 marbles per draw, the count bounces around. Getting 0 or 1 when
-          you&apos;d expect 2 is common. Getting 3 is common too. Now scale
-          that up: our A/B test had {CASE_STUDY_VISITORS} visitors per group, not 10. The same
-          principle applies. A gap of {CASE_STUDY_A_SIGNUPS} vs. {CASE_STUDY_B_SIGNUPS} signups is exactly the kind of
-          result sampling error produces routinely, even when both variants are
-          identical.
+          In our A/B test, we had the same issue. We had {CASE_STUDY_VISITORS} visitors per group, not 10. Still, the same
+          principle applies. A gap of {CASE_STUDY_A_SIGNUPS} vs. {CASE_STUDY_B_SIGNUPS} signups is so small, that it could easily be produced by sampling error. Even if there was no real difference in how visitors respond to the two button versions.
         </p>
         <p>
-          More data tightens that spread. How much more? That&apos;s what the
-          rest of this guide covers. But first, let&apos;s name the mistake.
+          Small samples are wobbly, large samples are more stable. If you take samples of 10 people and measure their size, a sample that was drawn from a basketball team might show that 9/10 people are extremely tall.
+          Another sample of 10 people drawn from a random street might show that 0/10 people are extremely tall. The variability will be huge. The real answer - the true rate in the population - will be somewhere in between.
+          The bigger your sample, the more likely your results will be closer to the true rate.
         </p>
 
-        <h2>The instinct vs. the reality</h2>
-
-        <p>
-          Group B converted at {bPercent}%. Group A converted at {aPercent}%. B is ahead —
-          but is it ahead enough to trust?
-        </p>
-        <p>
-          But at {CASE_STUDY_VISITORS}{" "}visitors per group, the numbers are fragile. One signup
-          either way moves the conversion rate by a full percentage point.
-        </p>
-        <p>
-          Even two <em>identical</em> versions of your button, the exact same
-          copy shown to equivalent audiences, would routinely produce a gap
-          like {CASE_STUDY_A_SIGNUPS} vs. {CASE_STUDY_B_SIGNUPS} by pure chance at this sample size. Random variation
-          at small scales is that large.
-        </p>
-
-        <Quote>
-          At {CASE_STUDY_VISITORS} visitors per group, even two <em>identical</em> versions would
-          routinely show a gap like this by pure chance.
-        </Quote>
-
-        <p>
-          That means you cannot tell, from {CASE_STUDY_VISITORS} visitors per group, whether B
-          is genuinely better or you got lucky. Shipping on this evidence is a
-          coin flip in a trenchcoat.
-        </p>
+        <p>So bigger samples are better because they have less variability.</p>
 
         <h2>Stack the draws: a shape appears</h2>
 
         <p>
-          One draw bounces around. That&apos;s sampling error. But draw again.
-          And again. Keep going and tally every result. Something happens: the
-          chaos settles into a pattern.
+          As we saw, single draws bounce around. That&apos;s sampling error. But draw again.
+          And again. Keep going and something happens: the chaos settles into a pattern.
         </p>
 
         <p>
-          Below is the same marble jar. This time, instead of watching a single
-          draw, you&apos;re building up a record of many draws. Each time you
-          sample, the count gets stacked onto the chart. Keep adding draws and a
+          Below is the same marble jar with a true rate of {aPercent}% green marbles. This time, instead of watching a single
+          draw, you&apos;re building up a record of many draws. Each time you sample, the count of green marbles gets stacked onto the chart. Keep adding draws and a
           shape fills in.
         </p>
 
@@ -164,9 +174,6 @@ export default function Section1Page() {
           results cluster around the jar&apos;s{" "}
           <SideRemark term="true rate" /> and thin out toward the extremes.
         </p>
-        <p>
-          That shape isn&apos;t fixed. Its width depends on your baseline.
-        </p>
       </div>
 
       <SectionFooter
@@ -175,7 +182,7 @@ export default function Section1Page() {
           "You can't tell signal from noise without knowing how much data you actually need.",
           "Stack enough draws and the noise settles into a shape: a sampling distribution that clusters around the true rate.",
         ]}
-        teaserText="Next: that shape isn't fixed. Its width depends on your baseline — and baseline is what drives how much data you need."
+        teaserText="In the next chapters, we'll use this knowledge to find the right sample size for your A/B tests."
         nextLabel="Next: Your baseline matters →"
         nextHref="/your-baseline-matters"
       />
