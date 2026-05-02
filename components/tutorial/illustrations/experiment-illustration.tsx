@@ -1,8 +1,3 @@
-import {
-  CASE_STUDY_A_SIGNUPS,
-  CASE_STUDY_B_SIGNUPS,
-} from "@/components/tutorial/constants/case-study-constants";
-
 export function ExperimentIllustration() {
   return (
     <div className="mb-6 flex flex-col gap-4 sm:flex-row">

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { siteConfig } from '@/lib/site-config';
 
 interface AuthorCalloutProps {
@@ -41,7 +42,7 @@ function Avatar({ src, name, size }: { src?: string; name: string; size: number 
   return (
     <div className={`${sizeClass} rounded-full bg-foreground/[0.08] flex-shrink-0 overflow-hidden flex items-center justify-center`}>
       {src
-        ? <img src={src} alt={name} className="w-full h-full object-cover" />
+        ? <Image src={src} alt={name} width={size} height={size} className="w-full h-full object-cover" />
         : <span className="font-semibold text-foreground/60">{initials}</span>
       }
     </div>

@@ -67,7 +67,7 @@ export default function Section1Page() {
       </p>
 
       <p className="mt-4 text-foreground/70">
-        This is a common instinct. But it&apos;s a trap, and in this guide, I'll show you exactly why.
+        This is a common instinct. But it&apos;s a trap, and in this guide, I&apos;ll show you exactly why.
       </p>
 
       <p className="mt-4 text-foreground/70">
@@ -76,13 +76,13 @@ export default function Section1Page() {
         Green means they signed up; grey means they didn&apos;t. The jar below has a true
         conversion rate of {aPercent}%: 1 in every {Math.round(1 / CASE_STUDY_A_RATE)}, on average.
 
-        Now, in reality we wouldn't know what the true rate is. But bear with me here for a second.
+        Now, in reality we wouldn&apos;t know what the true rate is. But bear with me here for a second.
       </p>
 
       <div className="mt-6 flex flex-col items-center gap-4">
         <JarIllustration />
         <p className="text-foreground/70">
-          Click "Draw a sample". Every draw takes 10 marbles out of the jar. We know that the true rate is {aPercent}%, but what does a single sample look like?
+          Click &ldquo;Draw a sample&rdquo;. Every draw takes 10 marbles out of the jar. We know that the true rate is {aPercent}%, but what does a single sample look like?
           And what happens to the average if you draw again and again?
         </p>
 

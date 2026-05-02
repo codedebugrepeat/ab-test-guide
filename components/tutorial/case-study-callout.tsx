@@ -1,6 +1,5 @@
 import { ExperimentIllustration } from "@/components/tutorial/illustrations/experiment-illustration";
 import {
-  CASE_STUDY_VISITORS,
   CASE_STUDY_A_SIGNUPS,
   CASE_STUDY_B_SIGNUPS,
   CASE_STUDY_A_RATE,
@@ -17,7 +16,7 @@ export function CaseStudyCallout() {
         Case study
       </p>
       <p className="mb-4 text-sm text-foreground/80">
-        Imagine you've been running this A/B test for a few days. You wanted to see if a simple copy change can boost your sign-ups, so you showed each version to 100 visitors. Here is what you see in your dashboard:
+        Imagine you&apos;ve been running this A/B test for a few days. You wanted to see if a simple copy change can boost your sign-ups, so you showed each version to 100 visitors. Here is what you see in your dashboard:
       </p>
       <ExperimentIllustration />
       <dl className="grid grid-cols-2 gap-4 text-sm sm:grid-cols-2">
