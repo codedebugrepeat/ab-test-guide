@@ -1,8 +1,6 @@
-
 "use client";
 
-// Jar with 6 rows of marbles and all rows circled as samples inside.
-
+import { useEffect, useState } from "react";
 import { P } from "../constants/sampling-constants";
 
 const WJAR_W = 260;
@@ -16,7 +14,6 @@ const WROWS = 6;
 const WSTART_X = (WJAR_W - (WCOLS * WMSTEP - WMGAP)) / 2 + 10;
 const WROW_YS = [50, 86, 122, 158, 194, 230];
 
-// Oval circles cols 0–9 of each row
 const WOVAL_COLS = 10;
 const WOVAL_W = WOVAL_COLS * WMSTEP - WMGAP + 10;
 const WOVAL_RY = 18;
@@ -42,7 +39,27 @@ function generateWideMarbles(): WideMarble[] {
 
 const WIDE_MARBLES = generateWideMarbles();
 
+// Delays: pause before first sample, between samples, pause after all shown
+const DELAY_START = 600;
+const DELAY_STEP = 700;
+const DELAY_HOLD = 1800;
+
 export function JarIllustration() {
+  const [visibleCount, setVisibleCount] = useState(0);
+
+  useEffect(() => {
+    const delay =
+      visibleCount === 0 ? DELAY_START :
+      visibleCount === WROWS ? DELAY_HOLD :
+      DELAY_STEP;
+
+    const t = setTimeout(() => {
+      setVisibleCount(v => (v < WROWS ? v + 1 : 0));
+    }, delay);
+
+    return () => clearTimeout(t);
+  }, [visibleCount]);
+
   return (
     <div className="w-full rounded-xl px-3 py-4">
       <div className="mx-auto w-4/5">
@@ -119,18 +136,25 @@ export function JarIllustration() {
               })}
             </g>
 
-            {/* 6 sample ovals on rows 0 through 5 */}
+            {/* Sample ovals — fade in one by one */}
             {[0, 1, 2, 3, 4, 5].map((ri) => {
               const cy = WROW_YS[ri];
+              const visible = ri < visibleCount;
               return (
-                <g key={ri}>
+                <g
+                  key={ri}
+                  style={{
+                    opacity: visible ? 1 : 0,
+                    transition: "opacity 0.35s ease",
+                  }}
+                >
                   <rect
                     x={WSTART_X - 8}
                     y={cy - WOVAL_RY}
                     width={WOVAL_W}
                     height={WOVAL_RY * 2}
                     rx={10}
-                    fill="rgba(239,68,68,0.05)"
+                    fill="transparent"
                     stroke="#747474"
                     strokeWidth="1.5"
                     strokeDasharray="5 3"
