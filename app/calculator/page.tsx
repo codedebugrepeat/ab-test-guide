@@ -23,42 +23,30 @@ export default function CalculatorPage() {
         How many users do you need for your experiment?
       </p>
 
-      <div className="mt-8 space-y-4 text-foreground/70">
+      <div className="prose mt-6">
         <p>A quick recap of what shapes that number:</p>
-        <ul className="list-disc space-y-2 pl-6">
+        <ul>
           <li>
-            <Link
-              href="/why-small-samples-lie"
-              className="underline underline-offset-4 hover:text-foreground"
-            >
+            <Link href="/why-small-samples-lie" className="hover:text-foreground">
               Chapter 1
             </Link>{" "}
             — small samples lie. You probably need more users than you think.
           </li>
           <li>
-            <Link
-              href="/your-baseline-matters"
-              className="underline underline-offset-4 hover:text-foreground"
-            >
+            <Link href="/your-baseline-matters" className="hover:text-foreground">
               Chapter 2
             </Link>{" "}
             — your baseline matters. The lower it is, the more data you need.
           </li>
           <li>
-            <Link
-              href="/how-big-a-jump-are-you-looking-for"
-              className="underline underline-offset-4 hover:text-foreground"
-            >
+            <Link href="/how-big-a-jump-are-you-looking-for" className="hover:text-foreground">
               Chapter 3
             </Link>{" "}
             — lift matters. Aim for a smaller win and the required sample size
             explodes.
           </li>
           <li>
-            <Link
-              href="/how-sure-do-you-need-to-be"
-              className="underline underline-offset-4 hover:text-foreground"
-            >
+            <Link href="/how-sure-do-you-need-to-be" className="hover:text-foreground">
               Chapter 4
             </Link>{" "}
             — confidence matters. A stricter threshold means you need more
@@ -76,11 +64,11 @@ export default function CalculatorPage() {
         </p>
       </div>
 
-      <div className="mt-10">
+      <div className="not-prose mt-10">
         <CalculatorWidget />
       </div>
 
-      <div className="mt-10 space-y-4 text-foreground/70">
+      <div className="prose mt-10">
         <p>
           Set your baseline conversion, the smallest effect worth detecting, and
           your confidence level. The visitors-per-variant number tells you how

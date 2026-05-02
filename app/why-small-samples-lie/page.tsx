@@ -38,76 +38,68 @@ export default function Section1Page() {
         {chapter.title}
       </h1>
 
-      <p className="mt-6 text-foreground/70">
-        Imagine you changed your button copy and showed it to 100 people per version. Version A got 20 signups and Version B got 22.
-        B is higher, so ship the variant?
-        Not so fast. What might look like a win, could just be random chance.
-      </p>
-
-      <p className="mt-6 text-foreground/70">
-        You probably intuitively know that you need more than 100 visitors to make a decision you can trust. But how many more? And what does it depend on?
-      </p>
-
-      <p className="mt-6 text-foreground/70">
-        Most A/B calculators answer that with a wall of jargon that leaves you more confused than when you started. I built this guide as an interactive sandbox to learn these concepts intuitively </p>
-      <p className="mt-6 text-foreground/70">
-        By the end, you’ll master the three levers that matter—baseline, lift, and confidence—so you can find exactly how many visitors you need to run a test you can trust. And dare I say you might even have fun along the way.
-      </p>
-
-      <hr className="my-10 border-foreground/10" />
-
-      <CaseStudyCallout />
-
-      <h2 className="mt-8 text-2xl font-semibold tracking-tight sm:text-3xl">
-        B seems to be better — but is it really?
-      </h2>
-
-      <p className="mt-4 text-foreground/70">
-        Obviously, group B seems to be better. So make the change and ship it?
-      </p>
-
-      <p className="mt-4 text-foreground/70">
-        This is a common instinct. But it&apos;s a trap, and in this guide, I&apos;ll show you exactly why.
-      </p>
-
-      <p className="mt-4 text-foreground/70">
-        <strong>Imagine every potential visitor is a marble in a jar.</strong>{" "}
-
-        Green means they signed up; grey means they didn&apos;t. The jar below has a true
-        conversion rate of {aPercent}%: 1 in every {Math.round(1 / CASE_STUDY_A_RATE)}, on average.
-
-        Now, in reality we wouldn&apos;t know what the true rate is. But bear with me here for a second.
-      </p>
-
-      <div className="mt-6 flex flex-col items-center gap-4">
-        <JarIllustration />
-        <p className="text-foreground/70">
-          Click &ldquo;Draw a sample&rdquo;. Every draw takes 10 marbles out of the jar. We know that the true rate is {aPercent}%, but what does a single sample look like?
-          And what happens to the average if you draw again and again?
+      <div className="prose mt-6">
+        <p>
+          Imagine you changed your button copy and showed it to 100 people per version. Version A got 20 signups and Version B got 22.
+          B is higher, so ship the variant?
+          Not so fast. What might look like a win, could just be random chance.
         </p>
 
-        <p className="text-foreground/70">
+        <p>
+          You probably intuitively know that you need more than 100 visitors to make a decision you can trust. But how many more? And what does it depend on?
         </p>
-        <WidgetFrame>
-          <MarbleSamplingWidget />
-        </WidgetFrame>
-      </div>
 
-      <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
-        What you&apos;re really looking at: sampling error
-      </h2>
+        <p>
+          Most A/B calculators answer that with a wall of jargon that leaves you more confused than when you started. I built this guide as an interactive sandbox to learn these concepts intuitively.
+        </p>
+        <p>
+          By the end, you&apos;ll master the three levers that matter—baseline, lift, and confidence—so you can find exactly how many visitors you need to run a test you can trust. And dare I say you might even have fun along the way.
+        </p>
 
-      <div className="mt-4 space-y-4 text-foreground/70">
+        <hr />
+
+        <div className="not-prose">
+          <CaseStudyCallout />
+        </div>
+
+        <h2>B seems to be better — but is it really?</h2>
+
+        <p>
+          Obviously, group B seems to be better. So make the change and ship it?
+        </p>
+
+        <p>
+          This is a common instinct. But it&apos;s a trap, and in this guide, I&apos;ll show you exactly why.
+        </p>
+
+        <p>
+          <strong>Imagine every potential visitor is a marble in a jar.</strong>{" "}
+          Green means they signed up; grey means they didn&apos;t. The jar below has a true
+          conversion rate of {aPercent}%: 1 in every {Math.round(1 / CASE_STUDY_A_RATE)}, on average.
+          Now, in reality we wouldn&apos;t know what the true rate is. But bear with me here for a second.
+        </p>
+
+        <div className="not-prose mt-6 flex flex-col items-center gap-4">
+          <JarIllustration />
+          <p className="text-sm text-foreground/70">
+            Click &ldquo;Draw a sample&rdquo;. Every draw takes 10 marbles out of the jar. We know that the true rate is {aPercent}%, but what does a single sample look like?
+            And what happens to the average if you draw again and again?
+          </p>
+          <WidgetFrame>
+            <MarbleSamplingWidget />
+          </WidgetFrame>
+        </div>
+
+        <h2>What you&apos;re really looking at: sampling error</h2>
+
         <p>
           What you just saw is <strong>sampling error</strong>: the natural
           spread in outcomes you get from a small random sample, even when
           nothing about the jar changed.
         </p>
-      </div>
 
-      <Quote>The jar&apos;s truth didn&apos;t move. Your draws did.</Quote>
+        <Quote>The jar&apos;s truth didn&apos;t move. Your draws did.</Quote>
 
-      <div className="space-y-4 text-foreground/70">
         <p>
           At 10 marbles per draw, the count bounces around. Getting 0 or 1 when
           you&apos;d expect 2 is common. Getting 3 is common too. Now scale
@@ -120,18 +112,15 @@ export default function Section1Page() {
           More data tightens that spread. How much more? That&apos;s what the
           rest of this guide covers. But first, let&apos;s name the mistake.
         </p>
-      </div>
 
-      <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
-        The instinct vs. the reality
-      </h2>
-      <div className="mt-4 space-y-4 text-foreground/70">
+        <h2>The instinct vs. the reality</h2>
+
         <p>
           Group B converted at {bPercent}%. Group A converted at {aPercent}%. B is ahead —
           but is it ahead enough to trust?
         </p>
         <p>
-          But at {CASE_STUDY_VISITORS}{" "} visitors per group, the numbers are fragile. One signup
+          But at {CASE_STUDY_VISITORS}{" "}visitors per group, the numbers are fragile. One signup
           either way moves the conversion rate by a full percentage point.
         </p>
         <p>
@@ -140,45 +129,39 @@ export default function Section1Page() {
           like {CASE_STUDY_A_SIGNUPS} vs. {CASE_STUDY_B_SIGNUPS} by pure chance at this sample size. Random variation
           at small scales is that large.
         </p>
-      </div>
 
-      <Quote>
-        At {CASE_STUDY_VISITORS} visitors per group, even two <em>identical</em> versions would
-        routinely show a gap like this by pure chance.
-      </Quote>
+        <Quote>
+          At {CASE_STUDY_VISITORS} visitors per group, even two <em>identical</em> versions would
+          routinely show a gap like this by pure chance.
+        </Quote>
 
-      <div className="space-y-4 text-foreground/70">
         <p>
           That means you cannot tell, from {CASE_STUDY_VISITORS} visitors per group, whether B
           is genuinely better or you got lucky. Shipping on this evidence is a
           coin flip in a trenchcoat.
         </p>
-      </div>
 
-      <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
-        Stack the draws: a shape appears
-      </h2>
+        <h2>Stack the draws: a shape appears</h2>
 
-      <p className="mt-4 text-foreground/70">
-        One draw bounces around. That&apos;s sampling error. But draw again.
-        And again. Keep going and tally every result. Something happens: the
-        chaos settles into a pattern.
-      </p>
+        <p>
+          One draw bounces around. That&apos;s sampling error. But draw again.
+          And again. Keep going and tally every result. Something happens: the
+          chaos settles into a pattern.
+        </p>
 
-      <p className="mt-4 text-foreground/70">
-        Below is the same marble jar. This time, instead of watching a single
-        draw, you&apos;re building up a record of many draws. Each time you
-        sample, the count gets stacked onto the chart. Keep adding draws and a
-        shape fills in.
-      </p>
+        <p>
+          Below is the same marble jar. This time, instead of watching a single
+          draw, you&apos;re building up a record of many draws. Each time you
+          sample, the count gets stacked onto the chart. Keep adding draws and a
+          shape fills in.
+        </p>
 
-      <div className="mt-6">
-        <WidgetFrame>
-          <SamplingDistributionBuilder />
-        </WidgetFrame>
-      </div>
+        <div className="not-prose mt-6">
+          <WidgetFrame>
+            <SamplingDistributionBuilder />
+          </WidgetFrame>
+        </div>
 
-      <div className="mt-8 space-y-4 text-foreground/70">
         <p>
           That shape has a name: a <strong>sampling distribution</strong>. The
           middle is where most outcomes land; the edges are rare. At 10 marbles

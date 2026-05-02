@@ -10,6 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@tailwindcss/typography": "^0.5.19",
     "@visx/axis": "^4.0.0-alpha.11",
     "@visx/curve": "^4.0.0-alpha.11",
     "@visx/group": "^4.0.0-alpha.11",
