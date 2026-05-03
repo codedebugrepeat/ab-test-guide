@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { vocabulary } from "@/components/tutorial/constants/vocabulary";
 
 type VocabularyTerm = keyof typeof vocabulary;
@@ -11,6 +11,7 @@ interface SideRemarkProps {
 
 export function SideRemark({ term }: SideRemarkProps) {
   const [open, setOpen] = useState(false);
+  const [popoverStyle, setPopoverStyle] = useState<React.CSSProperties>({});
   const ref = useRef<HTMLSpanElement>(null);
   const description = vocabulary[term];
   if (process.env.NODE_ENV !== "production" && !description) {
@@ -36,11 +37,23 @@ export function SideRemark({ term }: SideRemarkProps) {
     };
   }, [open]);
 
+  function handleToggle() {
+    if (!open && ref.current) {
+      const r = ref.current.getBoundingClientRect();
+      const popoverW = 256;
+      const pad = 8;
+      const centerX = r.left + r.width / 2;
+      const left = Math.max(pad, Math.min(centerX - popoverW / 2, window.innerWidth - popoverW - pad));
+      setPopoverStyle({ position: "fixed", bottom: window.innerHeight - r.top + 8, left });
+    }
+    setOpen((o) => !o);
+  }
+
   return (
     <span ref={ref} className="relative inline">
       <button
         type="button"
-        onClick={() => setOpen((o) => !o)}
+        onClick={handleToggle}
         aria-expanded={open}
         aria-controls={noteId}
         aria-describedby={open ? noteId : undefined}
@@ -60,7 +73,8 @@ export function SideRemark({ term }: SideRemarkProps) {
         <span
           id={noteId}
           role="note"
-          className="absolute bottom-full left-1/2 z-10 mb-2 block w-64 max-w-[calc(100vw-2rem)] -translate-x-1/2 rounded-md border border-foreground/15 bg-background px-4 py-3 text-sm text-foreground/70 shadow-lg"
+          style={popoverStyle}
+          className="z-10 w-64 rounded-md border border-foreground/15 bg-background px-4 py-3 text-sm text-foreground/70 shadow-lg"
         >
           {description}
         </span>

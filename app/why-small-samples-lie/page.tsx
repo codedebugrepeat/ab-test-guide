@@ -53,7 +53,7 @@ export default function Section1Page() {
 
         <hr />
 
-        <h2>Case Study</h2>
+        <h2>Case study</h2>
 
         <p>
           Let&apos;s imagine you have a website with a sign-up button and you want to get more sign-ups. So you&apos;re testing a copy change on your sign-up button and are running an A/B test. Version A is your original copy (&ldquo;Start your free trial&rdquo;), you showed this one to 100 visitors. Version B is the new version (&ldquo;Get started for free&rdquo;), which you showed to another 100 visitors.
@@ -104,15 +104,9 @@ export default function Section1Page() {
 
         <p>Ready for the first interactive demonstration?</p>
         <p>
-          We will draw samples from the jar. Every draw takes 10 marbles out of the jar.
+          We will draw samples from the jar. Every draw takes 10 marbles out of the jar. We know the true rate in the jar is {aPercent}%. So on average, 2 in every 10 marbles will be green.
+          But what does a single sample look like? And what happens to the average if you draw again and again?
         </p>
-
-        <p>We know the true rate in the jar is {aPercent}%. So on average, 2 in every 10 marbles will be green.
-        </p>
-
-        <p> But what does a single sample look like?</p>
-
-        <p>And what happens to the average if you draw again and again?</p>
 
         <p>Click &ldquo;Draw a sample&rdquo; to see for yourself.</p>
 

@@ -28,22 +28,22 @@ function StatCard({
 }) {
   return (
     <div
-      className={`flex min-w-[90px] flex-col items-center gap-0.5 rounded-[10px] border px-5 py-2.5 ${highlight
+      className={`flex w-full min-w-0 flex-col items-center gap-0.5 rounded-[10px] border px-2 py-2.5 sm:min-w-[90px] sm:px-5 ${highlight
         ? "border-green-600/20 bg-green-600/[0.06]"
         : "border-transparent"
         }`}
     >
       <span
-        className={`text-[30px] font-bold leading-none tabular-nums tracking-tight ${highlight ? "text-green-600" : dim ? "text-foreground/35" : "text-foreground"
+        className={`text-[22px] font-bold leading-none tabular-nums tracking-tight sm:text-[30px] ${highlight ? "text-green-600" : dim ? "text-foreground/35" : "text-foreground"
           }`}
       >
         {value}
       </span>
-      <span className={`text-center text-[10px] leading-snug whitespace-nowrap sm:text-[11px] ${dim ? "text-foreground/30" : "text-foreground/45"}`}>
+      <span className={`text-center text-[10px] leading-snug sm:text-[11px] ${dim ? "text-foreground/30" : "text-foreground/45"}`}>
         {label}
       </span>
       {sub && (
-        <span className="mt-0.5 text-[9px] text-foreground/30 whitespace-nowrap sm:text-[10px]">{sub}</span>
+        <span className="mt-0.5 text-[9px] text-foreground/30 sm:text-[10px]">{sub}</span>
       )}
     </div>
   );
@@ -256,19 +256,19 @@ export function MarbleSamplingWidget({
       {/* ── Widget card ── */}
       <div className="mx-auto w-full max-w-[420px] rounded-2xl border border-foreground/10 bg-background px-4 py-5 shadow-sm sm:px-6">
         {/* Stats: latest | avg | true */}
-        <div className="mb-4 flex items-stretch justify-center gap-1.5 border-b border-foreground/[0.08] pb-4">
+        <div className="mb-4 grid grid-cols-3 gap-2 border-b border-foreground/[0.08] pb-4 sm:flex sm:items-stretch sm:justify-center sm:gap-1.5">
           <StatCard
             label="latest sample"
             value={latestCount !== null ? `${latestCount}/${N}` : "–"}
           />
-          <div className="mx-1 w-px self-stretch bg-foreground/[0.08]" />
+          <div className="mx-1 hidden w-px self-stretch bg-foreground/[0.08] sm:block" />
           <StatCard
             label="your average"
             sub={`${totalDraws} sample${totalDraws !== 1 ? "s" : ""}`}
             value={currentMean !== null ? currentMean.toFixed(2) : "–"}
             highlight={currentMean !== null}
           />
-          <div className="mx-1 w-px self-stretch bg-foreground/[0.08]" />
+          <div className="mx-1 hidden w-px self-stretch bg-foreground/[0.08] sm:block" />
           <StatCard
             label="true average"
             value={trueMean.toFixed(1)}
@@ -288,12 +288,12 @@ export function MarbleSamplingWidget({
             {buttonLabel}
           </button>
           {/* Secondary row */}
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row">
             <button
               onClick={() => handleDrawN(10)}
               disabled={isAnimating}
               aria-label="Draw 10 samples at once"
-              className="flex-1 rounded-[10px] bg-foreground/10 py-2.5 text-sm font-semibold text-foreground transition-opacity hover:opacity-80 active:opacity-65 disabled:opacity-40"
+              className="w-full rounded-[10px] bg-foreground/10 py-2.5 text-sm font-semibold text-foreground transition-opacity hover:opacity-80 active:opacity-65 disabled:opacity-40 sm:flex-1"
             >
               Draw 10 samples
             </button>
@@ -301,7 +301,7 @@ export function MarbleSamplingWidget({
               onClick={() => handleDrawN(100)}
               disabled={isAnimating}
               aria-label="Draw 100 samples at once"
-              className="flex-1 rounded-[10px] bg-foreground/10 py-2.5 text-sm font-semibold text-foreground transition-opacity hover:opacity-80 active:opacity-65 disabled:opacity-40"
+              className="w-full rounded-[10px] bg-foreground/10 py-2.5 text-sm font-semibold text-foreground transition-opacity hover:opacity-80 active:opacity-65 disabled:opacity-40 sm:flex-1"
             >
               Draw 100 samples
             </button>

@@ -171,7 +171,7 @@ export default function Section2Page() {
 
         <p>Another change we will make is to also draw a bell shape for the B group.
 
-          In the last interactive widget, you already saw the bell shape for the A group. For the B group, we only showed its <SideRemark term="mean" /> as a blue dotted line.
+          In the last interactive widget, you already saw the bell shape for the A group. For the B group, we only showed its <SideRemark term="average" />{" "} as a blue dotted line.
 
           Actually, in an A/B test, both groups have their own bell shape. If we take repeated samples from both groups, we can draw a bell for each of them.
 

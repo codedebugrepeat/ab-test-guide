@@ -24,39 +24,24 @@ export default function CalculatorPage() {
       </p>
 
       <div className="prose mt-6">
-        <p>A quick recap of what shapes that number:</p>
+        <p>A quick recap of what shapes the sample size:</p>
         <ul>
           <li>
-            <Link href="/why-small-samples-lie" className="hover:text-foreground">
-              Chapter 1
-            </Link>{" "}
-            — small samples lie. You probably need more users than you think.
-          </li>
-          <li>
             <Link href="/your-baseline-matters" className="hover:text-foreground">
-              Chapter 2
-            </Link>{" "}
-            — your baseline matters. The lower it is, the more data you need.
+              Baseline
+            </Link>
           </li>
           <li>
             <Link href="/how-big-a-jump-are-you-looking-for" className="hover:text-foreground">
-              Chapter 3
-            </Link>{" "}
-            — lift matters. Aim for a smaller win and the required sample size
-            explodes.
+              Lift (minimum detectable effect)
+            </Link>
           </li>
           <li>
             <Link href="/how-sure-do-you-need-to-be" className="hover:text-foreground">
-              Chapter 4
-            </Link>{" "}
-            — confidence matters. A stricter threshold means you need more
-            visitors to clear it.
+              Confidence
+            </Link>
           </li>
         </ul>
-        <p>
-          Those four levers come together here. Plug them in as inputs and the
-          calculator gives you the minimum sample size you need per variant.
-        </p>
         <p>
           This is a <strong>pre-experiment</strong> calculator. It helps you
           plan how many visitors you need before you launch, so your results
