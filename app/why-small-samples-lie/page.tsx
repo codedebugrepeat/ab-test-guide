@@ -51,6 +51,8 @@ export default function Section1Page() {
 
         <p><strong>Let&apos;s start with the problem: small samples lie to you.</strong></p>
 
+        <hr />
+
         <h2>Case Study</h2>
 
         <p>
@@ -105,7 +107,7 @@ export default function Section1Page() {
           We will draw samples from the jar. Every draw takes 10 marbles out of the jar.
         </p>
 
-        <p>We know the true rate in the jar is {aPercent}%. So on average, 2 in every {2 * Math.round(1 / CASE_STUDY_A_RATE)}{" "} marbles will be green.
+        <p>We know the true rate in the jar is {aPercent}%. So on average, 2 in every 10 marbles will be green.
         </p>
 
         <p> But what does a single sample look like?</p>
@@ -131,7 +133,7 @@ export default function Section1Page() {
 
         <p>Some samples will have more green marbles than others.</p>
 
-        <p>On average, you&apos;d expect 2 green marbles in each sample of 10. But sometimes you get 0, sometimes 1, and sometimes 3 or more. On average, you get two. The more samples you draw, the closer your average will be to the true rate.</p>
+        <p>On average, you&apos;d expect 2 green marbles in each sample of 10. But sometimes you get 0, sometimes 1, and sometimes 3 or more. The more samples you draw, the closer your average will be to the true rate.</p>
 
         <p>
           In our A/B test, the same thing happened. We had {CASE_STUDY_VISITORS} visitors per group, not 10 (so 10 times more). Still, getting {CASE_STUDY_A_SIGNUPS} on one &ldquo;draw&rdquo; and {CASE_STUDY_B_SIGNUPS} on another is pretty likely. The difference could easily be produced by sampling error alone. Even if there was no real difference in how visitors respond to the two button versions.
