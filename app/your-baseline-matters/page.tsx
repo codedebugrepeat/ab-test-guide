@@ -183,7 +183,7 @@ export default function Section2Page() {
 
           The more they overlap, the harder it is to tell them apart. Is B really better than A? The more they pull apart, the easier it is to spot a difference.
 
-          The distance between the two means is the lift (or the "expected minimum effect").
+          The distance between the two means is the lift (or the &ldquo;expected minimum effect&rdquo;).
         </p>
 
         <div className="not-prose mt-6">
