@@ -77,6 +77,22 @@ export function gaussianCurve(
   });
 }
 
+// Gaussian curve in raw count units for Bin(n, p): x ranges over [0, n],
+// mean = n*p, sd = sqrt(n*p*(1-p)). y is normalized to peak=1.
+// Use when the axis should show marble-count distances rather than percentages
+// (e.g. illustrating the continuous approximation of a discrete histogram).
+export function gaussianCurveCounts(p: number, n: number, steps = 200): GaussianPoint[] {
+  const mean = n * p;
+  const sd = n > 0 ? Math.sqrt(n * p * (1 - p)) : 0;
+  if (sd < 1e-6) return [{ x: mean, y: 1 }];
+  if (steps <= 1) return [{ x: 0, y: Math.exp(-0.5 * ((0 - mean) / sd) ** 2) }];
+  return Array.from({ length: steps }, (_, i) => {
+    const x = (i / (steps - 1)) * n;
+    const z = (x - mean) / sd;
+    return { x, y: Math.exp(-0.5 * z * z) };
+  });
+}
+
 export type ConfidenceLevel = 0.8 | 0.9 | 0.95 | 0.99;
 
 // One-sided z-score lookup for the confidence levels the guide uses.

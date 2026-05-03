@@ -1,6 +1,6 @@
 export const vocabulary = {
   mean: "The more precise term for the type of average we use here: the sum of all outcomes divided by the number of observations. In a conversion context it equals the conversion rate.",
-  lift: "The percentage increase in conversion rate from A to B, measured relative to A. A 10% lift on a 20% baseline means B converts at 22% — not 30%. We always mean relative lift here, not the absolute percentage-point gap.",
+  lift: "The percentage increase in conversion rate from A to B, measured relative to A. A 10% lift on a 40% baseline means B converts at 44% — not 50%. We always mean relative lift here, not the absolute percentage-point gap.",
   "true rate": "The actual conversion rate that would emerge if you could observe infinitely many visitors. You never measure it directly; your baseline is an estimate of it. In the marble jar, it's the true share of green marbles — fixed, but unknown until you've drawn enough.",
   "standard deviation": "The formal name for the typical width of a sampling distribution. One standard deviation from the mean captures roughly 68% of samples; two captures about 95%. In this guide we use 'spread' or 'typical width' to keep things concrete.",
   "null hypothesis": "The assumption you're testing against: A and B are identical — there's no real effect. When a result clears the threshold, you're rejecting H₀: saying the outcome would be too improbable if A and B were truly the same. Most stats textbooks call this formal decision process hypothesis testing.",
