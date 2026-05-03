@@ -158,7 +158,7 @@ export default function Section4Page() {
           ))}
         </ul>
         <p className="mt-5 text-foreground/60">
-          Put all three in and sample size is what falls out. The calculator does the maths — you now know exactly what you&apos;re telling it and why.
+          Put all three in and sample size is what falls out. The calculator does the math — you now know exactly what you&apos;re telling it and why.
         </p>
         <Link
           href="/calculator"
