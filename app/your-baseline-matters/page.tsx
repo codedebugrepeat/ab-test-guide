@@ -75,7 +75,7 @@ export default function Section2Page() {
         <h2>Low baseline hides the lift</h2>
 
         <p>
-          Let's imagine that in our A/B test, version B lifts signups by {liftPercent}%.
+          Let&apos;s imagine that in our A/B test, version B lifts signups by {liftPercent}%.
 
           Whether we see that lift clearly depends on the baseline. At 5% baseline, a {liftPercent}% lift is a 0.1 percentage point increase, from 5% to 5.1%.
 
@@ -85,7 +85,7 @@ export default function Section2Page() {
         <p>The higher the baseline, the bigger the absolute difference for the same relative lift, and the easier it is to detect that difference with a given sample size.</p>
 
         <p>
-          Now it's your turn again. Move the slider to change the baseline (conversion rate of version A). Notice the blue dotted line - it is a 10% improvement over the baseline.
+          Now it&apos;s your turn again. Move the slider to change the baseline (conversion rate of version A). Notice the blue dotted line - it is a 10% improvement over the baseline.
         </p>
 
         <p>
@@ -99,7 +99,7 @@ export default function Section2Page() {
         </div>
 
         <p>
-          At a low baseline, the lift line hides in a small signal. If the blue line is the reading you got from your B group, it would be hard to tell if it's really an improvement or just a random variance within your data.
+          At a low baseline, the lift line hides in a small signal. If the blue line is the reading you got from your B group, it would be hard to tell if it&apos;s really an improvement or just a random variance within your data.
         </p>
         <p>
           At a high baseline, the lift line is further away from the average, and it would be easier to spot as a real improvement.
