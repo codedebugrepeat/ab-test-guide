@@ -138,16 +138,35 @@ export default function Section4Page() {
         </p>
       </div>
 
-      <SectionFooter
-        summary={[
-          "Tails of A's bell are rare. A result there is the kind of thing A only produces by accident — that's the basis for calling a winner.",
-          "The threshold is the line: anything past it, and you declare B the winner. The sliver of A's bell to the right is the significance level; everything to the left is the confidence level.",
-          "Stricter confidence filters more noise but needs more data to clear.",
-        ]}
-        teaserText="You now have all three levers. See how they combine into a single sample-size number."
-        nextLabel="Next: Calculator →"
-        nextHref="/calculator"
-      />
+      <div className="mt-12 rounded-xl border border-accent/30 bg-accent/[0.06] px-8 py-8">
+        <p className="text-xs font-semibold uppercase tracking-widest text-accent/70">
+          Guide complete
+        </p>
+        <h2 className="mt-3 text-2xl font-semibold tracking-tight">
+          You now understand the three levers
+        </h2>
+        <ul className="mt-5 space-y-2">
+          {[
+            <><strong>Baseline</strong> — your starting conversion rate, given by your product.</>,
+            <><strong>Minimum detectable effect</strong> — the smallest lift worth catching.</>,
+            <><strong>Confidence</strong> — how strict you want to be about calling a winner.</>,
+          ].map((item, i) => (
+            <li key={i} className="flex gap-2 text-foreground/70">
+              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent/60" />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-5 text-foreground/60">
+          Put all three in and sample size is what falls out. The calculator does the maths — you now know exactly what you&apos;re telling it and why.
+        </p>
+        <Link
+          href="/calculator"
+          className="mt-6 inline-block rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-background"
+        >
+          Open the calculator →
+        </Link>
+      </div>
     </TutorialLayout >
   );
 }
