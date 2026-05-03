@@ -43,8 +43,7 @@ export default function Section4Page() {
           near the true rate, some land a bit off, very few land far off.
           That&apos;s not a quirk of the signup case study — it&apos;s what
           happens any time you average a pile of yes/no outcomes. The spread of
-          the bell — what statisticians call a{" "}
-          <SideRemark term="standard deviation" /> — tells you how tight that
+          the bell — the {" "}<SideRemark term="variability" />{" "} — tells you how tight that
           clustering is.
         </p>
 
@@ -70,12 +69,9 @@ export default function Section4Page() {
         </p>
 
         <p>
-          The formal version of that logic: the threshold{" "}
-          <SideRemark term="critical value" /> marks the point where a sample mean
-          from B would be so extreme that, if A and B were truly identical —
-          the{" "}
-          <SideRemark term="null hypothesis" /> — you wouldn&apos;t expect to see
-          it.
+          Without getting into the specifics of statistics, the formal logic works like this: the <SideRemark term="threshold" /> is the
+          cutoff point. If B&apos;s result lands past it, it is so extreme that you wouldn't expect to see it if A and B were actually identical—our {" "}
+          <SideRemark term="default assumption" />.
         </p>
 
         <p>
@@ -95,10 +91,9 @@ export default function Section4Page() {
         <h2>If A and B were the same, I accept being wrong 5% of the time</h2>
 
         <p>
-          The thin piece of A&apos;s bell that sticks out to the right of the
-          threshold is the <SideRemark term="significance level" /> — the
-          probability that A alone, by pure chance, would wander past the line and
-          fool you into calling a winner that wasn&apos;t there.
+          The small section of A&apos;s curve that sticks out past the line is your risk for a {" "}<SideRemark term="false positive" />{" "}. It is the chance that **randomness in your sample**—the natural "sampling error"
+          that occurs whenever you test a random group—tricks you into calling
+          a winner that isn't really there.
         </p>
 
         <p>
