@@ -8,6 +8,7 @@ import {
   binomialPMF,
   buildTheoreticalBuckets,
   gaussianCurve,
+  gaussianCurveCounts,
   standardNormalCurve,
   normalCdf,
   Z_BY_CONFIDENCE,
@@ -265,6 +266,48 @@ describe("gaussianCurve", () => {
   });
 });
 
+describe("gaussianCurveCounts", () => {
+  it("returns `steps` points spanning [0, n] inclusive", () => {
+    const data = gaussianCurveCounts(0.2, 10, 50);
+    expect(data).toHaveLength(50);
+    expect(data[0].x).toBe(0);
+    expect(data[49].x).toBe(10);
+  });
+
+  it("defaults to 200 steps", () => {
+    expect(gaussianCurveCounts(0.2, 10)).toHaveLength(200);
+  });
+
+  it("peaks at y=1 near the mean (n*p)", () => {
+    const data = gaussianCurveCounts(0.2, 10);
+    const maxY = Math.max(...data.map((d) => d.y));
+    expect(maxY).toBeGreaterThan(0.999);
+    expect(maxY).toBeLessThanOrEqual(1 + 1e-9);
+    const peak = data.find((d) => d.y === maxY)!;
+    // Peak should be near x=2 (= n*p = 10*0.2)
+    expect(peak.x).toBeCloseTo(2, 0);
+  });
+
+  it("y values are in (0, 1]", () => {
+    const data = gaussianCurveCounts(0.2, 10);
+    expect(data.every((d) => d.y > 0 && d.y <= 1 + 1e-9)).toBe(true);
+  });
+
+  it("is symmetric around the mean", () => {
+    // Use p=0.5 so mean=5 is exactly the midpoint of [0,10]
+    const data = gaussianCurveCounts(0.5, 10, 11);
+    for (let i = 0; i < data.length; i++) {
+      expect(data[i].y).toBeCloseTo(data[data.length - 1 - i].y, 9);
+    }
+  });
+
+  it("n=0 collapses to single point", () => {
+    const data = gaussianCurveCounts(0.5, 0);
+    expect(data).toHaveLength(1);
+    expect(data[0].y).toBe(1);
+  });
+});
+
 describe("standardNormalCurve", () => {
   it("returns `steps` points spanning [xMin, xMax] inclusive", () => {
     const data = standardNormalCurve(-3.5, 3.5, 50);
@@ -357,6 +400,96 @@ describe("Z_BY_CONFIDENCE", () => {
     for (const [c, z] of Object.entries(Z_BY_CONFIDENCE) as [string, number][]) {
       expect(normalCdf(z)).toBeCloseTo(Number(c), 3);
     }
+  });
+});
+
+// Tests for the SmoothCurveIllustration rendering logic (bins 20-80, p=0.5, n=100).
+// The illustration slices allBuckets[20..80] by position (cols.map(i => allBuckets[i])),
+// then draws dots using buckets[idx] — not buckets[col] — and overlays gaussianCurve.
+describe("SmoothCurveIllustration – dot and curve alignment", () => {
+  const P = 0.5;
+  const N = 100;
+  const TOTAL_DOTS = 400;
+  const MIN_BIN = 20;
+  const MAX_BIN = 80;
+  const cols = Array.from({ length: MAX_BIN - MIN_BIN + 1 }, (_, i) => i + MIN_BIN);
+
+  // allBuckets is the full 101-element array; buckets is the slice for [20..80].
+  const allBuckets = buildTheoreticalBuckets({ n: N, p: P, maxBin: 100, totalDots: TOTAL_DOTS });
+  const buckets = cols.map((i) => allBuckets[i]);
+
+  it("sliced buckets have the correct length (61 columns)", () => {
+    expect(buckets).toHaveLength(61);
+  });
+
+  it("sliced buckets sum to fewer than TOTAL_DOTS (tails outside [20,80] are excluded)", () => {
+    const sum = buckets.reduce((a, b) => a + b, 0);
+    expect(sum).toBeLessThanOrEqual(TOTAL_DOTS);
+    // But the central mass should be nearly all of the dots for p=0.5, n=100.
+    expect(sum).toBeGreaterThan(TOTAL_DOTS * 0.99);
+  });
+
+  it("sliced bucket values are all non-negative integers", () => {
+    expect(buckets.every((v) => v >= 0 && Number.isInteger(v))).toBe(true);
+  });
+
+  it("dot peak is at index 30 (bin 50 — the centre of [20,80])", () => {
+    const maxVal = Math.max(...buckets);
+    const peakIdx = buckets.indexOf(maxVal);
+    // bin 50 is at index 30 (50 - 20 = 30)
+    expect(peakIdx).toBe(30);
+    expect(cols[peakIdx]).toBe(50);
+  });
+
+  it("dot distribution is symmetric around index 30", () => {
+    // For p=0.5 the distribution must be perfectly symmetric.
+    for (let i = 0; i < buckets.length; i++) {
+      expect(buckets[i]).toBe(buckets[buckets.length - 1 - i]);
+    }
+  });
+
+  it("curve peak x is near 50 (the mean for p=0.5, n=100)", () => {
+    // 300 samples over [20,80] step ~0.2 pp; the closest sample to x=50 is within 0.5.
+    const curve = gaussianCurve(P, N, MIN_BIN, MAX_BIN, 300);
+    const maxY = Math.max(...curve.map((d) => d.y));
+    const peak = curve.find((d) => d.y === maxY)!;
+    expect(peak.x).toBeCloseTo(50, 0);
+  });
+
+  it("curve peak x matches the dot peak bin within 1 pp", () => {
+    const curve = gaussianCurve(P, N, MIN_BIN, MAX_BIN, 300);
+    const maxY = Math.max(...curve.map((d) => d.y));
+    const curvePeakX = curve.find((d) => d.y === maxY)!.x;
+
+    const dotPeakBin = cols[buckets.indexOf(Math.max(...buckets))];
+    expect(Math.abs(curvePeakX - dotPeakBin)).toBeLessThan(1);
+  });
+
+  it("using bucket index (not col value) gives bell-shaped counts", () => {
+    // The previous bug used buckets[col] (col=20..80) instead of buckets[idx] (idx=0..60).
+    // Correct indexing: bucket heights must increase toward the centre and decrease after.
+    // Check the left half (indices 0..29) is non-decreasing.
+    for (let i = 1; i <= 30; i++) {
+      expect(buckets[i]).toBeGreaterThanOrEqual(buckets[i - 1]);
+    }
+    // Check the right half (indices 30..60) is non-increasing.
+    for (let i = 31; i < buckets.length; i++) {
+      expect(buckets[i]).toBeLessThanOrEqual(buckets[i - 1]);
+    }
+  });
+
+  it("using col value as index (the old bug) places the peak at the wrong bin", () => {
+    // With the bug: buckets[col] treats col (20..80) as an array index into the 0-indexed
+    // slice. buckets[30] is the peak value (index 30 = bin 50 in the slice), so the peak
+    // appears at col=30 — shifted 20 bins to the left of the correct position.
+    const buggyDotCounts = cols.map((col) => buckets[col] ?? 0);
+    const buggyPeakBin = cols[buggyDotCounts.indexOf(Math.max(...buggyDotCounts))];
+    expect(buggyPeakBin).not.toBe(50); // wrong — shifted left
+
+    // Correct indexing: peak stays at bin 50.
+    const correctDotCounts = cols.map((_, idx) => buckets[idx]);
+    const correctPeakBin = cols[correctDotCounts.indexOf(Math.max(...correctDotCounts))];
+    expect(correctPeakBin).toBe(50);
   });
 });
 

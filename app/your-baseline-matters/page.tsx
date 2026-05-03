@@ -14,6 +14,7 @@ import {
   CASE_STUDY_A_RATE,
 } from "@/components/tutorial/constants/case-study-constants";
 import { CH2_LIFT } from "@/components/tutorial/constants/chapter-2-constants";
+import { SmoothCurveIllustration } from "@/components/tutorial/illustrations/smooth-curve-illustration";
 
 const chapter = getChapter(2);
 
@@ -162,15 +163,28 @@ export default function Section2Page() {
           Going forward, let&apos; smoothen the curve out by imagining to draw the shape of the distribution instead of individual marbles. The shape is the same, it just doesn&apos;t have the individual dots anymore.
         </p>
 
+        <div className="not-prose my-6">
+          <SmoothCurveIllustration />
+        </div>
+
         <h3>Two bell shapes</h3>
 
         <p>Another change we will make is to also draw a bell shape for the B group.
 
           In the last interactive widget, you already saw the bell shape for the A group. For the B group, we only showed its <SideRemark term="mean" /> as a blue dotted line.
 
-          Now we will draw the bell for the B group as well, so you can see how much it overlaps with the A group. The more they overlap, the harder it is to tell them apart.
-        </p>
+          Actually, in an A/B test, both groups have their own bell shape. If we take repeated samples from both groups, we can draw a bell for each of them.
 
+          Most samples will sit somewhere around the true rate, with some higher and some lower.
+
+          Going forward, we will draw the bell for the B group as well.
+
+          The illustration below shows the same data as before, but with a bell for both groups.
+
+          The more they overlap, the harder it is to tell them apart. Is B really better than A? The more they pull apart, the easier it is to spot a difference.
+
+          The distance between the two means is the lift (or the "expected minimum effect").
+        </p>
 
         <div className="not-prose mt-6">
           <WidgetFrame>
