@@ -53,7 +53,7 @@ export default function Section1Page() {
 
         <hr />
 
-        <h2>Case Study</h2>
+        <h2>Case study</h2>
 
         <p>
           Let&apos;s imagine you have a website with a sign-up button and you want to get more sign-ups. So you&apos;re testing a copy change on your sign-up button and are running an A/B test. Version A is your original copy (&ldquo;Start your free trial&rdquo;), you showed this one to 100 visitors. Version B is the new version (&ldquo;Get started for free&rdquo;), which you showed to another 100 visitors.
