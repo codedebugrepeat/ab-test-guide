@@ -9,8 +9,8 @@ import { binomialMean } from "@/maths/sampling";
 type Props = { counts: number[] };
 
 const WIDTH = 560;
-const HEIGHT = 320;
-const MARGIN = { top: 40, right: 18, bottom: 46, left: 42 };
+const HEIGHT = 296;
+const MARGIN = { top: 16, right: 18, bottom: 46, left: 42 };
 const PLOT_W = WIDTH - MARGIN.left - MARGIN.right;
 const PLOT_H = HEIGHT - MARGIN.top - MARGIN.bottom;
 const DOT_R_NOMINAL = 4;
@@ -57,6 +57,9 @@ export function DiscreteSamplingDistribution({ counts }: Props) {
 
   return (
     <div className={`flex w-full max-w-[${WIDTH}px] flex-col items-center gap-2`}>
+      <p className="text-sm font-semibold text-foreground/55 sm:text-base">
+        true rate: {Math.round(P * 100)}% → {trueMean} per {N}
+      </p>
       <svg
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
         preserveAspectRatio="xMidYMid meet"
@@ -115,7 +118,7 @@ export function DiscreteSamplingDistribution({ counts }: Props) {
           {/* True-mean marker */}
           <line
             x1={colX(trueMean)}
-            y1={-6}
+            y1={0}
             x2={colX(trueMean)}
             y2={PLOT_H}
             stroke="currentColor"
@@ -123,17 +126,6 @@ export function DiscreteSamplingDistribution({ counts }: Props) {
             strokeDasharray="3 3"
             strokeWidth={1}
           />
-          <text
-            x={colX(trueMean)}
-            y={-12}
-            textAnchor="middle"
-            fontSize="10"
-            fontWeight="600"
-            fill="currentColor"
-            fillOpacity={0.55}
-          >
-            true rate: {Math.round(P * 100)}% → {trueMean} per {N}
-          </text>
 
           {/* Dashed placeholder slots above each column's current stack */}
           {cols.map((col) =>
