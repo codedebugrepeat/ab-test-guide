@@ -38,11 +38,14 @@ const LinkedInIcon = ({ size = 13 }: { size?: number }) => (
 
 function Avatar({ src, name, size }: { src?: string; name: string; size: number }) {
   const initials = name.split(' ').map((n) => n[0]).join('').slice(0, 2);
-  const sizeClass = size <= 36 ? 'w-9 h-9 text-[13px]' : 'w-12 h-12 text-[17px]';
+
   return (
-    <div className={`${sizeClass} rounded-full bg-foreground/[0.08] flex-shrink-0 overflow-hidden flex items-center justify-center`}>
+    <div
+      className="rounded-full bg-foreground/[0.08] flex-shrink-0 overflow-hidden flex items-center justify-center"
+      style={{ width: size, height: size, fontSize: Math.round(size * 0.35) }}
+    >
       {src
-        ? <Image src={src} alt={name} width={size} height={size} className="w-full h-full object-cover" />
+        ? <Image src={src} alt={name} width={size * 2} height={size * 2} quality={100} className="w-full h-full object-cover" />
         : <span className="font-semibold text-foreground/60">{initials}</span>
       }
     </div>
@@ -55,7 +58,7 @@ const variants = {
     container: 'mt-9 border-t border-foreground/10 pt-7',
     label: 'mb-3.5',
     avatarRow: 'mb-3 gap-2.5',
-    avatarSize: 36,
+    avatarSize: 56,
     name: 'text-[13px]',
     role: 'text-[11px]',
     bio: 'mb-3.5 text-[12px] text-foreground/60',
@@ -68,7 +71,7 @@ const variants = {
     container: 'mt-16 border-t border-foreground/10 pt-10',
     label: 'mb-5',
     avatarRow: 'mb-4 gap-3.5',
-    avatarSize: 48,
+    avatarSize: 64,
     name: 'text-base',
     role: 'text-[13px]',
     bio: 'mb-5 text-sm text-foreground/70',
