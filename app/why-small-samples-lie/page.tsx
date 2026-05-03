@@ -134,7 +134,7 @@ export default function Section1Page() {
         <p>On average, you&apos;d expect 2 green marbles in each sample of 10. But sometimes you get 0, sometimes 1, and sometimes 3 or more. On average, you get two. The more samples you draw, the closer your average will be to the true rate.</p>
 
         <p>
-          In our A/B test, the same thing happened. We had {CASE_STUDY_VISITORS} visitors per group, not 10 (so 10 times more). Still, getting {CASE_STUDY_A_SIGNUPS} on one &ldquo;draw&rdquo; and {CASE_STUDY_B_SIGNUPS} on another is highly likely. The difference is so small, that it could easily be produced by sampling error alone. Even if there was no real difference in how visitors respond to the two button versions.
+          In our A/B test, the same thing happened. We had {CASE_STUDY_VISITORS} visitors per group, not 10 (so 10 times more). Still, getting {CASE_STUDY_A_SIGNUPS} on one &ldquo;draw&rdquo; and {CASE_STUDY_B_SIGNUPS} on another is pretty likely. The difference could easily be produced by sampling error alone. Even if there was no real difference in how visitors respond to the two button versions.
         </p>
         <p>
           Small samples are wobbly, large samples are more stable. If you take samples of 10 people and measure their size, a sample that was drawn from a basketball team might show that 9/10 people are extremely tall.
