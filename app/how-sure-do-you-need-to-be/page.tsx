@@ -26,117 +26,109 @@ export default function Section4Page() {
         {chapter.title}
       </h1>
 
-      <p className="mt-6 text-foreground/70">
-        Chapter 3 ended with two bells — A centered on the baseline, B shifted
-        right by the lift you&apos;re hunting. The picture shows whether those
-        bells pull apart. What it doesn&apos;t tell you is when a result is
-        definitive enough to act on. That&apos;s this chapter.
-      </p>
+      <div className="prose mt-6">
+        <p>
+          Chapter 3 ended with two bells — A centered on the baseline, B shifted
+          right by the lift you&apos;re hunting. The picture shows whether those
+          bells pull apart. What it doesn&apos;t tell you is when a result is
+          definitive enough to act on. That&apos;s this chapter.
+        </p>
 
-      <hr className="my-10 border-foreground/10" />
+        <hr />
 
-      <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-        Middle is normal, tails are rare
-      </h2>
+        <h2>Middle is normal, tails are rare</h2>
 
-      <p className="mt-4 text-foreground/70">
-        Every bell you&apos;ve seen has the same property: most samples cluster
-        near the true rate, some land a bit off, very few land far off.
-        That&apos;s not a quirk of the signup case study — it&apos;s what
-        happens any time you average a pile of yes/no outcomes. The spread of
-        the bell — what statisticians call a{" "}
-        <SideRemark term="standard deviation" /> — tells you how tight that
-        clustering is.
-      </p>
+        <p>
+          Every bell you&apos;ve seen has the same property: most samples cluster
+          near the true rate, some land a bit off, very few land far off.
+          That&apos;s not a quirk of the signup case study — it&apos;s what
+          happens any time you average a pile of yes/no outcomes. The spread of
+          the bell — what statisticians call a{" "}
+          <SideRemark term="standard deviation" /> — tells you how tight that
+          clustering is.
+        </p>
 
-      <div className="mt-6">
-        <WidgetFrame>
-          <NormalVsExtremeWidget />
-        </WidgetFrame>
-      </div>
+        <div className="not-prose mt-6">
+          <WidgetFrame>
+            <NormalVsExtremeWidget />
+          </WidgetFrame>
+        </div>
 
-      <p className="mt-4 text-foreground/70">
-        The key takeaway: samples deep in the tails are rare. If A and B were
-        identical and you ran the experiment a hundred times, most results would
-        sit comfortably near A&apos;s mean. Only a handful would land out in the
-        right tail. That rarity is what lets you call a winner.
-      </p>
+        <p>
+          The key takeaway: samples deep in the tails are rare. If A and B were
+          identical and you ran the experiment a hundred times, most results would
+          sit comfortably near A&apos;s mean. Only a handful would land out in the
+          right tail. That rarity is what lets you call a winner.
+        </p>
 
-      <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
-        Drawing the line: how far out is too rare to happen by chance?
-      </h2>
+        <h2>Drawing the line: how far out is too rare to happen by chance?</h2>
 
-      <p className="mt-4 text-foreground/70">
-        Calling a winner means picking a point out past A&apos;s usual range
-        and saying: anything that lands further out, and I&apos;ll believe B
-        really is better. Anything short of it, and I&apos;ll stay with A.
-      </p>
+        <p>
+          Calling a winner means picking a point out past A&apos;s usual range
+          and saying: anything that lands further out, and I&apos;ll believe B
+          really is better. Anything short of it, and I&apos;ll stay with A.
+        </p>
 
-      <p className="mt-4 text-foreground/70">
-        The formal version of that logic: the threshold{" "}
-        <SideRemark term="critical value" /> marks the point where a sample mean
-        from B would be so extreme that, if A and B were truly identical —
-        the{" "}
-        <SideRemark term="null hypothesis" /> — you wouldn&apos;t expect to see
-        it.
-      </p>
+        <p>
+          The formal version of that logic: the threshold{" "}
+          <SideRemark term="critical value" /> marks the point where a sample mean
+          from B would be so extreme that, if A and B were truly identical —
+          the{" "}
+          <SideRemark term="null hypothesis" /> — you wouldn&apos;t expect to see
+          it.
+        </p>
 
-      <p className="mt-4 text-foreground/70">
-        The line has a cost either way you move it. Pull it toward A and you
-        catch more real wins, but A&apos;s routine noise slips through more
-        often. Push it toward B and you filter the noise out, at the price of
-        missing some genuine improvements because their samples landed on the
-        wrong side of the line.
-      </p>
+        <p>
+          The line has a cost either way you move it. Pull it toward A and you
+          catch more real wins, but A&apos;s routine noise slips through more
+          often. Push it toward B and you filter the noise out, at the price of
+          missing some genuine improvements because their samples landed on the
+          wrong side of the line.
+        </p>
 
-      <div className="mt-6">
-        <WidgetFrame>
-          <DecisionThresholdWidget />
-        </WidgetFrame>
-      </div>
+        <div className="not-prose mt-6">
+          <WidgetFrame>
+            <DecisionThresholdWidget />
+          </WidgetFrame>
+        </div>
 
-      <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
-        If A and B were the same, I accept being wrong 5% of the time
-      </h2>
+        <h2>If A and B were the same, I accept being wrong 5% of the time</h2>
 
-      <p className="mt-4 text-foreground/70">
-        The thin piece of A&apos;s bell that sticks out to the right of the
-        threshold is the <SideRemark term="significance level" /> — the
-        probability that A alone, by pure chance, would wander past the line and
-        fool you into calling a winner that wasn&apos;t there.
-      </p>
+        <p>
+          The thin piece of A&apos;s bell that sticks out to the right of the
+          threshold is the <SideRemark term="significance level" /> — the
+          probability that A alone, by pure chance, would wander past the line and
+          fool you into calling a winner that wasn&apos;t there.
+        </p>
 
-      <p className="mt-4 text-foreground/70">
-        The rest of A&apos;s bell — everything to the left of the threshold —
-        is the confidence level. Significance and confidence always add to 100%,
-        so picking one picks the other.
-      </p>
+        <p>
+          The rest of A&apos;s bell — everything to the left of the threshold —
+          is the confidence level. Significance and confidence always add to 100%,
+          so picking one picks the other.
+        </p>
 
-      <p className="mt-4 text-foreground/70">
-        A 95% confidence level is the standard default. You&apos;re saying:
-        I&apos;ll accept being fooled about 1 time in 20. The threshold is
-        drawn so that only a 5% sliver of A&apos;s bell pokes past it. If A
-        and B were really identical and you ran this experiment over and over,
-        A alone would wander past the line roughly 5% of the time and look like
-        a winner that wasn&apos;t there.
-      </p>
+        <p>
+          A 95% confidence level is the standard default. You&apos;re saying:
+          I&apos;ll accept being fooled about 1 time in 20. The threshold is
+          drawn so that only a 5% sliver of A&apos;s bell pokes past it. If A
+          and B were really identical and you ran this experiment over and over,
+          A alone would wander past the line roughly 5% of the time and look like
+          a winner that wasn&apos;t there.
+        </p>
 
-      <p className="mt-4 text-foreground/70">
-        The threshold sits in A&apos;s right tail only. We&apos;re hunting a
-        lift: B is either enough better than A to clear the line, or it
-        isn&apos;t. A suspiciously low result from B doesn&apos;t count as a
-        win, so the left tail stays out of the decision.
-      </p>
+        <p>
+          The threshold sits in A&apos;s right tail only. We&apos;re hunting a
+          lift: B is either enough better than A to clear the line, or it
+          isn&apos;t. A suspiciously low result from B doesn&apos;t count as a
+          win, so the left tail stays out of the decision.
+        </p>
 
-      <Quote>
-        A winner is a gap big enough that you wouldn&apos;t see it by chance.
-      </Quote>
+        <Quote>
+          A winner is a gap big enough that you would only see very rarely if A and B were really identical.
+        </Quote>
 
-      <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
-        What confidence actually costs
-      </h2>
+        <h2>What confidence actually costs</h2>
 
-      <div className="mt-4 space-y-4 text-foreground/70">
         <p>
           Stricter confidence pushes the threshold further from A&apos;s mean.
           Fewer false wins sneak through — which is the point. The catch: the

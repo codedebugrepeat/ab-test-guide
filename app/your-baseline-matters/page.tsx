@@ -35,73 +35,69 @@ export default function Section2Page() {
         {chapter.title}
       </h1>
 
-      <p className="mt-6 text-foreground/70">
-        Chapter 1 ended with a shape: stack enough draws from the jar and a
-        bell fills in. That bell isn&apos;t fixed. Its width depends on a
-        single number: how often your visitors currently convert. That number
-        is your baseline, and it shapes how much data you need more than almost
-        anything else.
-      </p>
-
-      <hr className="my-10 border-foreground/10" />
-
-      <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-        What&apos;s a baseline?
-      </h2>
-
-      <Quote>
-        Your <strong>baseline conversion rate</strong> is how many visitors
-        sign up right now, before any change.
-      </Quote>
-
-      <p className="text-foreground/70">
-        If 100 people hit your signup page and 4 sign up, your baseline is 4%.
-        That&apos;s it.
-      </p>
-
-      <p className="mt-4 text-foreground/70">
-        It sounds like background information. It isn&apos;t. Your baseline
-        tells you how much signal each visitor brings, and that shapes how much
-        data you need more than almost anything else.
-      </p>
-
-      <p className="mt-4 text-foreground/70">
-        In the case study, version A got {CASE_STUDY_A_SIGNUPS} signups from {CASE_STUDY_VISITORS} visitors, so the
-        baseline is {aPercent}% — your best estimate of the page&apos;s true rate.
-        That&apos;s on the high side. Many real signup flows sit somewhere between
-        1% and 5%, and the difference matters a lot. Here&apos;s what it looks like
-        on the distribution.
-      </p>
-
-      <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
-        Baseline changes the shape
-      </h2>
-
-      <p className="mt-4 text-foreground/70">
-        Two products, both targeting the same {liftPercent}%{" "}
-        <SideRemark term="lift" /> in conversions. One converts at 2% today;
-        the other at 20%. Same improvement on paper. On the distribution, they
-        are not the same story.
-      </p>
-
-      <p className="mt-4 text-foreground/70">
-        The widget below is the smoothed version of what you just drew,
-        scaled to {CASE_STUDY_VISITORS} visitors per sample. Slide the baseline to pick a
-        product. The solid line is that product&apos;s current average. The
-        dashed line is where version B lands if it really does lift by {liftPercent}%.
-        The question to sit with: does the lift line poke out of the bell, or
-        is it still inside the average&apos;s usual wobble?
-      </p>
-
-      <div className="mt-6">
-        <WidgetFrame>
-          <BaselineDistributionWidget />
-        </WidgetFrame>
-      </div>
-
-      <div className="mt-8 space-y-4 text-foreground/70">
+      <div className="prose mt-6">
         <p>
-          At 2%, the lift line sits deep inside the spread. Run the test at
+          Chapter 1 ended with a shape: stack enough draws from the jar and a
+          bell fills in. That bell isn&apos;t fixed. Its width depends on a
+          single number: how often your visitors currently convert. That number
+          is your baseline, and it shapes how much data you need more than almost
+          anything else.
+        </p>
+
+        <hr />
+
+        <h2>What&apos;s a baseline?</h2>
+
+        <Quote>
+          Your <strong>baseline conversion rate</strong> is how many visitors
+          sign up right now, before any change.
+        </Quote>
+
+        <p>
+          If 100 people hit your signup page and 4 sign up, your baseline is 4%.
+          That&apos;s it.
+        </p>
+
+        <p>
+          It sounds like background information. It isn&apos;t. Your baseline
+          tells you how much signal each visitor brings, and that shapes how much
+          data you need more than almost anything else.
+        </p>
+
+        <p>
+          In the case study, version A got {CASE_STUDY_A_SIGNUPS} signups from {CASE_STUDY_VISITORS} visitors, so the
+          baseline is {aPercent}% — your best estimate of the page&apos;s true rate.
+          That&apos;s on the high side. Many real signup flows sit somewhere between
+          1% and 5%, and the difference matters a lot. Here&apos;s what it looks like
+          on the distribution.
+        </p>
+
+        <h2>Baseline changes the shape</h2>
+
+        <p>
+          Two products, both targeting the same {liftPercent}%{" "}
+          <SideRemark term="lift" /> in conversions. One converts at 2% today;
+          the other at 20%. Same improvement on paper. On the distribution, they
+          are not the same story.
+        </p>
+
+        <p>
+          The widget below is the smoothed version of what you just drew,
+          scaled to {CASE_STUDY_VISITORS} visitors per sample. Slide the baseline to pick a
+          product. The solid line is that product&apos;s current average. The
+          dashed line is where version B lands if it really does lift by {liftPercent}%.
+          The question to sit with: does the lift line poke out of the bell, or
+          is it still inside the average&apos;s usual wobble?
+        </p>
+
+        <div className="not-prose mt-6">
+          <WidgetFrame>
+            <BaselineDistributionWidget />
+          </WidgetFrame>
+        </div>
+
+        <p>
+          At 2%, the lift line sits deep inside the spread. Run the test at{" "}
           {CASE_STUDY_VISITORS} visitors and you&apos;d see 2 vs. 2 one day, 2 vs. 3 the next, 3
           vs. 2 the day after. The real improvement is there; it is buried
           under the sample-to-sample bouncing.
@@ -112,13 +108,9 @@ export default function Section2Page() {
           &ldquo;B is better&rdquo; starts to hold up from one run to the
           next. Same {liftPercent}% improvement, very different picture.
         </p>
-      </div>
 
-      <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
-        The signal-to-noise problem
-      </h2>
+        <h2>The signal-to-noise problem</h2>
 
-      <div className="mt-4 space-y-4 text-foreground/70">
         <p>
           When your baseline is low, most visitors leave without converting.
           They give you no signal. You&apos;re waiting for a rare event, and
@@ -130,14 +122,12 @@ export default function Section2Page() {
           with. At 20%, the same {CASE_STUDY_VISITORS} visitors gives you 20. Ten times the
           signal, same traffic.
         </p>
-      </div>
 
-      <Quote>
-        The lower your baseline, the more data you need to hear the signal
-        above the noise.
-      </Quote>
+        <Quote>
+          The lower your baseline, the more data you need to hear the signal
+          above the noise.
+        </Quote>
 
-      <div className="space-y-4 text-foreground/70">
         <p>
           That gap compounds fast. A landing page at 2% baseline typically
           needs 10 to 20 times more visitors than a checkout flow at 30% to
@@ -157,43 +147,41 @@ export default function Section2Page() {
           visitors per group, not hundreds. The examples are simple on
           purpose. The actual numbers rarely are.
         </p>
+
+        <h2>Two bells</h2>
+
+        <p>
+          So far we&apos;ve drawn the control&apos;s distribution as a histogram
+          of discrete counts. From here on we&apos;ll draw it as a smooth
+          silhouette: same distribution, just without the individual dots. The
+          semantics don&apos;t change. Sample something and you get variance;
+          values cluster around the{" "}
+          <SideRemark term="mean" />{" "}
+          and form a bell.
+        </p>
+
+        <p>
+          Run an A/B test and you have two groups. Each is its own sampling
+          process, each has its own bell, each centered on its own mean. The
+          control sits at the baseline rate; B sits at the baseline plus the
+          lift as a percentage of that baseline. Here are both, at the case
+          study&apos;s {aPercent}% baseline and {CASE_STUDY_VISITORS} visitors per variant.
+        </p>
+
+        <div className="not-prose mt-6">
+          <WidgetFrame>
+            <TwoBellsWidget />
+          </WidgetFrame>
+        </div>
+
+        <p>
+          Use the slider to move the baseline. At 2%, the absolute gap between the
+          two means shrinks to a tenth of what it was at 20%, and the bells almost
+          sit on top of each other. Push to 20% and they pull apart. Same relative
+          lift, very different picture — the same thread from earlier in this
+          chapter, now with both distributions in view.
+        </p>
       </div>
-
-      <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
-        Two bells
-      </h2>
-
-      <p className="mt-4 text-foreground/70">
-        So far we&apos;ve drawn the control&apos;s distribution as a histogram
-        of discrete counts. From here on we&apos;ll draw it as a smooth
-        silhouette: same distribution, just without the individual dots. The
-        semantics don&apos;t change. Sample something and you get variance;
-        values cluster around the{" "}
-        <SideRemark term="mean" />{" "}
-        and form a bell.
-      </p>
-
-      <p className="mt-4 text-foreground/70">
-        Run an A/B test and you have two groups. Each is its own sampling
-        process, each has its own bell, each centered on its own mean. The
-        control sits at the baseline rate; B sits at the baseline plus the
-        lift as a percentage of that baseline. Here are both, at the case
-        study&apos;s {aPercent}% baseline and {CASE_STUDY_VISITORS} visitors per variant.
-      </p>
-
-      <div className="mt-6">
-        <WidgetFrame>
-          <TwoBellsWidget />
-        </WidgetFrame>
-      </div>
-
-      <p className="mt-4 text-foreground/70">
-        Use the slider to move the baseline. At 2%, the absolute gap between the
-        two means shrinks to a tenth of what it was at 20%, and the bells almost
-        sit on top of each other. Push to 20% and they pull apart. Same relative
-        lift, very different picture — the same thread from earlier in this
-        chapter, now with both distributions in view.
-      </p>
 
       <SectionFooter
         summary={[

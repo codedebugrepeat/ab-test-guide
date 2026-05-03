@@ -25,52 +25,48 @@ export default function Section3Page() {
         {chapter.title}
       </h1>
 
-      <p className="mt-6 text-foreground/70">
-        Chapter 2 ended with two bells side by side — A centered on the
-        baseline, B shifted right by the lift, their overlap changing as you
-        moved the slider. That picture posed a question: do the bells pull far
-        enough apart to see a difference, or do they sit on top of each other
-        and blend? This chapter is about the lever that controls the answer: the
-        size of the lift you&apos;re hunting.
-      </p>
+      <div className="prose mt-6">
+        <p>
+          Chapter 2 ended with two bells side by side — A centered on the
+          baseline, B shifted right by the lift, their overlap changing as you
+          moved the slider. That picture posed a question: do the bells pull far
+          enough apart to see a difference, or do they sit on top of each other
+          and blend? This chapter is about the lever that controls the answer: the
+          size of the lift you&apos;re hunting.
+        </p>
 
-      <hr className="my-10 border-foreground/10" />
+        <hr />
 
-      <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-        You choose what counts as a win
-      </h2>
+        <h2>You choose what counts as a win</h2>
 
-      <p className="mt-4 text-foreground/70">
-        Before you run a test, you have to decide the smallest lift that would
-        actually change what you ship. A 0.2% lift on checkout might be worth
-        millions. A 0.2% lift on a corner of the app no one uses might not be
-        worth the engineering follow-up. The number you settle on is your
-        minimum detectable effect — shorthand for &ldquo;this is the smallest
-        jump I want my test to be able to see.&rdquo;
-      </p>
+        <p>
+          Before you run a test, you have to decide the smallest lift that would
+          actually change what you ship. A 0.2% lift on checkout might be worth
+          millions. A 0.2% lift on a corner of the app no one uses might not be
+          worth the engineering follow-up. The number you settle on is your
+          minimum detectable effect — shorthand for &ldquo;this is the smallest
+          jump I want my test to be able to see.&rdquo;
+        </p>
 
-      <p className="mt-4 text-foreground/70">
-        Tests don&apos;t hand this number back to you. It&apos;s an input. A
-        product call dressed in stats clothing.
-      </p>
+        <p>
+          Tests don&apos;t hand this number back to you. It&apos;s an input. A
+          product call dressed in stats clothing.
+        </p>
 
-      <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
-        Smaller lifts hide. Bigger ones don&apos;t.
-      </h2>
+        <h2>Smaller lifts hide. Bigger ones don&apos;t.</h2>
 
-      <p className="mt-4 text-foreground/70">
-        Here are the two bells from chapter 2. Drag the lift slider down and
-        B&apos;s bell slides toward A&apos;s until the two are almost
-        indistinguishable. Drag it up and the bells pull apart on their own.
-      </p>
+        <p>
+          Here are the two bells from chapter 2. Drag the lift slider down and
+          B&apos;s bell slides toward A&apos;s until the two are almost
+          indistinguishable. Drag it up and the bells pull apart on their own.
+        </p>
 
-      <div className="mt-6">
-        <WidgetFrame>
-          <LiftEffectWidget showThreshold={false} />
-        </WidgetFrame>
-      </div>
+        <div className="not-prose mt-6">
+          <WidgetFrame>
+            <LiftEffectWidget showThreshold={false} />
+          </WidgetFrame>
+        </div>
 
-      <div className="mt-8 space-y-4 text-foreground/70">
         <p>
           At a 2% lift the bells almost coincide. You&apos;d need a very large
           sample before results from each group could reliably tell you which is
@@ -88,24 +84,22 @@ export default function Section3Page() {
           because the stats are mean, but because the lift you&apos;re hunting
           is small.
         </p>
+
+        <Quote>
+          Aim small and you need a lot of data. Aim big and you might miss the
+          win that was actually there.
+        </Quote>
+
+        <h2>Two levers in, one to go</h2>
+
+        <p>
+          You now have two inputs: baseline (given by your product) and lift
+          (the smallest improvement worth chasing). Both shape how far apart the
+          two bells sit. What the picture doesn&apos;t yet tell you is when a
+          result is definitive enough to act on. That&apos;s the final lever —
+          how strict you want to be about calling a winner.
+        </p>
       </div>
-
-      <Quote>
-        Aim small and you need a lot of data. Aim big and you might miss the
-        win that was actually there.
-      </Quote>
-
-      <h2 className="mt-10 text-2xl font-semibold tracking-tight sm:text-3xl">
-        Two levers in, one to go
-      </h2>
-
-      <p className="mt-4 text-foreground/70">
-        You now have two inputs: baseline (given by your product) and lift
-        (the smallest improvement worth chasing). Both shape how far apart the
-        two bells sit. What the picture doesn&apos;t yet tell you is when a
-        result is definitive enough to act on. That&apos;s the final lever —
-        how strict you want to be about calling a winner.
-      </p>
 
       <SectionFooter
         summary={[
