@@ -15,6 +15,9 @@ function insightFor(liftIndex: number, falseNegativeShare: number, showThreshold
   const lift = CH4_LIFT_STEPS[liftIndex];
   const liftPct = (lift * 100).toFixed(0);
   if (!showThreshold) {
+    if (lift === 0.00) {
+      return `At a ${liftPct}% lift, B's bell sits exactly on top of A's. The two groups are the same.`;
+    }
     if (lift <= 0.02) {
       return `At a ${liftPct}% lift, B's bell sits almost on top of A's. A single sample can't reliably tell you which group is ahead.`;
     }
