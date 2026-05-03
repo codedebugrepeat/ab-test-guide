@@ -37,11 +37,12 @@ export default function Section2Page() {
 
       <div className="prose mt-6">
         <p>
-          Chapter 1 ended with a shape: stack enough draws from the jar and a
-          bell fills in. That bell isn&apos;t fixed. Its width depends on a
-          single number: how often your visitors currently convert. That number
-          is your baseline, and it shapes how much data you need more than almost
-          anything else.
+          In chapter 1, we learned that we can&apos;t trust small samples. For our A/B tests to be reliable, we need larger samples.
+          How big a sample depends on three things.
+        </p>
+
+        <p> Let&apos;s look at the first of them: your baseline conversion rate.
+          In other words, how many visitors convert right now, before you make any changes?
         </p>
 
         <hr />
@@ -67,27 +68,28 @@ export default function Section2Page() {
         <p>
           In the case study, version A got {CASE_STUDY_A_SIGNUPS} signups from {CASE_STUDY_VISITORS} visitors, so the
           baseline is {aPercent}% — your best estimate of the page&apos;s true rate.
-          That&apos;s on the high side. Many real signup flows sit somewhere between
-          1% and 5%, and the difference matters a lot. Here&apos;s what it looks like
-          on the distribution.
+          That&apos;s on the high side. Many real signup flows might sit somewhere between
+          1% and 5%, and the difference matters a lot.
         </p>
 
-        <h2>Baseline changes the shape</h2>
+        <h2>Low baseline hides the lift</h2>
 
         <p>
-          Two products, both targeting the same {liftPercent}%{" "}
-          <SideRemark term="lift" /> in conversions. One converts at 2% today;
-          the other at 20%. Same improvement on paper. On the distribution, they
-          are not the same story.
+          Let's imagine that in our A/B test, version B lifts signups by {liftPercent}%.
+
+          Whether we see that lift clearly depends on the baseline. At 5% baseline, a {liftPercent}% lift is a 0.1 percentage point increase, from 5% to 5.1%.
+
+          However, if your baseline is 50%, the same {liftPercent}% lift is a 0.5 percentage point increase, from 50% to 50.5%.
+        </p>
+
+        <p>The higher the baseline, the bigger the absolute difference for the same relative lift, and the easier it is to detect that difference with a given sample size.</p>
+
+        <p>
+          Now it's your turn again. Move the slider to change the baseline (conversion rate of version A). Notice the blue dotted line - it is a 10% improvement over the baseline.
         </p>
 
         <p>
-          The widget below is the smoothed version of what you just drew,
-          scaled to {CASE_STUDY_VISITORS} visitors per sample. Slide the baseline to pick a
-          product. The solid line is that product&apos;s current average. The
-          dashed line is where version B lands if it really does lift by {liftPercent}%.
-          The question to sit with: does the lift line poke out of the bell, or
-          is it still inside the average&apos;s usual wobble?
+          When is it clearly different from your average? And when does it hide in your data?
         </p>
 
         <div className="not-prose mt-6">
@@ -97,16 +99,10 @@ export default function Section2Page() {
         </div>
 
         <p>
-          At 2%, the lift line sits deep inside the spread. Run the test at{" "}
-          {CASE_STUDY_VISITORS} visitors and you&apos;d see 2 vs. 2 one day, 2 vs. 3 the next, 3
-          vs. 2 the day after. The real improvement is there; it is buried
-          under the sample-to-sample bouncing.
+          At a low baseline, the lift line hides in a small signal. If the blue line is the reading you got from your B group, it would be hard to tell if it's really an improvement or just a random variance within your data.
         </p>
         <p>
-          Slide the baseline up to 20% and the lift line separates from the
-          average. Single samples still vary, but the gap is wide enough that
-          &ldquo;B is better&rdquo; starts to hold up from one run to the
-          next. Same {liftPercent}% improvement, very different picture.
+          At a high baseline, the lift line is further away from the average, and it would be easier to spot as a real improvement.
         </p>
 
         <h2>The signal-to-noise problem</h2>
@@ -140,33 +136,41 @@ export default function Section2Page() {
           visitors do I need?&rdquo; You start with your own baseline.
         </p>
         <p>
-          We&apos;ve been using {CASE_STUDY_VISITORS} visitors throughout because the numbers
-          are easy to follow. Real A/B tests rarely run at that scale. By the
+          We&apos;ve been using {CASE_STUDY_VISITORS}{" "} visitors throughout because the numbers
+          are easy to do percentage math in our head with. Real A/B tests rarely run at that scale. By the
           time you finish this guide, you&apos;ll see that depending on your
           baseline, a well-designed experiment might need thousands of
           visitors per group, not hundreds. The examples are simple on
           purpose. The actual numbers rarely are.
         </p>
 
-        <h2>Two bells</h2>
+        <Quote>A well-designed experiment might need thousands of visitors per group, not hundreds.</Quote>
+
+        <h2>A more standard visualization</h2>
+
+        <h3>Smooth curves</h3>
 
         <p>
-          So far we&apos;ve drawn the control&apos;s distribution as a histogram
-          of discrete counts. From here on we&apos;ll draw it as a smooth
-          silhouette: same distribution, just without the individual dots. The
-          semantics don&apos;t change. Sample something and you get variance;
-          values cluster around the{" "}
-          <SideRemark term="mean" />{" "}
-          and form a bell.
+          Before we wrap up this chapter, let&apos;s visualize the two groups in a simplified way. This will help us in the remaining chapters.
+
+          In chapter 1, you stacked counts of marbles. If you did it often enough, it would resemble a bell shape. Since you counted finite marbles, we showed it as a discrete distribution.
+
+          Meaning, there were gaps between the dots, and the dots represented actual counts of marbles.
         </p>
 
         <p>
-          Run an A/B test and you have two groups. Each is its own sampling
-          process, each has its own bell, each centered on its own mean. The
-          control sits at the baseline rate; B sits at the baseline plus the
-          lift as a percentage of that baseline. Here are both, at the case
-          study&apos;s {aPercent}% baseline and {CASE_STUDY_VISITORS} visitors per variant.
+          Going forward, let&apos; smoothen the curve out by imagining to draw the shape of the distribution instead of individual marbles. The shape is the same, it just doesn&apos;t have the individual dots anymore.
         </p>
+
+        <h3>Two bell shapes</h3>
+
+        <p>Another change we will make is to also draw a bell shape for the B group.
+
+          In the last interactive widget, you already saw the bell shape for the A group. For the B group, we only showed its <SideRemark term="mean" /> as a blue dotted line.
+
+          Now we will draw the bell for the B group as well, so you can see how much it overlaps with the A group. The more they overlap, the harder it is to tell them apart.
+        </p>
+
 
         <div className="not-prose mt-6">
           <WidgetFrame>
