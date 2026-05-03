@@ -70,7 +70,7 @@ export default function Section4Page() {
 
         <p>
           Without getting into the specifics of statistics, the formal logic works like this: the <SideRemark term="threshold" /> is the
-          cutoff point. If B&apos;s result lands past it, it is so extreme that you wouldn't expect to see it if A and B were actually identical—our {" "}
+          cutoff point. If B&apos;s result lands past it, it is so extreme that you wouldn&apos;t expect to see it if A and B were actually identical—our {" "}
           <SideRemark term="default assumption" />.
         </p>
 
@@ -91,9 +91,9 @@ export default function Section4Page() {
         <h2>If A and B were the same, I accept being wrong 5% of the time</h2>
 
         <p>
-          The small section of A&apos;s curve that sticks out past the line is your risk for a {" "}<SideRemark term="false positive" />{" "}. It is the chance that **randomness in your sample**—the natural "sampling error"
+          The small section of A&apos;s curve that sticks out past the line is your risk for a {" "}<SideRemark term="false positive" />{" "}. It is the chance that **randomness in your sample**—the natural &ldquo;sampling error&rdquo;
           that occurs whenever you test a random group—tricks you into calling
-          a winner that isn't really there.
+          a winner that isn&apos;t really there.
         </p>
 
         <p>
