@@ -49,80 +49,81 @@ function Avatar({ src, name, size }: { src?: string; name: string; size: number 
   );
 }
 
-export function AuthorCalloutSidebar({
+const variants = {
+  sidebar: {
+    Tag: 'aside' as const,
+    container: 'mt-9 border-t border-foreground/10 pt-7',
+    label: 'mb-3.5',
+    avatarRow: 'mb-3 gap-2.5',
+    avatarSize: 36,
+    name: 'text-[13px]',
+    role: 'text-[11px]',
+    bio: 'mb-3.5 text-[12px] text-foreground/60',
+    links: 'flex-col gap-1.5',
+    linkText: 'text-[11.5px] text-foreground/40',
+    iconSize: 13,
+  },
+  inline: {
+    Tag: 'section' as const,
+    container: 'mt-16 border-t border-foreground/10 pt-10',
+    label: 'mb-5',
+    avatarRow: 'mb-4 gap-3.5',
+    avatarSize: 48,
+    name: 'text-base',
+    role: 'text-[13px]',
+    bio: 'mb-5 text-sm text-foreground/70',
+    links: 'gap-5',
+    linkText: 'text-[13px] text-foreground/60',
+    iconSize: 15,
+  },
+};
+
+function AuthorCallout({
+  variant,
   name = siteConfig.author.name,
   role = siteConfig.author.role,
   bio = siteConfig.author.bio,
   avatarSrc = siteConfig.author.image,
   githubUrl = siteConfig.githubUrl,
   linkedinUrl = siteConfig.author.url,
-}: AuthorCalloutProps) {
+}: AuthorCalloutProps & { variant: keyof typeof variants }) {
+  const v = variants[variant];
+  const { Tag } = v;
   return (
-    <aside className="mt-9 border-t border-foreground/10 pt-7">
-      <p className="mb-3.5 text-[10px] font-semibold uppercase tracking-widest text-foreground/40">
+    <Tag className={v.container}>
+      <p className={`${v.label} text-[10px] font-semibold uppercase tracking-widest text-foreground/40`}>
         About the author
       </p>
-      <div className="mb-3 flex items-center gap-2.5">
-        <Avatar src={avatarSrc} name={name} size={36} />
+      <div className={`flex items-center ${v.avatarRow}`}>
+        <Avatar src={avatarSrc} name={name} size={v.avatarSize} />
         <div>
-          <div className="text-[13px] font-semibold leading-tight text-foreground">{name}</div>
-          <div className="mt-0.5 text-[11px] text-foreground/40">{role}</div>
+          <div className={`${v.name} font-semibold leading-tight text-foreground`}>{name}</div>
+          <div className={`mt-0.5 ${v.role} text-foreground/40`}>{role}</div>
         </div>
       </div>
-      <p className="mb-3.5 text-[12px] leading-relaxed text-foreground/60">{bio}</p>
-      <div className="flex flex-col gap-1.5">
+      <p className={`leading-relaxed ${v.bio}`}>{bio}</p>
+      <div className={`flex ${v.links}`}>
         {githubUrl && (
           <a href={githubUrl} target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-[11.5px] text-foreground/40 transition-colors hover:text-foreground">
-            <GitHubIcon /> Open source on GitHub
+            className={`flex items-center gap-1.5 ${v.linkText} transition-colors hover:text-foreground`}>
+            <GitHubIcon size={v.iconSize} /> Open source on GitHub
           </a>
         )}
         {linkedinUrl && (
           <a href={linkedinUrl} target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-[11.5px] text-foreground/40 transition-colors hover:text-foreground">
-            <LinkedInIcon /> LinkedIn
+            className={`flex items-center gap-1.5 ${v.linkText} transition-colors hover:text-foreground`}>
+            <LinkedInIcon size={v.iconSize} /> LinkedIn
           </a>
         )}
       </div>
-    </aside>
+    </Tag>
   );
 }
 
-export function AuthorCalloutInline({
-  name = siteConfig.author.name,
-  role = siteConfig.author.role,
-  bio = siteConfig.author.bio,
-  avatarSrc = siteConfig.author.image,
-  githubUrl = siteConfig.githubUrl,
-  linkedinUrl = siteConfig.author.url,
-}: AuthorCalloutProps) {
-  return (
-    <section className="mt-16 border-t border-foreground/10 pt-10">
-      <p className="mb-5 text-[10px] font-semibold uppercase tracking-widest text-foreground/40">
-        About the author
-      </p>
-      <div className="mb-4 flex items-center gap-3.5">
-        <Avatar src={avatarSrc} name={name} size={48} />
-        <div>
-          <div className="text-base font-semibold text-foreground">{name}</div>
-          <div className="mt-0.5 text-[13px] text-foreground/40">{role}</div>
-        </div>
-      </div>
-      <p className="mb-5 text-sm leading-relaxed text-foreground/70">{bio}</p>
-      <div className="flex gap-5">
-        {githubUrl && (
-          <a href={githubUrl} target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-[13px] text-foreground/60 transition-colors hover:text-foreground">
-            <GitHubIcon size={15} /> Open source on GitHub
-          </a>
-        )}
-        {linkedinUrl && (
-          <a href={linkedinUrl} target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-[13px] text-foreground/60 transition-colors hover:text-foreground">
-            <LinkedInIcon size={15} /> LinkedIn
-          </a>
-        )}
-      </div>
-    </section>
-  );
+export function AuthorCalloutSidebar(props: AuthorCalloutProps) {
+  return <AuthorCallout variant="sidebar" {...props} />;
+}
+
+export function AuthorCalloutInline(props: AuthorCalloutProps) {
+  return <AuthorCallout variant="inline" {...props} />;
 }
