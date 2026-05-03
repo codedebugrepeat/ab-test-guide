@@ -6,7 +6,6 @@ import { WidgetFrame } from "@/components/tutorial/widgets/widget-frame";
 import { LiftEffectWidget } from "@/components/tutorial/widgets/lift-effect-widget";
 import { getChapter, totalChapters } from "@/components/tutorial/chapters";
 import { siteConfig } from "@/lib/site-config";
-import { CH2_LIFT } from "@/components/tutorial/constants/chapter-2-constants";
 
 const chapter = getChapter(3);
 
@@ -79,7 +78,7 @@ export default function Section3Page() {
         <p>
           You now have two inputs: baseline (your current conversion rate) and lift / minimum detectable effect (the smallest improvement worth chasing).
           Both shape how far apart the two bells sit. So the further apart the bells, the easier it is to tell them apart with a given sample size.
-          The question becomes, how "extreme" does your variation (Group B) have to be before you will declare it a winner?
+          The question becomes, how &ldquo;extreme&rdquo; does your variation (Group B) have to be before you will declare it a winner?
         </p>
 
         <p>We&apos;ll look at this in the final chapter. It&apos;s called confidence level, and is the last piece of the puzzle.</p>

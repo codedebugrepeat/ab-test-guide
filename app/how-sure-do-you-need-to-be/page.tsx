@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { TutorialLayout } from "@/components/tutorial/tutorial-layout";
 import { Quote } from "@/components/tutorial/quote";
-import { SectionFooter } from "@/components/tutorial/section-footer";
 import { WidgetFrame } from "@/components/tutorial/widgets/widget-frame";
 import { DecisionThresholdWidget } from "@/components/tutorial/widgets/decision-threshold-widget";
 import { NormalVsExtremeWidget } from "@/components/tutorial/widgets/normal-vs-extreme-widget";
