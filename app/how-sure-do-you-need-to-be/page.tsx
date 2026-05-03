@@ -8,6 +8,7 @@ import { NormalVsExtremeWidget } from "@/components/tutorial/widgets/normal-vs-e
 import { SideRemark } from "@/components/tutorial/side-remark";
 import { getChapter, totalChapters } from "@/components/tutorial/chapters";
 import { siteConfig } from "@/lib/site-config";
+import Link from "next/link";
 
 const chapter = getChapter(4);
 
@@ -28,10 +29,8 @@ export default function Section4Page() {
 
       <div className="prose mt-6">
         <p>
-          Chapter 3 ended with two bells — A centered on the baseline, B shifted
-          right by the lift you&apos;re hunting. The picture shows whether those
-          bells pull apart. What it doesn&apos;t tell you is when a result is
-          definitive enough to act on. That&apos;s this chapter.
+          We now understand baseline and minimum detectable effect (lift). In this final chapter, we discuss how to determine when a result is definitive enough to act on.
+          After this final chapter youll be ready to use the <Link href="/calculator">sample size calculator</Link> with full confidence.
         </p>
 
         <hr />
@@ -39,12 +38,13 @@ export default function Section4Page() {
         <h2>Middle is normal, tails are rare</h2>
 
         <p>
-          Every bell you&apos;ve seen has the same property: most samples cluster
-          near the true rate, some land a bit off, very few land far off.
-          That&apos;s not a quirk of the signup case study — it&apos;s what
-          happens any time you average a pile of yes/no outcomes. The spread of
-          the bell — the {" "}<SideRemark term="variability" />{" "} — tells you how tight that
-          clustering is.
+          Lets think about why the bell shape is so common. It arises whenever you average a pile of yes/no outcomes — like the signup case study we started with, where each visitor either signed up or didn&apos;t.
+
+          There is some variability. So when you run the experiment again and again, you get a spread of results. Most of the time, the average lands somewhere in the middle. Rarely, just by chance, you get a more extreme result (the tails).
+
+          The spread of the bell — the {" "}<SideRemark term="variability" />{" "} — tells you how wide the spread is.
+
+          Hover or click on the regions in the chart. How many experiments would be expected to land in each area?
         </p>
 
         <div className="not-prose mt-6">
@@ -54,10 +54,8 @@ export default function Section4Page() {
         </div>
 
         <p>
-          The key takeaway: samples deep in the tails are rare. If A and B were
-          identical and you ran the experiment a hundred times, most results would
-          sit comfortably near A&apos;s mean. Only a handful would land out in the
-          right tail. That rarity is what lets you call a winner.
+          The key takeaway: samples deep in the tails are rare. If A and B were identical and you ran the experiment a hundred times, you would get a spread that is centered around A&apos;s mean.
+          Only a handful would land out in the right tail. That rarity is what lets you call a winner.
         </p>
 
         <h2>Drawing the line: how far out is too rare to happen by chance?</h2>
@@ -68,19 +66,7 @@ export default function Section4Page() {
           really is better. Anything short of it, and I&apos;ll stay with A.
         </p>
 
-        <p>
-          Without getting into the specifics of statistics, the formal logic works like this: the <SideRemark term="threshold" /> is the
-          cutoff point. If B&apos;s result lands past it, it is so extreme that you wouldn&apos;t expect to see it if A and B were actually identical—our {" "}
-          <SideRemark term="default assumption" />.
-        </p>
-
-        <p>
-          The line has a cost either way you move it. Pull it toward A and you
-          catch more real wins, but A&apos;s routine noise slips through more
-          often. Push it toward B and you filter the noise out, at the price of
-          missing some genuine improvements because their samples landed on the
-          wrong side of the line.
-        </p>
+        <p> Move the slider in the widget. At which point is a conversion rate you are seeing from B so rare on the green curve (A, your control) that you would say: that can&apos;t be a coincidence?</p>
 
         <div className="not-prose mt-6">
           <WidgetFrame>
@@ -88,19 +74,29 @@ export default function Section4Page() {
           </WidgetFrame>
         </div>
 
+        <p>
+          Without getting into the specifics of statistics, the formal logic works like this: the <SideRemark term="threshold" /> is the
+          cutoff point. If B&apos;s result lands past it, it is so extreme that you wouldn&apos;t expect to see it if A and B were actually identical—our {" "}
+          <SideRemark term="default assumption" />.
+
+          We then say that B is a winner and that we have a significant result.
+        </p>
+
+        <p>
+          The threshold has a cost either way you move it.
+        </p>
+
+        <p>If you are less confident (you pull it towards A), you catch more real wins,
+          because your sensitivity is higher. You are basically calling a winner earlier, even if the result is not so rare. The catch: more noise slips through.
+          You are more likely to call a winner when there isn&apos;t one, simply because you are seeing a rare result that A produced by chance due to sampling error.
+          We call that a {" "}<SideRemark term="false positive" />{" "}.</p>
+
+        <p>On the other hand, if you feel more confident and move the threshold toward B, you filter out more noise — you are less likely to call a winner when there isn&apos;t one.
+          But the catch is that you also miss more real wins, because the threshold is now further from A and A&apos;s natural variability is less likely to wander past it.
+          Increasing your confidence will also need a bigger sample size as you&apos;ll see in the calculator. You are basically calling a winner only when the gap is larger, so you miss some of the smaller but still real lifts.</p>
+
+
         <h2>If A and B were the same, I accept being wrong 5% of the time</h2>
-
-        <p>
-          The small section of A&apos;s curve that sticks out past the line is your risk for a {" "}<SideRemark term="false positive" />{" "}. It is the chance that **randomness in your sample**—the natural &ldquo;sampling error&rdquo;
-          that occurs whenever you test a random group—tricks you into calling
-          a winner that isn&apos;t really there.
-        </p>
-
-        <p>
-          The rest of A&apos;s bell — everything to the left of the threshold —
-          is the confidence level. Significance and confidence always add to 100%,
-          so picking one picks the other.
-        </p>
 
         <p>
           A 95% confidence level is the standard default. You&apos;re saying:
@@ -153,6 +149,6 @@ export default function Section4Page() {
         nextLabel="Next: Calculator →"
         nextHref="/calculator"
       />
-    </TutorialLayout>
+    </TutorialLayout >
   );
 }
