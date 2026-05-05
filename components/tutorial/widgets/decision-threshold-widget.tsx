@@ -94,8 +94,8 @@ export function DecisionThresholdWidget() {
   }, [confidence, falsePositiveShare, missedWinShare]);
 
   // Region label x positions: ±1 SD from the threshold, capped to chart bounds.
-  const fpLabelX = Math.min(X_MAX - 0.6, criticalX + 1.0);
-  const fnLabelX = Math.max(X_MIN + 0.6, criticalX - 1.0);
+  const fpLabelX = Math.min(X_MAX - 0.8, criticalX + 1.4);
+  const fnLabelX = Math.max(X_MIN + 0.8, criticalX - 1.4);
   const fpLabelY = isNarrow ? -40 : -28;
   const fnLabelY = isNarrow ? -18 : -28;
 
