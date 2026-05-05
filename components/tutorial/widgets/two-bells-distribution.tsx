@@ -47,6 +47,7 @@ export function TwoBellsDistribution({ pA, pB, maxBin }: Props) {
   const captionFs = isNarrow ? 14 : 10;
   const captionY = isNarrow ? 60 : 45;
   const svgHeight = isNarrow ? HEIGHT + 15 : HEIGHT;
+  const aLabelY = isNarrow ? -30 : -24;
   const xTicksBase = buildTickValues(maxBin, 10);
 
   const sdA = Math.sqrt(pA * (1 - pA) / CH2_N) * 100;
@@ -176,7 +177,7 @@ export function TwoBellsDistribution({ pA, pB, maxBin }: Props) {
           />
           <text
             x={xValueScale(baselinePct)}
-            y={-24}
+            y={aLabelY}
             textAnchor="middle"
             fontSize={labelFs}
             fontWeight="600"

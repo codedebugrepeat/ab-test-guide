@@ -96,6 +96,8 @@ export function DecisionThresholdWidget() {
   // Region label x positions: ±1 SD from the threshold, capped to chart bounds.
   const fpLabelX = Math.min(X_MAX - 0.6, criticalX + 1.0);
   const fnLabelX = Math.max(X_MIN + 0.6, criticalX - 1.0);
+  const fpLabelY = isNarrow ? -40 : -28;
+  const fnLabelY = isNarrow ? -18 : -28;
 
   const ariaLabel = `Two sampling distributions. Left bell is control (A), right bell is variant (B). A threshold line marks the decision boundary. The red region in A's right tail shows false positives. The gray region in B's left tail shows false negatives.`;
 
@@ -221,7 +223,7 @@ export function DecisionThresholdWidget() {
           {/* False positives label */}
           <text
             x={xScale(fpLabelX)}
-            y={-28}
+            y={fpLabelY}
             textAnchor="middle"
             fontSize={labelFs}
             fontWeight="700"
@@ -234,7 +236,7 @@ export function DecisionThresholdWidget() {
           {/* False negatives label */}
           <text
             x={xScale(fnLabelX)}
-            y={-28}
+            y={fnLabelY}
             textAnchor="middle"
             fontSize={labelFs}
             fontWeight="700"

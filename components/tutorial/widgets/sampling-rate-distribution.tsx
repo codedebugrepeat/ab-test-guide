@@ -40,6 +40,7 @@ export function SamplingRateDistribution({ buckets, baseline }: Props) {
   const captionFs = isNarrow ? 14 : 10;
   const captionY = isNarrow ? 60 : 45;
   const svgHeight = isNarrow ? HEIGHT + 15 : HEIGHT;
+  const avgLabelY = isNarrow ? -30 : -24;
   const cols = Array.from({ length: MAX_BIN + 1 }, (_, i) => i);
   const xTicksBase = buildTickValues(MAX_BIN, 10);
   const bucketCounts = cols.map((_, i) => Math.max(0, Math.floor(buckets[i] ?? 0)));
@@ -153,7 +154,7 @@ export function SamplingRateDistribution({ buckets, baseline }: Props) {
           />
           <text
             x={xValueScale(baselinePct)}
-            y={-24}
+            y={avgLabelY}
             textAnchor="middle"
             fontSize={labelFs}
             fontWeight="600"

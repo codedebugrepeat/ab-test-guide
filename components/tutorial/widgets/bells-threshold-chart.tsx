@@ -77,6 +77,7 @@ export function BellsThresholdChart({ pA, pB, n, confidence, showThreshold = tru
   const captionFs = isNarrow ? 14 : 10;
   const captionY = isNarrow ? 60 : 45;
   const svgHeight = isNarrow ? HEIGHT + 15 : HEIGHT;
+  const aLabelY = isNarrow ? -54 : -44;
   const readout = useMemo(() => computeBellsReadout({ pA, pB, n, confidence }), [pA, pB, n, confidence]);
   const { meanA, meanB, sdA, sdB, threshold } = readout;
 
@@ -138,7 +139,7 @@ export function BellsThresholdChart({ pA, pB, n, confidence, showThreshold = tru
 
           {/* Mean markers */}
           <line x1={xScale(meanA)} y1={-6} x2={xScale(meanA)} y2={PLOT_H} stroke={A_COLOR} strokeOpacity={0.85} strokeWidth={1.5} />
-          <text x={xScale(meanA)} y={-44} textAnchor="middle" fontSize={labelFs} fontWeight="600" fill={A_COLOR} fillOpacity={0.9}>
+          <text x={xScale(meanA)} y={aLabelY} textAnchor="middle" fontSize={labelFs} fontWeight="600" fill={A_COLOR} fillOpacity={0.9}>
             A: {meanA.toFixed(meanA < 10 ? 2 : 1)}%
           </text>
           <line x1={xScale(meanB)} y1={-6} x2={xScale(meanB)} y2={PLOT_H} stroke={B_COLOR} strokeOpacity={0.9} strokeDasharray="6 2" strokeWidth={1.5} />
