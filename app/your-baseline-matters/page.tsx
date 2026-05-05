@@ -179,6 +179,10 @@ export default function Section2Page() {
 
           Going forward, we will draw the bell for the B group as well.
 
+        </p>
+
+        <p>
+
           The illustration below shows the same data as before, but with a bell for both groups.
 
           The more they overlap, the harder it is to tell them apart. Is B really better than A? The more they pull apart, the easier it is to spot a difference.
