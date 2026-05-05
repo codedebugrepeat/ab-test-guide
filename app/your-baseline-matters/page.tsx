@@ -67,7 +67,7 @@ export default function Section2Page() {
         </p>
 
         <p>
-          In the case study, version A got {CASE_STUDY_A_SIGNUPS} signups from {CASE_STUDY_VISITORS} visitors, so the
+          In the case study, version <strong>A</strong>{" "}got {CASE_STUDY_A_SIGNUPS} signups from {CASE_STUDY_VISITORS} visitors, so the
           baseline is {aPercent}% — your best estimate of the page&apos;s true rate.
           That&apos;s on the high side. Many real signup flows might sit somewhere between
           1% and 5%, and the difference matters a lot.
@@ -76,7 +76,7 @@ export default function Section2Page() {
         <h2>Low baseline hides the lift</h2>
 
         <p>
-          Let&apos;s imagine that in our A/B test, version B lifts signups by {liftPercent}%.
+          Let&apos;s imagine that in our A/B test, version <strong>B</strong>{" "}lifts signups by {liftPercent}%.
 
           Whether we see that lift clearly depends on the baseline. At 5% baseline, a {liftPercent}% lift is a 0.1 percentage point increase, from 5% to 5.1%.
 
@@ -86,7 +86,7 @@ export default function Section2Page() {
         <p>The higher the baseline, the bigger the absolute difference for the same relative lift, and the easier it is to detect that difference with a given sample size.</p>
 
         <p>
-          Now it&apos;s your turn again. Move the slider to change the baseline (conversion rate of version A). Notice the blue dotted line - it is a 10% improvement over the baseline.
+          Now it&apos;s your turn again. Move the slider to change the baseline (conversion rate of version <strong>A</strong>). Notice the blue dotted line - it is a 10% improvement over the baseline.
         </p>
 
         <p>
@@ -100,7 +100,7 @@ export default function Section2Page() {
         </div>
 
         <p>
-          At a low baseline, the lift line hides in a small signal. If the blue line is the reading you got from your B group, it would be hard to tell if it&apos;s really an improvement or just a random variance within your data.
+          At a low baseline, the lift line hides in a small signal. If the blue line is the reading you got from your <strong>B</strong>{" "}group, it would be hard to tell if it&apos;s really an improvement or just a random variance within your data.
         </p>
         <p>
           At a high baseline, the lift line is further away from the average, and it would be easier to spot as a real improvement.
@@ -169,15 +169,15 @@ export default function Section2Page() {
 
         <h3>Two bell shapes</h3>
 
-        <p>Another change we will make is to also draw a bell shape for the B group.
+        <p>Another change we will make is to also draw a bell shape for the <strong>B</strong>{" "}group.
 
-          In the last interactive widget, you already saw the bell shape for the A group. For the B group, we only showed its <SideRemark term="average" />{" "} as a blue dotted line.
+          In the last interactive widget, you already saw the bell shape for the <strong>A</strong>{" "}group. For the <strong>B</strong>{" "}group, we only showed its <SideRemark term="average" />{" "} as a blue dotted line.
 
           Actually, in an A/B test, both groups have their own bell shape. If we take repeated samples from both groups, we can draw a bell for each of them.
 
           Most samples will sit somewhere around the true rate, with some higher and some lower.
 
-          Going forward, we will draw the bell for the B group as well.
+          Going forward, we will draw the bell for the <strong>B</strong>{" "}group as well.
 
         </p>
 
@@ -185,7 +185,7 @@ export default function Section2Page() {
 
           The illustration below shows the same data as before, but with a bell for both groups.
 
-          The more they overlap, the harder it is to tell them apart. Is B really better than A? The more they pull apart, the easier it is to spot a difference.
+          The more they overlap, the harder it is to tell them apart. Is <strong>B</strong>{" "}really better than <strong>A</strong>? The more they pull apart, the easier it is to spot a difference.
 
           The distance between the two means is the lift (or the &ldquo;expected minimum effect&rdquo;).
         </p>
