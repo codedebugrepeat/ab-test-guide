@@ -100,10 +100,10 @@ export default function Section4Page() {
         <p>
           A 95% confidence level is the standard default. You&apos;re saying:
           I&apos;ll accept being fooled about 1 time in 20. The threshold is
-          drawn so that only a 5% sliver of A&apos;s bell pokes past it. If A
+          drawn so that only 5% of A&apos;s distribution sits above it. If A
           and B were really identical and you ran this experiment over and over,
-          A alone would wander past the line roughly 5% of the time and look like
-          a winner that wasn&apos;t there.
+          about 5% of the time A&apos;s result would land above the threshold on
+          its own and look like a winner that wasn&apos;t there.
         </p>
 
         <p>
