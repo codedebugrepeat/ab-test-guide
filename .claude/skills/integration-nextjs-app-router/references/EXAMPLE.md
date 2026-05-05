@@ -35,7 +35,7 @@ pnpm install
 Create a `.env.local` file in the root directory:
 
 ```bash
-NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN=your_posthog_project_token
+NEXT_PUBLIC_POSTHOG_TOKEN=your_posthog_project_token
 NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
 ```
 
@@ -84,7 +84,7 @@ instrumentation-client.ts      # Client-side PostHog initialization
 ```typescript
 import posthog from "posthog-js"
 
-posthog.init(process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN!, {
+posthog.init(process.env.NEXT_PUBLIC_POSTHOG_TOKEN!, {
   api_host: "/ingest",
   ui_host: "https://us.posthog.com",
   defaults: '2026-01-30',
@@ -158,7 +158,7 @@ Check out the [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ```example
 # PostHog Configuration
 # Get your PostHog project token from: https://app.posthog.com/project/settings
-NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN=your_posthog_project_token_here
+NEXT_PUBLIC_POSTHOG_TOKEN=your_posthog_project_token_here
 # NEXT_PUBLIC_POSTHOG_HOST=https://eu.i.posthog.com
 NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
 ```
@@ -170,7 +170,7 @@ NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
 ```ts
 import posthog from "posthog-js"
 
-posthog.init(process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN!, {
+posthog.init(process.env.NEXT_PUBLIC_POSTHOG_TOKEN!, {
   api_host: "/ingest",
   ui_host: "https://us.posthog.com",
   // Include the defaults option as required by PostHog
@@ -687,7 +687,7 @@ let posthogClient: PostHog | null = null;
 export function getPostHogClient() {
   if (!posthogClient) {
     posthogClient = new PostHog(
-      process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN!,
+      process.env.NEXT_PUBLIC_POSTHOG_TOKEN!,
       { 
         host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
         flushAt: 1,

@@ -5,7 +5,7 @@ The wizard has completed a deep integration of PostHog analytics into the A/B te
 
 - **`instrumentation-client.ts`** (new file): Initializes PostHog client-side via the Next.js instrumentation hook. Uses a reverse proxy for better reliability and enables exception capture.
 - **`next.config.ts`**: Added reverse proxy rewrites routing `/ingest/*` → `eu.i.posthog.com` and `/ingest/static|array/*` → `eu-assets.i.posthog.com`, plus `skipTrailingSlashRedirect: true`.
-- **`.env.local`**: Created with `NEXT_PUBLIC_POSTHOG_TOKEN` and `NEXT_PUBLIC_POSTHOG_HOST` (EU instance).
+- **`.gitignore`**: Added `.env.local` to prevent secrets from being committed. Set `NEXT_PUBLIC_POSTHOG_TOKEN` and `NEXT_PUBLIC_POSTHOG_HOST` (EU instance) in your local `.env.local` to run analytics locally.
 - **`components/tutorial/section-footer.tsx`**: Converted to a client component; added `section_next_clicked` event on the next-chapter CTA link.
 - **`components/tutorial/tutorial-nav.tsx`**: Added `chapter_nav_clicked` event on all chapter navigation links, with `chapter_number`, `from_href`, and `nav_type` properties.
 - **`components/tutorial/widgets/marble-sampling-widget.tsx`**: Added `marble_sample_drawn` event on single and bulk draws, and `marble_samples_reset` on the reset button.
