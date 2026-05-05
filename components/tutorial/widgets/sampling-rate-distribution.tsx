@@ -4,6 +4,7 @@ import { AxisBottom, AxisLeft } from "@visx/axis";
 import { Group } from "@visx/group";
 import { scaleBand, scaleLinear } from "@visx/scale";
 import { CH2_AXIS_MAX, CH2_LIFT, CH2_N } from "../constants/chapter-2-constants";
+import { useIsNarrow } from "@/lib/use-is-narrow";
 
 type Props = {
   buckets: number[];
@@ -19,10 +20,9 @@ const DOT_R_NOMINAL = 4;
 const DOT_STEP_NOMINAL = 10;
 const MAX_BIN = Math.round(CH2_AXIS_MAX * 100);
 
-const axisLabelProps = {
+const axisLabelPropsBase = {
   fill: "currentColor",
   fillOpacity: 0.35,
-  fontSize: 10,
   fontWeight: 500,
 };
 
@@ -34,6 +34,12 @@ function buildTickValues(maxBin: number, interval: number) {
 }
 
 export function SamplingRateDistribution({ buckets, baseline }: Props) {
+  const isNarrow = useIsNarrow();
+  const labelFs = isNarrow ? 17 : 10;
+  const tickFs = isNarrow ? 15 : 11;
+  const captionFs = isNarrow ? 14 : 10;
+  const captionY = isNarrow ? 60 : 45;
+  const svgHeight = isNarrow ? HEIGHT + 15 : HEIGHT;
   const cols = Array.from({ length: MAX_BIN + 1 }, (_, i) => i);
   const xTicksBase = buildTickValues(MAX_BIN, 10);
   const bucketCounts = cols.map((_, i) => Math.max(0, Math.floor(buckets[i] ?? 0)));
@@ -78,7 +84,7 @@ export function SamplingRateDistribution({ buckets, baseline }: Props) {
   return (
     <div className="flex w-full max-w-[560px] flex-col items-center gap-2">
       <svg
-        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+        viewBox={`0 0 ${WIDTH} ${svgHeight}`}
         preserveAspectRatio="xMidYMid meet"
         role="img"
         aria-label={`Theoretical sampling distribution at ${baselinePct.toFixed(1)}% baseline (N=${CH2_N}), with a ${liftLabel} marker.`}
@@ -95,9 +101,10 @@ export function SamplingRateDistribution({ buckets, baseline }: Props) {
             tickLength={4}
             label="relative likelihood"
             labelOffset={24}
-            labelProps={{ ...axisLabelProps, textAnchor: "middle" }}
+            labelProps={{ ...axisLabelPropsBase, fontSize: captionFs, textAnchor: "middle" }}
             tickLabelProps={() => ({
-              ...axisLabelProps,
+              ...axisLabelPropsBase,
+              fontSize: tickFs,
               textAnchor: "end",
               dx: "-0.25em",
               dy: "0.32em",
@@ -113,7 +120,7 @@ export function SamplingRateDistribution({ buckets, baseline }: Props) {
             tickValues={xTicks}
             tickFormat={(v) => `${v}%`}
             tickLabelProps={(col) => ({
-              fontSize: 11,
+              fontSize: tickFs,
               fontWeight: col === baselineBin ? 600 : 500,
               fill: "currentColor",
               fillOpacity: col === baselineBin ? 0.7 : 0.4,
@@ -123,9 +130,9 @@ export function SamplingRateDistribution({ buckets, baseline }: Props) {
           />
           <text
             x={PLOT_W / 2}
-            y={PLOT_H + 45}
+            y={PLOT_H + captionY}
             textAnchor="middle"
-            fontSize="10"
+            fontSize={captionFs}
             fontWeight={500}
             fill="currentColor"
             fillOpacity={0.4}
@@ -148,7 +155,7 @@ export function SamplingRateDistribution({ buckets, baseline }: Props) {
             x={xValueScale(baselinePct)}
             y={-24}
             textAnchor="middle"
-            fontSize="10"
+            fontSize={labelFs}
             fontWeight="600"
             fill="currentColor"
             fillOpacity={0.55}
@@ -172,7 +179,7 @@ export function SamplingRateDistribution({ buckets, baseline }: Props) {
             x={xValueScale(liftedPct)}
             y={-12}
             textAnchor="middle"
-            fontSize="10"
+            fontSize={labelFs}
             fontWeight="600"
             fill="currentColor"
             fillOpacity={0.8}
@@ -194,7 +201,7 @@ export function SamplingRateDistribution({ buckets, baseline }: Props) {
         </Group>
       </svg>
 
-      <div className="text-[11px] text-foreground/45 tabular-nums">
+      <div className="text-[13px] text-foreground/45 tabular-nums sm:text-[11px]">
         Theoretical shape (not a random draw).
       </div>
     </div>

@@ -5,6 +5,7 @@ import { Group } from "@visx/group";
 import { scaleBand, scaleLinear } from "@visx/scale";
 import { N, P } from "../constants/sampling-constants";
 import { binomialMean } from "@/maths/sampling";
+import { useIsNarrow } from "@/lib/use-is-narrow";
 
 type Props = { counts: number[] };
 
@@ -17,14 +18,18 @@ const DOT_R_NOMINAL = 4;
 const DOT_STEP_NOMINAL = 10;
 const PLACEHOLDER_ROWS = 3;
 
-const axisLabelProps = {
+const axisLabelPropsBase = {
   fill: "currentColor",
   fillOpacity: 0.35,
-  fontSize: 10,
   fontWeight: 500,
 };
 
 export function DiscreteSamplingDistribution({ counts }: Props) {
+  const isNarrow = useIsNarrow();
+  const tickFs = isNarrow ? 15 : 11;
+  const captionFs = isNarrow ? 14 : 10;
+  const captionY = isNarrow ? 60 : 45;
+  const svgHeight = isNarrow ? HEIGHT + 15 : HEIGHT;
   const cols = Array.from({ length: N + 1 }, (_, i) => i);
   const buckets = cols.map(() => 0);
   for (const c of counts) if (c >= 0 && c <= N) buckets[c] += 1;
@@ -61,7 +66,7 @@ export function DiscreteSamplingDistribution({ counts }: Props) {
         true rate: {Math.round(P * 100)}% → {trueMean} per {N}
       </p>
       <svg
-        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+        viewBox={`0 0 ${WIDTH} ${svgHeight}`}
         preserveAspectRatio="xMidYMid meet"
         role="img"
         aria-label={`Discrete sampling distribution of ${counts.length} draws across green-marble counts 0 to ${N}.`}
@@ -78,9 +83,10 @@ export function DiscreteSamplingDistribution({ counts }: Props) {
             tickLength={4}
             label="times drawn"
             labelOffset={24}
-            labelProps={{ ...axisLabelProps, textAnchor: "middle" }}
+            labelProps={{ ...axisLabelPropsBase, fontSize: captionFs, textAnchor: "middle" }}
             tickLabelProps={() => ({
-              ...axisLabelProps,
+              ...axisLabelPropsBase,
+              fontSize: tickFs,
               textAnchor: "end",
               dx: "-0.25em",
               dy: "0.32em",
@@ -95,7 +101,7 @@ export function DiscreteSamplingDistribution({ counts }: Props) {
             hideTicks
             tickFormat={(v) => String(v)}
             tickLabelProps={(col) => ({
-              fontSize: 11,
+              fontSize: tickFs,
               fontWeight: col === trueMean ? 600 : 500,
               fill: "currentColor",
               fillOpacity: col === trueMean ? 0.7 : 0.4,
@@ -105,9 +111,9 @@ export function DiscreteSamplingDistribution({ counts }: Props) {
           />
           <text
             x={PLOT_W / 2}
-            y={PLOT_H + 45}
+            y={PLOT_H + captionY}
             textAnchor="middle"
-            fontSize="10"
+            fontSize={captionFs}
             fontWeight={500}
             fill="currentColor"
             fillOpacity={0.4}
@@ -163,7 +169,7 @@ export function DiscreteSamplingDistribution({ counts }: Props) {
         </Group>
       </svg>
 
-      <div className="text-[11px] text-foreground/45 tabular-nums">
+      <div className="text-[13px] text-foreground/45 tabular-nums sm:text-[11px]">
         {counts.length === 0
           ? "Draw a sample to begin."
           : `${counts.length} sample${counts.length !== 1 ? "s" : ""} drawn`}

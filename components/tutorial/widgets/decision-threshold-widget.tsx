@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useIsNarrow } from "@/lib/use-is-narrow";
 import { curveMonotoneX } from "@visx/curve";
 import { Group } from "@visx/group";
 import { scaleLinear } from "@visx/scale";
@@ -62,6 +63,8 @@ const xScale = scaleLinear<number>({ domain: [X_MIN, X_MAX], range: [0, PLOT_W] 
 const yScale = scaleLinear<number>({ domain: [0, 1.12], range: [PLOT_H, 0] });
 
 export function DecisionThresholdWidget() {
+  const isNarrow = useIsNarrow();
+  const labelFs = isNarrow ? 17 : 10;
   const [confidencePct, setConfidencePct] = useState(DEFAULT_CONFIDENCE_PCT);
   const [liveText, setLiveText] = useState("");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -207,7 +210,7 @@ export function DecisionThresholdWidget() {
             x={xScale(criticalX)}
             y={-57}
             textAnchor="middle"
-            fontSize="10"
+            fontSize={labelFs}
             fontWeight="600"
             fill="currentColor"
             fillOpacity={0.5}
@@ -220,7 +223,7 @@ export function DecisionThresholdWidget() {
             x={xScale(fpLabelX)}
             y={-28}
             textAnchor="middle"
-            fontSize="10"
+            fontSize={labelFs}
             fontWeight="700"
             fill={FALSE_POS_COLOR}
             fillOpacity={0.9}
@@ -233,7 +236,7 @@ export function DecisionThresholdWidget() {
             x={xScale(fnLabelX)}
             y={-28}
             textAnchor="middle"
-            fontSize="10"
+            fontSize={labelFs}
             fontWeight="700"
             fill={MISSED_COLOR}
             fillOpacity={0.9}

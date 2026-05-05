@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { useIsNarrow } from "@/lib/use-is-narrow";
 import { AxisBottom } from "@visx/axis";
 import { curveMonotoneX } from "@visx/curve";
 import { Group } from "@visx/group";
@@ -70,6 +71,12 @@ export function computeBellsReadout({ pA, pB, n, confidence }: Props): BellsThre
 }
 
 export function BellsThresholdChart({ pA, pB, n, confidence, showThreshold = true }: Props) {
+  const isNarrow = useIsNarrow();
+  const labelFs = isNarrow ? 17 : 10;
+  const tickFs = isNarrow ? 15 : 11;
+  const captionFs = isNarrow ? 14 : 10;
+  const captionY = isNarrow ? 60 : 45;
+  const svgHeight = isNarrow ? HEIGHT + 15 : HEIGHT;
   const readout = useMemo(() => computeBellsReadout({ pA, pB, n, confidence }), [pA, pB, n, confidence]);
   const { meanA, meanB, sdA, sdB, threshold } = readout;
 
@@ -106,7 +113,7 @@ export function BellsThresholdChart({ pA, pB, n, confidence, showThreshold = tru
   return (
     <div className="flex w-full max-w-[560px] flex-col items-center">
       <svg
-        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+        viewBox={`0 0 ${WIDTH} ${svgHeight}`}
         preserveAspectRatio="xMidYMid meet"
         role="img"
         aria-label={ariaLabel}
@@ -131,11 +138,11 @@ export function BellsThresholdChart({ pA, pB, n, confidence, showThreshold = tru
 
           {/* Mean markers */}
           <line x1={xScale(meanA)} y1={-6} x2={xScale(meanA)} y2={PLOT_H} stroke={A_COLOR} strokeOpacity={0.85} strokeWidth={1.5} />
-          <text x={xScale(meanA)} y={-44} textAnchor="middle" fontSize="10" fontWeight="600" fill={A_COLOR} fillOpacity={0.9}>
+          <text x={xScale(meanA)} y={-44} textAnchor="middle" fontSize={labelFs} fontWeight="600" fill={A_COLOR} fillOpacity={0.9}>
             A: {meanA.toFixed(meanA < 10 ? 2 : 1)}%
           </text>
           <line x1={xScale(meanB)} y1={-6} x2={xScale(meanB)} y2={PLOT_H} stroke={B_COLOR} strokeOpacity={0.9} strokeDasharray="6 2" strokeWidth={1.5} />
-          <text x={xScale(meanB)} y={-32} textAnchor="middle" fontSize="10" fontWeight="600" fill={B_COLOR} fillOpacity={0.95}>
+          <text x={xScale(meanB)} y={-32} textAnchor="middle" fontSize={labelFs} fontWeight="600" fill={B_COLOR} fillOpacity={0.95}>
             B: {meanB.toFixed(meanB < 10 ? 2 : 1)}%
           </text>
 
@@ -143,7 +150,7 @@ export function BellsThresholdChart({ pA, pB, n, confidence, showThreshold = tru
           {showThreshold && (
             <>
               <line x1={xScale(threshold)} y1={-66} x2={xScale(threshold)} y2={PLOT_H} stroke="currentColor" strokeOpacity={0.8} strokeWidth={2} />
-              <text x={xScale(threshold)} y={-71} textAnchor="middle" fontSize="10" fontWeight="600" fill="currentColor" fillOpacity={0.55}>
+              <text x={xScale(threshold)} y={-71} textAnchor="middle" fontSize={labelFs} fontWeight="600" fill="currentColor" fillOpacity={0.55}>
                 threshold ({(confidence * 100).toFixed(0)}%)
               </text>
             </>
@@ -158,7 +165,7 @@ export function BellsThresholdChart({ pA, pB, n, confidence, showThreshold = tru
             numTicks={6}
             tickFormat={(v) => `${Number(v).toFixed(Number(v) < 10 ? 1 : 0)}%`}
             tickLabelProps={() => ({
-              fontSize: 11,
+              fontSize: tickFs,
               fontWeight: 500,
               fill: "currentColor",
               fillOpacity: 0.4,
@@ -166,7 +173,7 @@ export function BellsThresholdChart({ pA, pB, n, confidence, showThreshold = tru
               dy: "0.9em",
             })}
           />
-          <text x={PLOT_W / 2} y={PLOT_H + 45} textAnchor="middle" fontSize="10" fontWeight={500} fill="currentColor" fillOpacity={0.4}>
+          <text x={PLOT_W / 2} y={PLOT_H + captionY} textAnchor="middle" fontSize={captionFs} fontWeight={500} fill="currentColor" fillOpacity={0.4}>
             Conversion rate per {n.toLocaleString()}-visitor sample
           </text>
         </Group>

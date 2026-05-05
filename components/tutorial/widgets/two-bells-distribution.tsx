@@ -7,6 +7,7 @@ import { scaleLinear } from "@visx/scale";
 import { AreaClosed, LinePath } from "@visx/shape";
 import { gaussianCurve, type GaussianPoint } from "@/maths/sampling";
 import { CH2_N } from "../constants/chapter-2-constants";
+import { useIsNarrow } from "@/lib/use-is-narrow";
 
 type Props = {
   pA: number;
@@ -24,10 +25,9 @@ const A_COLOR = "#16a34a";
 const B_COLOR = "#f59e0b";
 const FILL_OPACITY = 0.35;
 
-const axisLabelProps = {
+const axisLabelPropsBase = {
   fill: "currentColor",
   fillOpacity: 0.35,
-  fontSize: 10,
   fontWeight: 500,
 };
 
@@ -41,6 +41,12 @@ function buildTickValues(maxBin: number, interval: number) {
 type Datum = GaussianPoint;
 
 export function TwoBellsDistribution({ pA, pB, maxBin }: Props) {
+  const isNarrow = useIsNarrow();
+  const labelFs = isNarrow ? 17 : 10;
+  const tickFs = isNarrow ? 15 : 11;
+  const captionFs = isNarrow ? 14 : 10;
+  const captionY = isNarrow ? 60 : 45;
+  const svgHeight = isNarrow ? HEIGHT + 15 : HEIGHT;
   const xTicksBase = buildTickValues(maxBin, 10);
 
   const sdA = Math.sqrt(pA * (1 - pA) / CH2_N) * 100;
@@ -70,7 +76,7 @@ export function TwoBellsDistribution({ pA, pB, maxBin }: Props) {
   return (
     <div className="flex w-full max-w-[560px] flex-col items-center gap-2">
       <svg
-        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+        viewBox={`0 0 ${WIDTH} ${svgHeight}`}
         preserveAspectRatio="xMidYMid meet"
         role="img"
         aria-label={`Two sampling distributions on a shared axis. Control at ${baselinePct.toFixed(1)}% (solid marker), variant at ${liftedPct.toFixed(1)}% (dashed marker), N=${CH2_N}.`}
@@ -88,7 +94,7 @@ export function TwoBellsDistribution({ pA, pB, maxBin }: Props) {
             tickFormat={() => ""}
             label="likelihood"
             labelOffset={14}
-            labelProps={{ ...axisLabelProps, textAnchor: "middle" }}
+            labelProps={{ ...axisLabelPropsBase, fontSize: captionFs, textAnchor: "middle" }}
           />
 
           <AxisBottom
@@ -100,7 +106,7 @@ export function TwoBellsDistribution({ pA, pB, maxBin }: Props) {
             tickValues={xTicksBase}
             tickFormat={(v) => `${v}%`}
             tickLabelProps={() => ({
-              fontSize: 11,
+              fontSize: tickFs,
               fontWeight: 500,
               fill: "currentColor",
               fillOpacity: 0.4,
@@ -110,9 +116,9 @@ export function TwoBellsDistribution({ pA, pB, maxBin }: Props) {
           />
           <text
             x={PLOT_W / 2}
-            y={PLOT_H + 45}
+            y={PLOT_H + captionY}
             textAnchor="middle"
-            fontSize="10"
+            fontSize={captionFs}
             fontWeight={500}
             fill="currentColor"
             fillOpacity={0.4}
@@ -172,7 +178,7 @@ export function TwoBellsDistribution({ pA, pB, maxBin }: Props) {
             x={xValueScale(baselinePct)}
             y={-24}
             textAnchor="middle"
-            fontSize="10"
+            fontSize={labelFs}
             fontWeight="600"
             fill={A_COLOR}
             fillOpacity={0.9}
@@ -195,7 +201,7 @@ export function TwoBellsDistribution({ pA, pB, maxBin }: Props) {
             x={xValueScale(liftedPct)}
             y={-12}
             textAnchor="middle"
-            fontSize="10"
+            fontSize={labelFs}
             fontWeight="600"
             fill={B_COLOR}
             fillOpacity={0.95}
@@ -205,7 +211,7 @@ export function TwoBellsDistribution({ pA, pB, maxBin }: Props) {
         </Group>
       </svg>
 
-      <div className="text-[11px] text-foreground/45 tabular-nums">
+      <div className="text-[13px] text-foreground/45 tabular-nums sm:text-[11px]">
         Theoretical shapes. Gap between means: {gapPts} pts.
       </div>
     </div>
