@@ -13,6 +13,7 @@ export function SamplingDistributionBuilder() {
         onSample={(count) => setCounts((prev) => [...prev, count])}
         onReset={() => setCounts([])}
         hideRows
+        sampleEventName="marble_distribution_sample_drawn"
       />
       <DiscreteSamplingDistribution counts={counts} />
     </div>

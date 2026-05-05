@@ -47,6 +47,7 @@ export function LiftEffectWidget({ showThreshold = true }: { showThreshold?: boo
   const [liftIndex, setLiftIndex] = useState(CH4_LIFT_DEFAULT_INDEX);
   const [liveText, setLiveText] = useState("");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const interactedRef = useRef(false);
 
   const lift = CH4_LIFT_STEPS[liftIndex];
   const pA = CH4_BASELINE;
@@ -55,6 +56,7 @@ export function LiftEffectWidget({ showThreshold = true }: { showThreshold?: boo
   const readout = computeBellsReadout({ pA, pB, n: CH4_N, confidence: CH4_CONFIDENCE });
 
   useEffect(() => {
+    if (!interactedRef.current) return;
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       if (showThreshold) {
@@ -90,7 +92,7 @@ export function LiftEffectWidget({ showThreshold = true }: { showThreshold?: boo
           max={CH4_LIFT_STEPS.length - 1}
           step={1}
           value={liftIndex}
-          onChange={(e) => setLiftIndex(Number(e.target.value))}
+          onChange={(e) => { interactedRef.current = true; setLiftIndex(Number(e.target.value)); }}
           aria-valuetext={`${(lift * 100).toFixed(0)}%`}
           className="flex-1"
         />

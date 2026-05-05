@@ -242,11 +242,13 @@ export function CalculatorWidget() {
                 role="radio"
                 aria-checked={confidence === opt}
                 onClick={() => {
-                  posthog.capture("calculator_confidence_changed", {
-                    confidence_pct: opt * 100,
-                    previous_confidence_pct: confidence * 100,
-                  });
-                  setConfidence(opt);
+                  if (opt !== confidence) {
+                    posthog.capture("calculator_confidence_changed", {
+                      confidence_pct: opt * 100,
+                      previous_confidence_pct: confidence * 100,
+                    });
+                    setConfidence(opt);
+                  }
                 }}
                 className={`rounded-lg border px-3 py-1.5 text-sm font-semibold transition-colors sm:px-4 ${confidence === opt
                   ? "border-foreground/40 bg-foreground/10 text-foreground"
@@ -313,11 +315,13 @@ export function CalculatorWidget() {
                 role="radio"
                 aria-checked={period === p}
                 onClick={() => {
-                  posthog.capture("calculator_period_changed", {
-                    period: p,
-                    previous_period: period,
-                  });
-                  setPeriod(p);
+                  if (p !== period) {
+                    posthog.capture("calculator_period_changed", {
+                      period: p,
+                      previous_period: period,
+                    });
+                    setPeriod(p);
+                  }
                 }}
                 className={`rounded-md border px-3 py-1 text-xs font-semibold transition-colors ${period === p
                   ? "border-foreground/40 bg-foreground/10 text-foreground"

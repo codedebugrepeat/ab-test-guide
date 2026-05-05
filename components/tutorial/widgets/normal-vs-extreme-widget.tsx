@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import posthog from "posthog-js";
 import { AxisBottom } from "@visx/axis";
 import { curveMonotoneX } from "@visx/curve";
 import { Group } from "@visx/group";
@@ -78,7 +79,12 @@ export function NormalVsExtremeWidget() {
 
   function enter(r: Region) { setHovered(r); }
   function leave() { setHovered(null); }
-  function click(r: Region) { setLocked((prev) => (prev === r ? null : r)); }
+  const SECTION_LABEL: Record<Region, string> = { inner: "1sd", outer: "2sd", tail: "tails" };
+
+  function click(r: Region) {
+    setLocked((prev) => (prev === r ? null : r));
+    posthog.capture("normal_distribution_section_clicked", { section: SECTION_LABEL[r] });
+  }
 
   function regionProps(r: Region) {
     return {

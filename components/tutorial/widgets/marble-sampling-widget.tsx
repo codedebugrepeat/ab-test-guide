@@ -55,12 +55,14 @@ type MarbleSamplingWidgetProps = {
   onSample?: (count: number) => void;
   onReset?: () => void;
   hideRows?: boolean;
+  sampleEventName?: string;
 };
 
 export function MarbleSamplingWidget({
   onSample,
   onReset,
   hideRows = false,
+  sampleEventName = "marble_sample_drawn",
 }: MarbleSamplingWidgetProps = {}) {
   const [samples, setSamples] = useState<Sample[]>([]);
   const drawCount = useRef(0);
@@ -104,7 +106,7 @@ export function MarbleSamplingWidget({
   function handleDrawN(n: number) {
     if (isAnimatingRef.current) return;
     isAnimatingRef.current = true;
-    posthog.capture("marble_sample_drawn", { count: n, total_draws_before: drawCount.current });
+    posthog.capture(sampleEventName, { count: n, total_draws_before: drawCount.current });
 
     const newSamples = Array.from({ length: n }, () => {
       const marbles = drawSample(N, P);
@@ -228,7 +230,7 @@ export function MarbleSamplingWidget({
     const marbles = drawSample(N, P);
     const count = countSample(marbles);
     const nextId = ++drawCount.current;
-    posthog.capture("marble_sample_drawn", { count: 1, total_draws_before: nextId - 1 });
+    posthog.capture(sampleEventName, { count: 1, total_draws_before: nextId - 1 });
 
     setSamples((prev) => {
       const next = [{ id: nextId, marbles }, ...prev].slice(0, MAX_ROWS + 1);

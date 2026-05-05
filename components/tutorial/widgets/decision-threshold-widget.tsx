@@ -69,6 +69,7 @@ export function DecisionThresholdWidget() {
   const [confidencePct, setConfidencePct] = useState(DEFAULT_CONFIDENCE_PCT);
   const [liveText, setLiveText] = useState("");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const interactedRef = useRef(false);
 
   const confidence = confidencePct / 100;
   const z = normalInv(confidence);
@@ -83,6 +84,7 @@ export function DecisionThresholdWidget() {
   const dataBMissed = useMemo(() => splitCurve(dataB, criticalX, "left"), [dataB, criticalX]);
 
   useEffect(() => {
+    if (!interactedRef.current) return;
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       setLiveText(
@@ -123,7 +125,7 @@ export function DecisionThresholdWidget() {
           max={99}
           step={1}
           value={confidencePct}
-          onChange={(e) => setConfidencePct(Number(e.target.value))}
+          onChange={(e) => { interactedRef.current = true; setConfidencePct(Number(e.target.value)); }}
           aria-valuetext={`${confidencePct}%`}
           className="flex-1"
         />

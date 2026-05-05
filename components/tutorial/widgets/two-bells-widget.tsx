@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import posthog from "posthog-js";
 import { TwoBellsDistribution } from "./two-bells-distribution";
 import {
   CH2_AXIS_MAX,
@@ -24,6 +25,7 @@ export function TwoBellsWidget() {
   const { baseline, baselineIndex, handleBaselineChange } = useBaselineSlider(CASE_STUDY_A_RATE);
   const [liveText, setLiveText] = useState("");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const interactedRef = useRef(false);
 
   const liftedBaseline = Math.min(CH2_AXIS_MAX, baseline * (1 + CH2_LIFT));
 
@@ -35,6 +37,9 @@ export function TwoBellsWidget() {
       setLiveText(
         `Baseline ${(next * 100).toFixed(1)}%. Control mean ${(next * 100).toFixed(1)}%, variant mean ${(lifted * 100).toFixed(1)}%. Overlap ${overlapFor(next)}.`,
       );
+      if (interactedRef.current) {
+        posthog.capture("baseline_slider_twobells_changed", { baseline_pct: parseFloat((next * 100).toFixed(1)) });
+      }
     }, CH2_DEBOUNCE_MS);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -69,7 +74,7 @@ export function TwoBellsWidget() {
           max={CH2_BASELINE_STEPS.length - 1}
           step={1}
           value={baselineIndex}
-          onChange={handleBaselineChange}
+          onChange={(e) => { interactedRef.current = true; handleBaselineChange(e); }}
           aria-valuetext={`${(baseline * 100).toFixed(0)}%`}
           className="flex-1"
         />
