@@ -74,11 +74,9 @@ export default function Section4Page() {
         </div>
 
         <p>
-          Without getting into the specifics of statistics, the formal logic works like this: the <SideRemark term="threshold" /> is the
-          cutoff point. If <strong>B</strong>&apos;s result lands past it, it is so extreme that you wouldn&apos;t expect to see it if <strong>A</strong>{" "}and <strong>B</strong>{" "}were actually identical—our {" "}
-          <SideRemark term="default assumption" />.
-
-          We then say that <strong>B</strong>{" "}is a winner and that we have a significant result.
+          Without getting into the full statistics, the intuition is: the <SideRemark term="threshold" />{" "} is a cutoff on <strong>A</strong>&apos;s usual noise.
+          If <strong>B</strong>&apos;s result lands past it, that kind of result would be rare if <strong>A</strong>{" "}and <strong>B</strong>{" "}were really identical (our <SideRemark term="default assumption" />).
+          That&apos;s why you&apos;d call it a win at this confidence level.
         </p>
 
         <p>
@@ -95,13 +93,13 @@ export default function Section4Page() {
           Increasing your confidence will also need a bigger sample size as you&apos;ll see in the calculator. You are basically calling a winner only when the gap is larger, so you miss some of the smaller but still real lifts.</p>
 
 
-        <h2>If <strong>A</strong>{" "}and <strong>B</strong>{" "}were the same, I accept being wrong 5% of the time</h2>
+        <h2>If <strong>A</strong>{" "}and <strong>B</strong>{" "} were the same, I accept being wrong 5% of the time</h2>
 
         <p>
           A 95% confidence level is the standard default. You&apos;re saying:
           I&apos;ll accept being fooled about 1 time in 20. The threshold is
-          drawn so that only 5% of <strong>A</strong>&apos;s distribution sits above it. If <strong>A</strong>
-          and <strong>B</strong>{" "}were really identical and you ran this experiment over and over,
+          drawn so that only 5% of <strong>A</strong>&apos;s distribution sits above it. If <strong>A</strong>{" "}
+          and <strong>B</strong>{" "} were really identical and you ran this experiment over and over,
           about 5% of the time <strong>A</strong>&apos;s result would land above the threshold on
           its own and look like a winner that wasn&apos;t there.
         </p>
