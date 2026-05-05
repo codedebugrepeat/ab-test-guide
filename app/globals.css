@@ -138,12 +138,35 @@ input[type="range"]::-moz-range-thumb {
 }
 
 @keyframes smooth-curve-draw {
-  0%   { stroke-dashoffset: 1; opacity: 1; }
-  60%  { stroke-dashoffset: 0; opacity: 1; }
-  85%  { stroke-dashoffset: 0; opacity: 1; }
-  86%  { stroke-dashoffset: 1; opacity: 0; }
-  99%  { stroke-dashoffset: 1; opacity: 0; }
-  100% { stroke-dashoffset: 1; opacity: 1; }
+  0% {
+    stroke-dashoffset: 1;
+    opacity: 1;
+  }
+
+  60% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+
+  85% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+
+  86% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+
+  99% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 1;
+    opacity: 1;
+  }
 }
 
 .animate-smooth-curve {

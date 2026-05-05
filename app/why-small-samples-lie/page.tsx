@@ -50,6 +50,30 @@ export default function Section1Page() {
           By the end, you&apos;ll master the three levers that matter — baseline, expected lift, and confidence — so you can find exactly how many visitors you need to run a test you can trust.
         </p>
 
+        <p>
+          Where you see this icon: {" "}
+          <span className="inline-flex items-center gap-1 text-accent">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2" />
+              <path d="M8.5 2h7" />
+              <path d="M7 16h10" />
+            </svg>
+            interactive
+          </span>
+          , there&apos;s a widget you can play with.
+        </p>
+
         <p><strong>Let&apos;s start with the problem: small samples lie to you.</strong></p>
 
         <hr />
