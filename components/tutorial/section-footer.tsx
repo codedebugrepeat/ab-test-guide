@@ -30,7 +30,7 @@ export function SectionFooter({
       <p className="mt-5 text-foreground/50">{teaserText}</p>
       <Link
         href={nextHref}
-        className="mt-5 inline-block rounded-lg bg-foreground px-5 py-2.5 text-sm font-medium text-background"
+        className="mt-5 inline-block rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-background"
       >
         {nextLabel}
       </Link>

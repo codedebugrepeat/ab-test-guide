@@ -15,6 +15,7 @@ import {
 } from "@/components/tutorial/constants/case-study-constants";
 import { CH2_LIFT } from "@/components/tutorial/constants/chapter-2-constants";
 import { SmoothCurveIllustration } from "@/components/tutorial/illustrations/smooth-curve-illustration";
+import { IllustrationFrame } from "@/components/tutorial/illustrations/illustration-frame";
 
 const chapter = getChapter(2);
 
@@ -164,7 +165,9 @@ export default function Section2Page() {
         </p>
 
         <div className="not-prose my-6">
-          <SmoothCurveIllustration />
+          <IllustrationFrame>
+            <SmoothCurveIllustration />
+          </IllustrationFrame>
         </div>
 
         <h3>Two bell shapes</h3>

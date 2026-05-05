@@ -283,7 +283,7 @@ export function MarbleSamplingWidget({
             onClick={handleDraw}
             disabled={isAnimating}
             aria-label={`${buttonLabel}. ${totalDraws} sample${totalDraws !== 1 ? "s" : ""} drawn so far.`}
-            className="w-full whitespace-nowrap rounded-[10px] bg-foreground py-3 text-sm font-semibold text-background transition-opacity hover:opacity-80 active:opacity-65 disabled:opacity-40"
+            className="w-full whitespace-nowrap rounded-[10px] bg-accent py-3 text-sm font-semibold text-background transition-opacity hover:opacity-80 active:opacity-65 disabled:opacity-40"
           >
             {buttonLabel}
           </button>

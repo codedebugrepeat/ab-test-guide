@@ -7,6 +7,7 @@ import { Quote } from "@/components/tutorial/quote";
 import { SectionFooter } from "@/components/tutorial/section-footer";
 import { WidgetFrame } from "@/components/tutorial/widgets/widget-frame";
 import { JarIllustration } from "@/components/tutorial/illustrations/jar-illustration";
+import { IllustrationFrame } from "@/components/tutorial/illustrations/illustration-frame";
 import { SideRemark } from "@/components/tutorial/side-remark";
 import { getChapter, totalChapters } from "@/components/tutorial/chapters";
 import { siteConfig } from "@/lib/site-config";
@@ -97,7 +98,9 @@ export default function Section1Page() {
         </p>
 
         <div className="not-prose mt-6 flex justify-center">
-          <JarIllustration />
+          <IllustrationFrame>
+            <JarIllustration />
+          </IllustrationFrame>
         </div>
 
         <hr />
