@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import posthog from "posthog-js";
 import { chapters } from "./chapters";
 import { AuthorCalloutSidebar } from "./author-callout";
 
@@ -13,6 +14,16 @@ export function TutorialNav({
   onNavigate?: () => void;
 }) {
   const pathname = usePathname();
+
+  function handleChapterClick(chapterNumber: number, chapterHref: string) {
+    posthog.capture("chapter_nav_clicked", {
+      chapter_number: chapterNumber,
+      chapter_href: chapterHref,
+      from_href: pathname,
+      nav_type: compactNav ? "compact" : "sidebar",
+    });
+    onNavigate?.();
+  }
 
   if (compactNav) {
     return (
@@ -26,7 +37,7 @@ export function TutorialNav({
                   <Link
                     href={ch.href}
                     aria-current={active ? "page" : undefined}
-                    onClick={onNavigate}
+                    onClick={() => handleChapterClick(ch.number, ch.href)}
                     className={`flex w-full items-center gap-2 rounded-full px-3 py-1.5 text-[13px] transition-colors sm:text-sm ${active
                       ? "bg-foreground/[0.08] font-medium text-foreground"
                       : "text-foreground/40 hover:bg-foreground/[0.04] hover:text-foreground/70"
@@ -61,7 +72,7 @@ export function TutorialNav({
                 <Link
                   href={ch.href}
                   aria-current={active ? "page" : undefined}
-                  onClick={onNavigate}
+                  onClick={() => handleChapterClick(ch.number, ch.href)}
                   className={`flex gap-3 rounded-md px-3 py-2 text-sm transition-colors ${active
                     ? "bg-foreground/[0.07] font-medium text-foreground"
                     : "text-foreground/50 hover:bg-foreground/[0.04] hover:text-foreground/70"

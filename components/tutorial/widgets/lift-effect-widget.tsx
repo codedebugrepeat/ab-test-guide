@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import posthog from "posthog-js";
 import { BellsThresholdChart, computeBellsReadout } from "./bells-threshold-chart";
 import {
   CH4_BASELINE,
@@ -63,6 +64,10 @@ export function LiftEffectWidget({ showThreshold = true }: { showThreshold?: boo
       } else {
         setLiveText(`Lift ${(lift * 100).toFixed(0)}%. Variant mean ${readout.meanB.toFixed(2)}%.`);
       }
+      posthog.capture("lift_slider_adjusted", {
+        lift_pct: parseInt((lift * 100).toFixed(0), 10),
+        show_threshold: showThreshold,
+      });
     }, CH4_DEBOUNCE_MS);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);

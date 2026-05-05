@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import posthog from "posthog-js";
 import { useIsNarrow } from "@/lib/use-is-narrow";
 import { curveMonotoneX } from "@visx/curve";
 import { Group } from "@visx/group";
@@ -87,11 +88,16 @@ export function DecisionThresholdWidget() {
       setLiveText(
         `Confidence ${(confidence * 100).toFixed(0)}%. False positives: ${(falsePositiveShare * 100).toFixed(1)}% of control. Missed wins: ${(missedWinShare * 100).toFixed(0)}% of variant.`,
       );
+      posthog.capture("decision_threshold_adjusted", {
+        confidence_pct: confidencePct,
+        false_positive_pct: parseFloat((falsePositiveShare * 100).toFixed(1)),
+        missed_win_pct: parseInt((missedWinShare * 100).toFixed(0), 10),
+      });
     }, CH2_DEBOUNCE_MS);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [confidence, falsePositiveShare, missedWinShare]);
+  }, [confidence, falsePositiveShare, missedWinShare, confidencePct]);
 
   // Region label x positions: ±1 SD from the threshold, capped to chart bounds.
   const fpLabelX = Math.min(X_MAX - 0.8, criticalX + 1.4);

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useRef } from "react";
+import posthog from "posthog-js";
 import { binomialSD, buildTheoreticalBuckets } from "@/maths/sampling";
 import { SamplingRateDistribution } from "./sampling-rate-distribution";
 import {
@@ -27,6 +28,7 @@ export function BaselineDistributionWidget() {
       setLiveText(
         `Baseline changed to ${(next * 100).toFixed(1)}%. Lift marker at ${(lifted * 100).toFixed(1)}%. Showing the theoretical distribution for ${CH2_N} visitors.`,
       );
+      posthog.capture("baseline_slider_changed", { baseline_pct: parseFloat((next * 100).toFixed(1)) });
     }, CH2_DEBOUNCE_MS);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);

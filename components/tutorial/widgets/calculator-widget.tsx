@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import posthog from "posthog-js";
 import { BellsThresholdChart } from "./bells-threshold-chart";
 import { CH4_DEBOUNCE_MS } from "../constants/chapter-4-constants";
 import { requiredSampleSize, estimateDuration, formatDuration, type Period } from "@/maths/calculator";
@@ -156,6 +157,7 @@ export function CalculatorWidget() {
   const isDefault = baseline === DEFAULTS.baseline && lift === DEFAULTS.lift && confidence === DEFAULTS.confidence;
 
   function reset() {
+    posthog.capture("calculator_reset", { baseline, lift, confidence_pct: confidence * 100 });
     setBaseline(DEFAULTS.baseline);
     setLift(DEFAULTS.lift);
     setConfidence(DEFAULTS.confidence);
@@ -239,7 +241,13 @@ export function CalculatorWidget() {
                 type="button"
                 role="radio"
                 aria-checked={confidence === opt}
-                onClick={() => setConfidence(opt)}
+                onClick={() => {
+                  posthog.capture("calculator_confidence_changed", {
+                    confidence_pct: opt * 100,
+                    previous_confidence_pct: confidence * 100,
+                  });
+                  setConfidence(opt);
+                }}
                 className={`rounded-lg border px-3 py-1.5 text-sm font-semibold transition-colors sm:px-4 ${confidence === opt
                   ? "border-foreground/40 bg-foreground/10 text-foreground"
                   : "border-foreground/15 text-foreground/50 hover:border-foreground/25 hover:text-foreground/75"
@@ -304,7 +312,13 @@ export function CalculatorWidget() {
                 type="button"
                 role="radio"
                 aria-checked={period === p}
-                onClick={() => setPeriod(p)}
+                onClick={() => {
+                  posthog.capture("calculator_period_changed", {
+                    period: p,
+                    previous_period: period,
+                  });
+                  setPeriod(p);
+                }}
                 className={`rounded-md border px-3 py-1 text-xs font-semibold transition-colors ${period === p
                   ? "border-foreground/40 bg-foreground/10 text-foreground"
                   : "border-foreground/15 text-foreground/50 hover:border-foreground/25 hover:text-foreground/75"
