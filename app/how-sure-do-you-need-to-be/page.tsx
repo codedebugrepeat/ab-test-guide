@@ -53,19 +53,19 @@ export default function Section4Page() {
         </div>
 
         <p>
-          The key takeaway: samples deep in the tails are rare. If A and B were identical and you ran the experiment a hundred times, you would get a spread that is centered around A&apos;s mean.
+          The key takeaway: samples deep in the tails are rare. If <strong>A</strong>{" "}and <strong>B</strong>{" "}were identical and you ran the experiment a hundred times, you would get a spread that is centered around <strong>A</strong>&apos;s mean.
           Only a handful would land out in the right tail. That rarity is what lets you call a winner.
         </p>
 
         <h2>Drawing the line: how far out is too rare to happen by chance?</h2>
 
         <p>
-          Calling a winner means picking a point out past A&apos;s usual range
-          and saying: anything that lands further out, and I&apos;ll believe B
-          really is better. Anything short of it, and I&apos;ll stay with A.
+          Calling a winner means picking a point out past <strong>A</strong>&apos;s usual range
+          and saying: anything that lands further out, and I&apos;ll believe <strong>B</strong>{" "}
+          really is better. Anything short of it, and I&apos;ll stay with <strong>A</strong>.
         </p>
 
-        <p> Move the slider in the widget. At which point is a conversion rate you are seeing from B so rare on the green curve (A, your control) that you would say: that can&apos;t be a coincidence?</p>
+        <p> Move the slider in the widget. At which point is a conversion rate you are seeing from <strong>B</strong> so rare on the green curve (<strong>A</strong>, your control) that you would say: that can&apos;t be a coincidence?</p>
 
         <div className="not-prose mt-6">
           <WidgetFrame>
@@ -74,55 +74,53 @@ export default function Section4Page() {
         </div>
 
         <p>
-          Without getting into the specifics of statistics, the formal logic works like this: the <SideRemark term="threshold" /> is the
-          cutoff point. If B&apos;s result lands past it, it is so extreme that you wouldn&apos;t expect to see it if A and B were actually identical—our {" "}
-          <SideRemark term="default assumption" />.
-
-          We then say that B is a winner and that we have a significant result.
+          Without getting into the full statistics, the intuition is: the <SideRemark term="threshold" />{" "} is a cutoff on <strong>A</strong>&apos;s usual noise.
+          If <strong>B</strong>&apos;s result lands past it, that kind of result would be rare if <strong>A</strong>{" "}and <strong>B</strong>{" "}were really identical (our <SideRemark term="default assumption" />).
+          That&apos;s why you&apos;d call it a win at this confidence level.
         </p>
 
         <p>
           The threshold has a cost either way you move it.
         </p>
 
-        <p>If you are less confident (you pull it towards A), you catch more real wins,
+        <p>If you are less confident (you pull it towards <strong>A</strong>), you catch more real wins,
           because your sensitivity is higher. You are basically calling a winner earlier, even if the result is not so rare. The catch: more noise slips through.
-          You are more likely to call a winner when there isn&apos;t one, simply because you are seeing a rare result that A produced by chance due to sampling error.
+          You are more likely to call a winner when there isn&apos;t one, simply because you are seeing a rare result that <strong>A</strong>{" "}produced by chance due to sampling error.
           We call that a {" "}<SideRemark term="false positive" />{" "}.</p>
 
-        <p>On the other hand, if you feel more confident and move the threshold toward B, you filter out more noise — you are less likely to call a winner when there isn&apos;t one.
-          But the catch is that you also miss more real wins, because the threshold is now further from A and A&apos;s natural variability is less likely to wander past it.
+        <p>On the other hand, if you feel more confident and move the threshold toward <strong>B</strong>, you filter out more noise — you are less likely to call a winner when there isn&apos;t one.
+          But the catch is that you also miss more real wins, because the threshold is now further from <strong>A</strong>{" "}and its natural variability is less likely to wander past it.
           Increasing your confidence will also need a bigger sample size as you&apos;ll see in the calculator. You are basically calling a winner only when the gap is larger, so you miss some of the smaller but still real lifts.</p>
 
 
-        <h2>If A and B were the same, I accept being wrong 5% of the time</h2>
+        <h2>If <strong>A</strong>{" "}and <strong>B</strong>{" "} were the same, I accept being wrong 5% of the time</h2>
 
         <p>
           A 95% confidence level is the standard default. You&apos;re saying:
           I&apos;ll accept being fooled about 1 time in 20. The threshold is
-          drawn so that only a 5% sliver of A&apos;s bell pokes past it. If A
-          and B were really identical and you ran this experiment over and over,
-          A alone would wander past the line roughly 5% of the time and look like
-          a winner that wasn&apos;t there.
+          drawn so that only 5% of <strong>A</strong>&apos;s distribution sits above it. If <strong>A</strong>{" "}
+          and <strong>B</strong>{" "} were really identical and you ran this experiment over and over,
+          about 5% of the time <strong>A</strong>&apos;s result would land above the threshold on
+          its own and look like a winner that wasn&apos;t there.
         </p>
 
         <p>
-          The threshold sits in A&apos;s right tail only. We&apos;re hunting a
-          lift: B is either enough better than A to clear the line, or it
-          isn&apos;t. A suspiciously low result from B doesn&apos;t count as a
+          The threshold sits in <strong>A</strong>&apos;s right tail only. We&apos;re hunting a
+          lift: <strong>B</strong>{" "}is either enough better than <strong>A</strong>{" "}to clear the line, or it
+          isn&apos;t. A suspiciously low result from <strong>B</strong>{" "}doesn&apos;t count as a
           win, so the left tail stays out of the decision.
         </p>
 
         <Quote>
-          A winner is a gap big enough that you would only see very rarely if A and B were really identical.
+          A winner is a gap big enough that you would only see very rarely if <strong>A</strong>{" "}and <strong>B</strong>{" "}were really identical.
         </Quote>
 
         <h2>What confidence actually costs</h2>
 
         <p>
-          Stricter confidence pushes the threshold further from A&apos;s mean.
+          Stricter confidence pushes the threshold further from <strong>A</strong>&apos;s mean.
           Fewer false wins sneak through — which is the point. The catch: the
-          threshold now sits further from B&apos;s mean too, so a real lift has
+          threshold now sits further from <strong>B</strong>&apos;s mean too, so a real lift has
           to be that much larger before it clears.
         </p>
         <p>

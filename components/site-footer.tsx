@@ -15,7 +15,6 @@ export function SiteFooter() {
           >
             {siteConfig.author.name}
           </a>
-          . MIT licensed.
         </p>
         <a
           href={siteConfig.githubUrl}

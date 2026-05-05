@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useIsNarrow } from "@/lib/use-is-narrow";
 import { curveMonotoneX } from "@visx/curve";
 import { Group } from "@visx/group";
 import { scaleLinear } from "@visx/scale";
 import { AreaClosed, LinePath } from "@visx/shape";
-import { normalCdf, Z_BY_CONFIDENCE, type ConfidenceLevel, type GaussianPoint } from "@/maths/sampling";
+import { normalCdf, normalInv, type GaussianPoint } from "@/maths/sampling";
 import { CH2_DEBOUNCE_MS } from "../constants/chapter-2-constants";
 
-const CONFIDENCE_STEPS: ConfidenceLevel[] = [0.8, 0.9, 0.95, 0.99];
-const DEFAULT_CONFIDENCE_INDEX = 2;
+const DEFAULT_CONFIDENCE_PCT = 95;
 
 // Abstract normalized units — no real percentages, pure shape.
 // 2.5 SD separation gives clear visual gap while keeping meaningful missed-win region.
@@ -63,12 +63,14 @@ const xScale = scaleLinear<number>({ domain: [X_MIN, X_MAX], range: [0, PLOT_W] 
 const yScale = scaleLinear<number>({ domain: [0, 1.12], range: [PLOT_H, 0] });
 
 export function DecisionThresholdWidget() {
-  const [confidenceIndex, setConfidenceIndex] = useState(DEFAULT_CONFIDENCE_INDEX);
+  const isNarrow = useIsNarrow();
+  const labelFs = isNarrow ? 17 : 10;
+  const [confidencePct, setConfidencePct] = useState(DEFAULT_CONFIDENCE_PCT);
   const [liveText, setLiveText] = useState("");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const confidence = CONFIDENCE_STEPS[confidenceIndex];
-  const z = Z_BY_CONFIDENCE[confidence];
+  const confidence = confidencePct / 100;
+  const z = normalInv(confidence);
   const criticalX = A_MEAN + z * SD;
 
   const falsePositiveShare = 1 - confidence;
@@ -92,8 +94,10 @@ export function DecisionThresholdWidget() {
   }, [confidence, falsePositiveShare, missedWinShare]);
 
   // Region label x positions: ±1 SD from the threshold, capped to chart bounds.
-  const fpLabelX = Math.min(X_MAX - 0.6, criticalX + 1.0);
-  const fnLabelX = Math.max(X_MIN + 0.6, criticalX - 1.0);
+  const fpLabelX = Math.min(X_MAX - 0.8, criticalX + 1.4);
+  const fnLabelX = Math.max(X_MIN + 0.8, criticalX - 1.4);
+  const fpLabelY = isNarrow ? -40 : -28;
+  const fnLabelY = isNarrow ? -18 : -28;
 
   const ariaLabel = `Two sampling distributions. Left bell is control (A), right bell is variant (B). A threshold line marks the decision boundary. The red region in A's right tail shows false positives. The gray region in B's left tail shows false negatives.`;
 
@@ -109,12 +113,12 @@ export function DecisionThresholdWidget() {
         <input
           id="confidence-slider"
           type="range"
-          min={0}
-          max={CONFIDENCE_STEPS.length - 1}
+          min={80}
+          max={99}
           step={1}
-          value={confidenceIndex}
-          onChange={(e) => setConfidenceIndex(Number(e.target.value))}
-          aria-valuetext={`${(confidence * 100).toFixed(0)}%`}
+          value={confidencePct}
+          onChange={(e) => setConfidencePct(Number(e.target.value))}
+          aria-valuetext={`${confidencePct}%`}
           className="flex-1"
         />
         <span className="w-12 shrink-0 text-right text-sm font-semibold tabular-nums text-foreground/80">
@@ -208,7 +212,7 @@ export function DecisionThresholdWidget() {
             x={xScale(criticalX)}
             y={-57}
             textAnchor="middle"
-            fontSize="10"
+            fontSize={labelFs}
             fontWeight="600"
             fill="currentColor"
             fillOpacity={0.5}
@@ -219,9 +223,9 @@ export function DecisionThresholdWidget() {
           {/* False positives label */}
           <text
             x={xScale(fpLabelX)}
-            y={-28}
+            y={fpLabelY}
             textAnchor="middle"
-            fontSize="10"
+            fontSize={labelFs}
             fontWeight="700"
             fill={FALSE_POS_COLOR}
             fillOpacity={0.9}
@@ -232,9 +236,9 @@ export function DecisionThresholdWidget() {
           {/* False negatives label */}
           <text
             x={xScale(fnLabelX)}
-            y={-28}
+            y={fnLabelY}
             textAnchor="middle"
-            fontSize="10"
+            fontSize={labelFs}
             fontWeight="700"
             fill={MISSED_COLOR}
             fillOpacity={0.9}

@@ -5,7 +5,7 @@ export const siteConfig = {
   url: "https://ab-test-guide.example.com",
   githubUrl: "https://github.com/codedebugrepeat/ab-test-guide",
   navLinks: [
-    { href: "/", label: "Tutorial" },
+    { href: "/", label: "Guide" },
     { href: "/calculator", label: "Calculator" },
   ],
   author: {

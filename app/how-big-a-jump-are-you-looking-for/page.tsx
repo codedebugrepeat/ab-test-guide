@@ -65,7 +65,7 @@ export default function Section3Page() {
         </p>
         <p>
           However, at a 50% lift the bells barely touch. The difference is large enough
-          that even a modest sample shows B sitting clearly to the right of A.
+          that even a modest sample shows <strong>B</strong>{" "}sitting clearly to the right of <strong>A</strong>.
           The lift is doing the work before the statistics have to.
         </p>
 
@@ -78,7 +78,7 @@ export default function Section3Page() {
         <p>
           You now have two inputs: baseline (your current conversion rate) and lift / minimum detectable effect (the smallest improvement worth chasing).
           Both shape how far apart the two bells sit. So the further apart the bells, the easier it is to tell them apart with a given sample size.
-          The question becomes, how &ldquo;extreme&rdquo; does your variation (Group B) have to be before you will declare it a winner?
+          The question becomes, how &ldquo;extreme&rdquo; does your variation (Group <strong>B</strong>) have to be before you will declare it a winner?
         </p>
 
         <p>We&apos;ll look at this in the final chapter. It&apos;s called confidence level, and is the last piece of the puzzle.</p>
@@ -87,7 +87,7 @@ export default function Section3Page() {
       <SectionFooter
         summary={[
           "Minimum detectable effect is the smallest lift you want to be able to detect. It's a business call, not a stat.",
-          "Small lifts push B's bell close to A's — the difference hides in the overlap. Large lifts pull the bells apart.",
+          <>Small lifts push <strong>B</strong>&apos;s bell close to <strong>A</strong>&apos;s — the difference hides in the overlap. Large lifts pull the bells apart.</>,
           "You choose the lift before the test runs. The data can't tell you what's worth finding.",
         ]}
         teaserText="Next: the bells are set. Now draw the line that separates a real win from a lucky draw."

@@ -56,7 +56,7 @@ export default function Section1Page() {
         <h2>Case study</h2>
 
         <p>
-          Let&apos;s imagine you have a website with a sign-up button and you want to get more sign-ups. So you&apos;re testing a copy change on your sign-up button and are running an A/B test. Version A is your original copy (&ldquo;Start your free trial&rdquo;), you showed this one to 100 visitors. Version B is the new version (&ldquo;Get started for free&rdquo;), which you showed to another 100 visitors.
+          Let&apos;s imagine you have a website with a sign-up button and you want to get more sign-ups. So you&apos;re testing a copy change on your sign-up button and are running an A/B test. Version <strong>A</strong>{" "}is your original copy (&ldquo;Start your free trial&rdquo;), you showed this one to 100 visitors. Version <strong>B</strong>{" "}is the new version (&ldquo;Get started for free&rdquo;), which you showed to another 100 visitors.
         </p>
 
         <p>A couple days later, here is what you see in your dashboard:</p>
@@ -68,7 +68,7 @@ export default function Section1Page() {
         <h2>B seems to be better — but is it really?</h2>
 
         <p>
-          Obviously, group B seems to be better. After all, it has more sign-ups. So should you make the change and ship it?
+          Obviously, group <strong>B</strong>{" "}seems to be better. After all, it has more sign-ups. So should you make the change and ship it?
         </p>
 
         <p>
@@ -173,7 +173,7 @@ export default function Section1Page() {
 
       <SectionFooter
         summary={[
-          `Small samples produce noisy results. If you see ${CASE_STUDY_A_SIGNUPS} vs. ${CASE_STUDY_B_SIGNUPS} out of 100 signups, you can't be certain if B is really better — or if you just got lucky with your sample.`,
+          <>Small samples produce noisy results. If you see {CASE_STUDY_A_SIGNUPS} vs. {CASE_STUDY_B_SIGNUPS} out of 100 signups, you can&apos;t be certain if <strong>B</strong>{" "}is really better — or if you just got lucky with your sample.</>,
           "Draw more samples (or larger samples) and you'll get closer to the true rate in the jar. In A/B testing, that means you can be more confident that your results reflect reality, not just random chance.",
         ]}
         teaserText="Now we know that small samples lie. So we want bigger samples. But how big? It depends on three things. Ready to find out what they are? →"

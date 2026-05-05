@@ -23,16 +23,6 @@ export function SiteHeader() {
                 </Link>
               </li>
             ))}
-            <li>
-              <a
-                href={siteConfig.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-foreground/70 transition-colors hover:text-foreground"
-              >
-                GitHub
-              </a>
-            </li>
           </ul>
         </nav>
       </div>

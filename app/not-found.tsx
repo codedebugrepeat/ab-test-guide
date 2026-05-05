@@ -8,7 +8,7 @@ export default function NotFound() {
       <p className="mt-4 text-foreground/70">
         That page does not exist.{" "}
         <Link href="/" className="underline hover:text-foreground">
-          Back to the tutorial
+          Back to the guide
         </Link>
         .
       </p>

@@ -33,7 +33,7 @@ export default function CalculatorPage() {
           </li>
           <li>
             <Link href="/how-big-a-jump-are-you-looking-for" className="hover:text-foreground">
-              Lift (minimum detectable effect)
+              Minimum detectable effect
             </Link>
           </li>
           <li>
@@ -45,7 +45,7 @@ export default function CalculatorPage() {
         <p>
           This is a <strong>pre-experiment</strong> calculator. It helps you
           plan how many visitors you need before you launch, so your results
-          have a fair shot at being statistically significant.
+          have a fair shot at clearing your chosen threshold.
         </p>
       </div>
 
@@ -57,8 +57,8 @@ export default function CalculatorPage() {
         <p>
           Set your baseline conversion, the smallest effect worth detecting, and
           your confidence level. The visitors-per-variant number tells you how
-          many people each side of your test needs before the math can reliably
-          tell A from B.
+          many people each side of your test needs before you have a good chance
+          to tell A from B.
         </p>
         <p>
           Halve the lift and the required visitors roughly quadruple. Push

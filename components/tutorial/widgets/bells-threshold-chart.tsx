@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { useIsNarrow } from "@/lib/use-is-narrow";
 import { AxisBottom } from "@visx/axis";
 import { curveMonotoneX } from "@visx/curve";
 import { Group } from "@visx/group";
@@ -18,15 +19,12 @@ type Props = {
 
 const WIDTH = 560;
 const HEIGHT = 320;
-const MARGIN = { top: 80, right: 24, bottom: 50, left: 24 };
-const PLOT_W = WIDTH - MARGIN.left - MARGIN.right;
-const PLOT_H = HEIGHT - MARGIN.top - MARGIN.bottom;
+const BASE_MARGIN = { top: 80, right: 24, bottom: 50, left: 24 };
 
 const A_COLOR = "#16a34a";
 const B_COLOR = "#f59e0b";
 const FALSE_POS_COLOR = "#dc2626";
 const MISSED_COLOR = "#6b7280";
-const POWER_COLOR = "#2563eb";
 const FILL_OPACITY = 0.22;
 const SHADE_OPACITY = 0.5;
 
@@ -70,6 +68,19 @@ export function computeBellsReadout({ pA, pB, n, confidence }: Props): BellsThre
 }
 
 export function BellsThresholdChart({ pA, pB, n, confidence, showThreshold = true }: Props) {
+  const isNarrow = useIsNarrow();
+  const labelFs = isNarrow ? 17 : 10;
+  const tickFs = isNarrow ? 15 : 11;
+  const captionFs = isNarrow ? 14 : 10;
+  const captionY = isNarrow ? 60 : 45;
+  const svgHeight = isNarrow ? HEIGHT + 15 : HEIGHT;
+  const aLabelY = isNarrow ? -54 : -44;
+  const margin = {
+    ...BASE_MARGIN,
+    top: isNarrow ? 100 : BASE_MARGIN.top,
+  };
+  const plotW = WIDTH - margin.left - margin.right;
+  const plotH = HEIGHT - margin.top - margin.bottom;
   const readout = useMemo(() => computeBellsReadout({ pA, pB, n, confidence }), [pA, pB, n, confidence]);
   const { meanA, meanB, sdA, sdB, threshold } = readout;
 
@@ -91,28 +102,24 @@ export function BellsThresholdChart({ pA, pB, n, confidence, showThreshold = tru
     () => (showThreshold ? splitCurve(dataB, threshold, "left") : []),
     [dataB, threshold, showThreshold]
   );
-  const dataBPower = useMemo(
-    () => (showThreshold ? splitCurve(dataB, threshold, "right") : []),
-    [dataB, threshold, showThreshold]
-  );
 
-  const xScale = scaleLinear<number>({ domain: [xMin, xMax], range: [0, PLOT_W] });
-  const yScale = scaleLinear<number>({ domain: [0, 1.12], range: [PLOT_H, 0] });
+  const xScale = scaleLinear<number>({ domain: [xMin, xMax], range: [0, plotW] });
+  const yScale = scaleLinear<number>({ domain: [0, 1.12], range: [plotH, 0] });
 
   const ariaLabel = showThreshold
-    ? `Two sampling distributions in conversion-rate units. Control mean ${meanA.toFixed(2)}%, variant mean ${meanB.toFixed(2)}%, n=${n} per variant. Decision threshold at ${threshold.toFixed(2)}% from ${(confidence * 100).toFixed(0)}% one-sided confidence. Red region is A's right tail past the threshold (false positives); gray region is B's left tail short of the threshold (false negatives); blue region is B's right tail past the threshold (power).`
+    ? `Two sampling distributions in conversion-rate units. Control mean ${meanA.toFixed(2)}%, variant mean ${meanB.toFixed(2)}%, n=${n} per variant. Decision threshold at ${threshold.toFixed(2)}% from ${(confidence * 100).toFixed(0)}% one-sided confidence. Red region is A's right tail past the threshold (false positives); gray region is B's left tail short of the threshold (false negatives).`
     : `Two sampling distributions in conversion-rate units. Control mean ${meanA.toFixed(2)}%, variant mean ${meanB.toFixed(2)}%, n=${n} per variant.`;
 
   return (
     <div className="flex w-full max-w-[560px] flex-col items-center">
       <svg
-        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+        viewBox={`0 0 ${WIDTH} ${svgHeight}`}
         preserveAspectRatio="xMidYMid meet"
         role="img"
         aria-label={ariaLabel}
         className="block h-auto w-full"
       >
-        <Group left={MARGIN.left} top={MARGIN.top}>
+        <Group left={margin.left} top={margin.top}>
           <AreaClosed data={dataA} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={A_COLOR} fillOpacity={FILL_OPACITY} />
           <LinePath data={dataA} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} curve={curveMonotoneX} stroke={A_COLOR} strokeWidth={1.5} />
 
@@ -122,35 +129,32 @@ export function BellsThresholdChart({ pA, pB, n, confidence, showThreshold = tru
           {showThreshold && dataBMissed.length > 1 && (
             <AreaClosed data={dataBMissed} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={MISSED_COLOR} fillOpacity={SHADE_OPACITY} />
           )}
-          {showThreshold && dataBPower.length > 1 && (
-            <AreaClosed data={dataBPower} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={POWER_COLOR} fillOpacity={SHADE_OPACITY} />
-          )}
           {showThreshold && dataAFalse.length > 1 && (
             <AreaClosed data={dataAFalse} x={(d) => xScale(d.x) ?? 0} y={(d) => yScale(d.y) ?? 0} yScale={yScale} curve={curveMonotoneX} fill={FALSE_POS_COLOR} fillOpacity={SHADE_OPACITY} />
           )}
 
           {/* Mean markers */}
-          <line x1={xScale(meanA)} y1={-6} x2={xScale(meanA)} y2={PLOT_H} stroke={A_COLOR} strokeOpacity={0.85} strokeWidth={1.5} />
-          <text x={xScale(meanA)} y={-44} textAnchor="middle" fontSize="10" fontWeight="600" fill={A_COLOR} fillOpacity={0.9}>
+          <line x1={xScale(meanA)} y1={-6} x2={xScale(meanA)} y2={plotH} stroke={A_COLOR} strokeOpacity={0.85} strokeWidth={1.5} />
+          <text x={xScale(meanA)} y={aLabelY} textAnchor="middle" fontSize={labelFs} fontWeight="600" fill={A_COLOR} fillOpacity={0.9}>
             A: {meanA.toFixed(meanA < 10 ? 2 : 1)}%
           </text>
-          <line x1={xScale(meanB)} y1={-6} x2={xScale(meanB)} y2={PLOT_H} stroke={B_COLOR} strokeOpacity={0.9} strokeDasharray="6 2" strokeWidth={1.5} />
-          <text x={xScale(meanB)} y={-32} textAnchor="middle" fontSize="10" fontWeight="600" fill={B_COLOR} fillOpacity={0.95}>
+          <line x1={xScale(meanB)} y1={-6} x2={xScale(meanB)} y2={plotH} stroke={B_COLOR} strokeOpacity={0.9} strokeDasharray="6 2" strokeWidth={1.5} />
+          <text x={xScale(meanB)} y={-32} textAnchor="middle" fontSize={labelFs} fontWeight="600" fill={B_COLOR} fillOpacity={0.95}>
             B: {meanB.toFixed(meanB < 10 ? 2 : 1)}%
           </text>
 
           {/* Threshold line */}
           {showThreshold && (
             <>
-              <line x1={xScale(threshold)} y1={-66} x2={xScale(threshold)} y2={PLOT_H} stroke="currentColor" strokeOpacity={0.8} strokeWidth={2} />
-              <text x={xScale(threshold)} y={-71} textAnchor="middle" fontSize="10" fontWeight="600" fill="currentColor" fillOpacity={0.55}>
+              <line x1={xScale(threshold)} y1={-66} x2={xScale(threshold)} y2={plotH} stroke="currentColor" strokeOpacity={0.8} strokeWidth={2} />
+              <text x={xScale(threshold)} y={-71} textAnchor="middle" fontSize={labelFs} fontWeight="600" fill="currentColor" fillOpacity={0.55}>
                 threshold ({(confidence * 100).toFixed(0)}%)
               </text>
             </>
           )}
 
           <AxisBottom
-            top={PLOT_H}
+            top={plotH}
             scale={xScale}
             stroke="currentColor"
             axisLineClassName="[stroke-opacity:0.14]"
@@ -158,7 +162,7 @@ export function BellsThresholdChart({ pA, pB, n, confidence, showThreshold = tru
             numTicks={6}
             tickFormat={(v) => `${Number(v).toFixed(Number(v) < 10 ? 1 : 0)}%`}
             tickLabelProps={() => ({
-              fontSize: 11,
+              fontSize: tickFs,
               fontWeight: 500,
               fill: "currentColor",
               fillOpacity: 0.4,
@@ -166,7 +170,7 @@ export function BellsThresholdChart({ pA, pB, n, confidence, showThreshold = tru
               dy: "0.9em",
             })}
           />
-          <text x={PLOT_W / 2} y={PLOT_H + 45} textAnchor="middle" fontSize="10" fontWeight={500} fill="currentColor" fillOpacity={0.4}>
+          <text x={plotW / 2} y={plotH + captionY} textAnchor="middle" fontSize={captionFs} fontWeight={500} fill="currentColor" fillOpacity={0.4}>
             Conversion rate per {n.toLocaleString()}-visitor sample
           </text>
         </Group>
@@ -189,13 +193,8 @@ export function BellsThresholdChart({ pA, pB, n, confidence, showThreshold = tru
             />
             <span><strong className="text-foreground/85">False negative</strong> — you declare A your winner, even if B is better</span>
           </li>
-          <li className="flex items-center gap-2">
-            <span
-              aria-hidden
-              className="inline-block h-2.5 w-2.5 rounded-sm"
-              style={{ backgroundColor: POWER_COLOR, opacity: SHADE_OPACITY }}
-            />
-            <span><strong className="text-foreground/85">Power</strong> — B beats A and you spot it</span>
+          <li className="text-foreground/55">
+            Curve widths are kept constant to visualize the bells drifting apart, not scaled to calculated sample size.
           </li>
         </ul>
       )}

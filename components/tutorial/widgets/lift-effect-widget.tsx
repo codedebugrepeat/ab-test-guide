@@ -100,7 +100,7 @@ export function LiftEffectWidget({ showThreshold = true }: { showThreshold?: boo
         {insightFor(liftIndex, readout.falseNegativeShare, showThreshold)}
       </p>
 
-      <p className="text-[11px] text-foreground/45 tabular-nums">
+      <p className="text-[13px] text-foreground/45 tabular-nums sm:text-[11px]">
         Baseline {(CH4_BASELINE * 100).toFixed(0)}%, N={CH4_N.toLocaleString()} per variant
         {showThreshold && <>, confidence {(CH4_CONFIDENCE * 100).toFixed(0)}%</>}.
       </p>
