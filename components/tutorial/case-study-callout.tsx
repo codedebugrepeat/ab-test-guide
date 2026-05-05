@@ -19,7 +19,7 @@ export function CaseStudyCallout() {
           <dt className="text-xs font-semibold uppercase tracking-widest text-foreground/40">
             Group A
           </dt>
-          <dd className="mt-1 text-4xl font-bold tabular-nums">
+          <dd className="mt-1 text-3xl font-bold tabular-nums">
             {CASE_STUDY_A_SIGNUPS}
           </dd>
         </div>
@@ -27,7 +27,7 @@ export function CaseStudyCallout() {
           <dt className="text-xs font-semibold uppercase tracking-widest text-foreground/40">
             Group B
           </dt>
-          <dd className="mt-1 text-4xl font-bold tabular-nums">
+          <dd className="mt-1 text-3xl font-bold tabular-nums">
             {CASE_STUDY_B_SIGNUPS}
           </dd>
         </div>
