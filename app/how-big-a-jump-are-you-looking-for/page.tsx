@@ -1,3 +1,4 @@
+import React from "react";
 import type { Metadata } from "next";
 import { TutorialLayout } from "@/components/tutorial/tutorial-layout";
 import { Quote } from "@/components/tutorial/quote";
@@ -87,7 +88,7 @@ export default function Section3Page() {
       <SectionFooter
         summary={[
           "Minimum detectable effect is the smallest lift you want to be able to detect. It's a business call, not a stat.",
-          <>Small lifts push <strong>B</strong>&apos;s bell close to <strong>A</strong>&apos;s — the difference hides in the overlap. Large lifts pull the bells apart.</>,
+          <React.Fragment key="1">Small lifts push <strong>B</strong>&apos;s bell close to <strong>A</strong>&apos;s — the difference hides in the overlap. Large lifts pull the bells apart.</React.Fragment>,
           "You choose the lift before the test runs. The data can't tell you what's worth finding.",
         ]}
         teaserText="Next: the bells are set. Now draw the line that separates a real win from a lucky draw."
