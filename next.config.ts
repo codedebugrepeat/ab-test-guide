@@ -1,13 +1,13 @@
 import type { NextConfig } from "next";
 
-const posthogHost =
-  process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://eu.posthog.com";
-const region = posthogHost.split("://")[1]?.split(".")[0] ?? "eu";
-const posthogIngestHost = posthogHost.replace(
-  ".posthog.com",
-  ".i.posthog.com"
+const posthogUrl = new URL(
+  process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://eu.posthog.com"
 );
-const posthogAssetsHost = `https://${region}-assets.i.posthog.com`;
+const region = posthogUrl.hostname.split(".")[0] ?? "eu";
+const posthogIngestHost = posthogUrl.hostname.endsWith(".i.posthog.com")
+  ? posthogUrl.origin
+  : `${posthogUrl.protocol}//${region}.i.posthog.com`;
+const posthogAssetsHost = `${posthogUrl.protocol}//${region}-assets.i.posthog.com`;
 
 const nextConfig: NextConfig = {
   images: {
@@ -30,7 +30,6 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  skipTrailingSlashRedirect: true,
 };
 
 export default nextConfig;
