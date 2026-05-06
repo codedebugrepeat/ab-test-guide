@@ -27,7 +27,6 @@ Each chapter introduces one concept and pairs it with one or multiple interactiv
 - visx (axis, group, scale) for SVG chart primitives
 - PostHog for product analytics
 - Statically generated pages for SEO, client-side hydration for interactive widgets
-- No server or database needed
 
 ## Docs
 
