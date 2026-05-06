@@ -1,13 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import dynamic from "next/dynamic";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-
-const CookieBanner = dynamic(
-  () => import("@/components/cookie-banner").then((m) => m.CookieBanner),
-  { ssr: false }
-);
+import { CookieBannerLoader } from "@/components/cookie-banner-loader";
 import { siteConfig } from "@/lib/site-config";
 import "./globals.css";
 
@@ -61,7 +56,7 @@ export default function RootLayout({
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
-        <CookieBanner />
+        <CookieBannerLoader />
       </body>
     </html>
   );
