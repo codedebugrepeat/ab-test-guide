@@ -1,10 +1,11 @@
+import Link from "next/link";
 import { siteConfig } from "@/lib/site-config";
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
   return (
     <footer className="border-t border-black/10 dark:border-white/10">
-      <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-6 text-xs text-foreground/60">
+      <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-6 py-6 text-xs text-foreground/60">
         <p>
           &copy; {year} {siteConfig.name} by{" "}
           <a
@@ -16,14 +17,22 @@ export function SiteFooter() {
             {siteConfig.author.name}
           </a>
         </p>
-        <a
-          href={siteConfig.githubUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="transition-colors hover:text-foreground"
-        >
-          GitHub
-        </a>
+        <div className="flex items-center gap-4">
+          <Link
+            href="/privacy"
+            className="transition-colors hover:text-foreground"
+          >
+            Privacy
+          </Link>
+          <a
+            href={siteConfig.githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-foreground"
+          >
+            GitHub
+          </a>
+        </div>
       </div>
     </footer>
   );
