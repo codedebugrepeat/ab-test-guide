@@ -37,14 +37,14 @@ export default function PrivacyPage() {
             PostHog
           </a>{" "}
           to understand how the guide is used so we can improve it. PostHog
-          records anonymous usage events such as pages viewed, clicks, and
-          approximate location derived from your IP address.
+          records usage events such as pages viewed and clicks. It may also
+          store your IP address to derive an approximate location.
         </p>
         <p>
-          If you accept cookies on the consent banner, PostHog sets cookies that
-          let us recognise return visits and link them into a single session. If
-          you decline, PostHog runs in cookieless mode and no identifiers are
-          stored on your device.
+          If you accept cookies on the consent banner, PostHog sets a
+          pseudonymous identifier that lets us recognise return visits and link
+          them into a single session. If you decline, PostHog runs in cookieless
+          mode and no identifiers are stored on your device.
         </p>
         <p>
           You can change your choice at any time by clearing this site&apos;s
