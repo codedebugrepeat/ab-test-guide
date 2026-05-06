@@ -56,6 +56,7 @@ type MarbleSamplingWidgetProps = {
   onReset?: () => void;
   hideRows?: boolean;
   sampleEventName?: string;
+  resetEventName?: string;
 };
 
 export function MarbleSamplingWidget({
@@ -63,6 +64,7 @@ export function MarbleSamplingWidget({
   onReset,
   hideRows = false,
   sampleEventName = "marble_sample_drawn",
+  resetEventName = "marble_samples_reset",
 }: MarbleSamplingWidgetProps = {}) {
   const [samples, setSamples] = useState<Sample[]>([]);
   const drawCount = useRef(0);
@@ -92,7 +94,7 @@ export function MarbleSamplingWidget({
     isAnimatingRef.current = false;
     setIsAnimating(false);
     setBatchPending(false);
-    posthog.capture("marble_samples_reset", { total_draws: drawCount.current });
+    posthog.capture(resetEventName, { total_draws: drawCount.current });
     drawCount.current = 0;
     setSamples([]);
     setTotalDraws(0);
