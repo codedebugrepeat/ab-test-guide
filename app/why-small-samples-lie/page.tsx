@@ -1,3 +1,4 @@
+import React from "react";
 import type { Metadata } from "next";
 import { TutorialLayout } from "@/components/tutorial/tutorial-layout";
 import { CaseStudyCallout } from "@/components/tutorial/case-study-callout";
@@ -200,7 +201,7 @@ export default function Section1Page() {
 
       <SectionFooter
         summary={[
-          <>Small samples produce noisy results. If you see {CASE_STUDY_A_SIGNUPS} vs. {CASE_STUDY_B_SIGNUPS} out of 100 signups, you can&apos;t be certain if <strong>B</strong>{" "}is really better — or if you just got lucky with your sample.</>,
+          <React.Fragment key="0">Small samples produce noisy results. If you see {CASE_STUDY_A_SIGNUPS} vs. {CASE_STUDY_B_SIGNUPS} out of 100 signups, you can&apos;t be certain if <strong>B</strong>{" "}is really better — or if you just got lucky with your sample.</React.Fragment>,
           "Draw more samples (or larger samples) and you'll get closer to the true rate in the jar. In A/B testing, that means you can be more confident that your results reflect reality, not just random chance.",
         ]}
         teaserText="Now we know that small samples lie. So we want bigger samples. But how big? It depends on three things. Ready to find out what they are? →"
