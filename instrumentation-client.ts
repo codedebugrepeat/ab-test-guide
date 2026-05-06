@@ -6,4 +6,7 @@ posthog.init(process.env.NEXT_PUBLIC_POSTHOG_TOKEN!, {
   defaults: "2026-01-30",
   capture_exceptions: true,
   debug: process.env.NODE_ENV === "development",
+  loaded: (ph) => {
+    ph.register({ env: process.env.NODE_ENV });
+  },
 });
