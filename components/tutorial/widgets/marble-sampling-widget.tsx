@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import posthog from "posthog-js";
 import { drawSample, countSample, binomialMean } from "@/maths/sampling";
 import { MarbleRow } from "./marble-row";
 import { N, P } from "../constants/sampling-constants";
@@ -54,12 +55,16 @@ type MarbleSamplingWidgetProps = {
   onSample?: (count: number) => void;
   onReset?: () => void;
   hideRows?: boolean;
+  sampleEventName?: string;
+  resetEventName?: string;
 };
 
 export function MarbleSamplingWidget({
   onSample,
   onReset,
   hideRows = false,
+  sampleEventName = "marble_sample_drawn",
+  resetEventName = "marble_samples_reset",
 }: MarbleSamplingWidgetProps = {}) {
   const [samples, setSamples] = useState<Sample[]>([]);
   const drawCount = useRef(0);
@@ -89,6 +94,7 @@ export function MarbleSamplingWidget({
     isAnimatingRef.current = false;
     setIsAnimating(false);
     setBatchPending(false);
+    posthog.capture(resetEventName, { total_draws: drawCount.current });
     drawCount.current = 0;
     setSamples([]);
     setTotalDraws(0);
@@ -102,6 +108,7 @@ export function MarbleSamplingWidget({
   function handleDrawN(n: number) {
     if (isAnimatingRef.current) return;
     isAnimatingRef.current = true;
+    posthog.capture(sampleEventName, { count: n, total_draws_before: drawCount.current });
 
     const newSamples = Array.from({ length: n }, () => {
       const marbles = drawSample(N, P);
@@ -225,6 +232,7 @@ export function MarbleSamplingWidget({
     const marbles = drawSample(N, P);
     const count = countSample(marbles);
     const nextId = ++drawCount.current;
+    posthog.capture(sampleEventName, { count: 1, total_draws_before: nextId - 1 });
 
     setSamples((prev) => {
       const next = [{ id: nextId, marbles }, ...prev].slice(0, MAX_ROWS + 1);

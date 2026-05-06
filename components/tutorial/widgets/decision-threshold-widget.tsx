@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import posthog from "posthog-js";
 import { useIsNarrow } from "@/lib/use-is-narrow";
 import { curveMonotoneX } from "@visx/curve";
 import { Group } from "@visx/group";
@@ -68,6 +69,7 @@ export function DecisionThresholdWidget() {
   const [confidencePct, setConfidencePct] = useState(DEFAULT_CONFIDENCE_PCT);
   const [liveText, setLiveText] = useState("");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const interactedRef = useRef(false);
 
   const confidence = confidencePct / 100;
   const z = normalInv(confidence);
@@ -82,16 +84,22 @@ export function DecisionThresholdWidget() {
   const dataBMissed = useMemo(() => splitCurve(dataB, criticalX, "left"), [dataB, criticalX]);
 
   useEffect(() => {
+    if (!interactedRef.current) return;
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       setLiveText(
         `Confidence ${(confidence * 100).toFixed(0)}%. False positives: ${(falsePositiveShare * 100).toFixed(1)}% of control. Missed wins: ${(missedWinShare * 100).toFixed(0)}% of variant.`,
       );
+      posthog.capture("decision_threshold_adjusted", {
+        confidence_pct: confidencePct,
+        false_positive_pct: parseFloat((falsePositiveShare * 100).toFixed(1)),
+        missed_win_pct: parseInt((missedWinShare * 100).toFixed(0), 10),
+      });
     }, CH2_DEBOUNCE_MS);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [confidence, falsePositiveShare, missedWinShare]);
+  }, [confidence, falsePositiveShare, missedWinShare, confidencePct]);
 
   // Region label x positions: ±1 SD from the threshold, capped to chart bounds.
   const fpLabelX = Math.min(X_MAX - 0.8, criticalX + 1.4);
@@ -117,7 +125,7 @@ export function DecisionThresholdWidget() {
           max={99}
           step={1}
           value={confidencePct}
-          onChange={(e) => setConfidencePct(Number(e.target.value))}
+          onChange={(e) => { interactedRef.current = true; setConfidencePct(Number(e.target.value)); }}
           aria-valuetext={`${confidencePct}%`}
           className="flex-1"
         />

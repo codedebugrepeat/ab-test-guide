@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useRef } from "react";
+import posthog from "posthog-js";
 import { binomialSD, buildTheoreticalBuckets } from "@/maths/sampling";
 import { SamplingRateDistribution } from "./sampling-rate-distribution";
 import {
@@ -18,8 +19,10 @@ export function BaselineDistributionWidget() {
   const { baseline, baselineIndex, handleBaselineChange } = useBaselineSlider(CH2_BASELINE_DEFAULT);
   const [liveText, setLiveText] = useState("");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const interactedRef = useRef(false);
 
   useEffect(() => {
+    if (!interactedRef.current) return;
     if (debounceRef.current) clearTimeout(debounceRef.current);
     const next = baseline;
     debounceRef.current = setTimeout(() => {
@@ -27,6 +30,7 @@ export function BaselineDistributionWidget() {
       setLiveText(
         `Baseline changed to ${(next * 100).toFixed(1)}%. Lift marker at ${(lifted * 100).toFixed(1)}%. Showing the theoretical distribution for ${CH2_N} visitors.`,
       );
+      posthog.capture("baseline_slider_changed", { baseline_pct: parseFloat((next * 100).toFixed(1)) });
     }, CH2_DEBOUNCE_MS);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -70,7 +74,7 @@ export function BaselineDistributionWidget() {
           max={CH2_BASELINE_STEPS.length - 1}
           step={1}
           value={baselineIndex}
-          onChange={handleBaselineChange}
+          onChange={(e) => { interactedRef.current = true; handleBaselineChange(e); }}
           aria-valuetext={`${(baseline * 100).toFixed(0)}%`}
           className="flex-1"
         />
