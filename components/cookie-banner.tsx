@@ -24,21 +24,23 @@ export function CookieBanner() {
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-[var(--color-accent)] px-6 py-4 sm:py-6">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-        <p className="mb-1 text-sm font-semibold text-white">We use cookies</p>
-        <p className="text-sm text-white">
+        <p className="mb-1 text-sm font-semibold text-background">We use cookies</p>
+        <p className="text-sm text-background">
           We use tracking cookies to understand how you use the product and help us improve it.
         </p>
         </div>
         <div className="flex shrink-0 gap-2">
           <button
+            type="button"
             onClick={handleDecline}
-            className="rounded-md border border-white/40 px-3 py-1.5 text-sm text-white transition-colors hover:border-white hover:bg-white/10"
+            className="rounded-md border border-background/40 px-3 py-1.5 text-sm text-background transition-colors hover:border-background hover:bg-background/10"
           >
             Decline
           </button>
           <button
+            type="button"
             onClick={handleAccept}
-            className="rounded-md bg-white px-3 py-1.5 text-sm text-[var(--color-accent)] font-medium transition-opacity hover:opacity-90"
+            className="rounded-md bg-background px-3 py-1.5 text-sm text-accent font-medium transition-opacity hover:opacity-90"
           >
             Accept
           </button>
