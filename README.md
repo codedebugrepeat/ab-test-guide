@@ -1,27 +1,32 @@
-# A/B Test Guide
+# [learnabtest.org](https://learnabtest.org) — A/B test guide & calculator
 
-An interactive tutorial for absolute beginners — PMs, founders, and engineers who have never run an A/B test (or need a refresher) and want to understand the whole process end to end.
+A guide and pre-experiment calculator for A/B testing. It assumes you don't know the statistical jargon and uses interactive widgets to build intuition instead. By the end you understand which levers matter and how big a sample size you'll need.
 
-This is an interactive guide to A/B testing that assumes you know nothing — and at the end, you can run a real test and trust the result.
+## Why this exists
 
-## What this is
+Most A/B test calculators hit you with a wall of jargon — power, MDE, alpha, two-tailed — and assume you already know what to plug in. They aren't beginner-friendly. This guide exists to fill that gap: teach the core concepts and build the intuition first, so the calculator at the end actually means something.
 
-This is a teaching experience with interactive visualizations to play around and experience the statistics in a fun way. 
+To stay beginner-friendly, it makes a few opinionated choices: tests are one-tailed, only conversion-rate A/B tests are covered, and the calculator fixes statistical power at 80%. That keeps the focus on the three levers that matter most — [baseline](https://learnabtest.org/your-baseline-matters), [effect size](https://learnabtest.org/how-big-a-jump-are-you-looking-for), and [confidence](https://learnabtest.org/how-sure-do-you-need-to-be).
 
-The site walks you through a series of chapters, one concept per chapter, each with an interactive visualization. By the end, you have effectively used a sample-size planner and a significance calculator — without ever clicking a "calculator" button.
+It started as just the pre-experiment calculator. More tools and chapters may follow based on user feedback.
+
+## What it is
+
+Each chapter introduces one concept and pairs it with one or multiple interactive widgets — drag a slider, pull samples from a jar, watch a distribution form. The final chapter is a sample-size calculator, but by the time you reach it you already know what every input means and why it moves the number it does.
 
 ## Who it is for
 
-**Primary audience:** absolute beginners. People who have never opened a stats textbook, or did once and forgot all of it.
+**Primary audience:** beginners. PMs, founders, and engineers who have never run an A/B test, or who opened a stats textbook once and forgot all of it.
 
-**Secondary audience:** experienced analysts and growth PMs. A "skip to calculator" link gets them there fast.
+**Secondary audience:** experienced analysts and growth PMs who want a refresher or a sharable explainer. The calculator is one click away in the menu.
 
 ## Stack
 
 - Next.js 16 + React 19, hosted on Vercel
 - Tailwind CSS v4 for styling
 - visx (axis, group, scale) for SVG chart primitives
-- Statically generated pages for SEO, client-side hydration for interactive charts
+- PostHog for product analytics
+- Statically generated pages for SEO, client-side hydration for interactive widgets
 - No server or database needed
 
 ## Docs
