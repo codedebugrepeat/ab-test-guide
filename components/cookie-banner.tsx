@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import posthog from "posthog-js";
 import { useState } from "react";
 
@@ -29,10 +30,13 @@ export function CookieBanner() {
     >
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-        <p className="mb-1 text-sm font-semibold text-background">We use cookies</p>
-        <p className="text-sm text-background">
-          We use tracking cookies to understand how you use the product and help us improve it.
-        </p>
+          <p className="mb-1 text-sm font-semibold text-background">We use cookies</p>
+          <p className="text-sm text-background">
+            We use tracking cookies to understand how you use the product and help us improve it.{" "}
+            <Link href="/privacy" className="underline opacity-80 hover:opacity-100">
+              Privacy policy
+            </Link>
+          </p>
         </div>
         <div className="flex shrink-0 gap-2">
           <button
