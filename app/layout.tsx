@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import dynamic from "next/dynamic";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { CookieBanner } from "@/components/cookie-banner";
+
+const CookieBanner = dynamic(
+  () => import("@/components/cookie-banner").then((m) => m.CookieBanner),
+  { ssr: false }
+);
 import { siteConfig } from "@/lib/site-config";
 import "./globals.css";
 

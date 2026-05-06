@@ -1,14 +1,12 @@
 "use client";
 
 import posthog from "posthog-js";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export function CookieBanner() {
-  const [consentGiven, setConsentGiven] = useState("");
-
-  useEffect(() => {
-    setConsentGiven(posthog.get_explicit_consent_status() ?? "pending");
-  }, []);
+  const [consentGiven, setConsentGiven] = useState(
+    () => posthog.get_explicit_consent_status() ?? "pending"
+  );
 
   const handleAccept = () => {
     posthog.opt_in_capturing();
