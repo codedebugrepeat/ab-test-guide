@@ -2,7 +2,6 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { vocabulary } from "@/components/tutorial/constants/vocabulary";
-import type { ReactNode } from "react";
 
 type VocabularyTerm = keyof typeof vocabulary;
 
